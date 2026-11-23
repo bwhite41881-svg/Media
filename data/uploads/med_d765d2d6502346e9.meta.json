@@ -1,0 +1,25 @@
+{
+  "id": "med_d765d2d6502346e9",
+  "albumId": "alb_0b4c665709aa4975",
+  "albumVisibility": "public",
+  "ownerId": "usr_e3fe2868cff34484",
+  "ownerName": "Archive Verifier",
+  "title": "Crimson Frame",
+  "caption": "",
+  "kind": "photo",
+  "mimeType": "image/jpeg",
+  "fileName": "crimson-frame.jpg",
+  "fileSize": 9739,
+  "mediaUrl": "/api/media/med_d765d2d6502346e9",
+  "posterUrl": "/api/media/med_d765d2d6502346e9",
+  "width": 800,
+  "height": 600,
+  "durationSec": 0,
+  "cameraMeta": "",
+  "tags": [
+    "4K"
+  ],
+  "createdAt": "2026-11-23T00:46:12.509Z",
+  "updatedAt": "2026-11-23T00:46:12.509Z",
+  "diskFileName": "med_d765d2d6502346e9.jpg"
+}

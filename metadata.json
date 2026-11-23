@@ -1,0 +1,6 @@
+{
+  "name": "Aperture",
+  "description": "Unlimited-size photo and video sharing platform with user accounts and secure private, unlisted, and public album management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

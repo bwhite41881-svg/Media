@@ -1,0 +1,25 @@
+{
+  "id": "med_9f48cc7e69454127",
+  "albumId": "alb_d470791a6c4f46c4",
+  "albumVisibility": "private",
+  "ownerId": "usr_7a59efcb71e840e6",
+  "ownerName": "Quota Verifier",
+  "title": "Private Master Backup",
+  "caption": "Sample verification capture",
+  "kind": "photo",
+  "mimeType": "image/jpeg",
+  "fileName": "private-master-backup.jpg",
+  "fileSize": 18987,
+  "mediaUrl": "/api/media/med_9f48cc7e69454127",
+  "posterUrl": "/api/media/med_9f48cc7e69454127",
+  "width": 960,
+  "height": 720,
+  "durationSec": 0,
+  "cameraMeta": "",
+  "tags": [
+    "Archive"
+  ],
+  "createdAt": "2026-11-23T00:37:34.560Z",
+  "updatedAt": "2026-11-23T00:37:34.560Z",
+  "diskFileName": "med_9f48cc7e69454127.jpg"
+}

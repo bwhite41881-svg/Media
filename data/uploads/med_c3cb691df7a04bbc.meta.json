@@ -1,0 +1,26 @@
+{
+  "id": "med_c3cb691df7a04bbc",
+  "albumId": "alb_4165182a95074520",
+  "albumVisibility": "public",
+  "ownerId": "usr_7a59efcb71e840e6",
+  "ownerName": "Quota Verifier",
+  "title": "Golden Studio Frame",
+  "caption": "Sample verification capture",
+  "kind": "photo",
+  "mimeType": "image/jpeg",
+  "fileName": "golden-studio-frame.jpg",
+  "fileSize": 22678,
+  "mediaUrl": "/api/media/med_c3cb691df7a04bbc",
+  "posterUrl": "/api/media/med_c3cb691df7a04bbc",
+  "width": 960,
+  "height": 720,
+  "durationSec": 0,
+  "cameraMeta": "",
+  "tags": [
+    "4K",
+    "Studio"
+  ],
+  "createdAt": "2026-11-23T00:37:34.503Z",
+  "updatedAt": "2026-11-23T00:37:34.503Z",
+  "diskFileName": "med_c3cb691df7a04bbc.jpg"
+}

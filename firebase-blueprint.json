@@ -1,0 +1,609 @@
+{
+  "entities": {
+    "UserPublicProfile": {
+      "title": "UserPublicProfile",
+      "description": "Publicly visible creator profile with zero PII.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "handle": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 40,
+          "pattern": "^[a-z0-9_.\\-]+$"
+        },
+        "bio": {
+          "type": "string",
+          "maxLength": 280
+        },
+        "avatarUrl": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "displayName", "handle", "createdAt", "updatedAt"]
+    },
+    "UserPrivateProfile": {
+      "title": "UserPrivateProfile",
+      "description": "Owner-only private account data containing PII such as email and usage metrics.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 254
+        },
+        "totalBytesUploaded": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "email", "totalBytesUploaded", "createdAt", "updatedAt"]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Trusted administrator membership record managed by existing admins.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "grantedBy": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "grantedBy", "createdAt"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Live cPanel site branding, theme, announcement, and upload engine configuration.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "siteName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "heroKicker": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "heroHeadline": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 180
+        },
+        "heroSubheadline": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "footerText": {
+          "type": "string",
+          "maxLength": 240
+        },
+        "accentColor": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "themeMode": {
+          "type": "string",
+          "enum": ["light", "dark"]
+        },
+        "announcementEnabled": {
+          "type": "boolean"
+        },
+        "announcementText": {
+          "type": "string",
+          "maxLength": 240
+        },
+        "allowRegistrations": {
+          "type": "boolean"
+        },
+        "defaultAlbumVisibility": {
+          "type": "string",
+          "enum": ["private", "unlisted", "public"]
+        },
+        "defaultAllowDownloads": {
+          "type": "boolean"
+        },
+        "uploadConcurrency": {
+          "type": "number"
+        },
+        "chunkSizeMb": {
+          "type": "number"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "siteName",
+        "heroHeadline",
+        "accentColor",
+        "themeMode",
+        "announcementEnabled",
+        "allowRegistrations",
+        "defaultAlbumVisibility",
+        "defaultAllowDownloads",
+        "uploadConcurrency",
+        "chunkSizeMb",
+        "updatedAt"
+      ]
+    },
+    "Album": {
+      "title": "Album",
+      "description": "Photo and video collection with private, unlisted, or public visibility controls.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["private", "unlisted", "public"]
+        },
+        "allowDownloads": {
+          "type": "boolean"
+        },
+        "shareToken": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]*$"
+        },
+        "hasPasscode": {
+          "type": "boolean"
+        },
+        "coverUrl": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "itemCount": {
+          "type": "number"
+        },
+        "totalBytes": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "ownerName",
+        "title",
+        "visibility",
+        "allowDownloads",
+        "shareToken",
+        "hasPasscode",
+        "itemCount",
+        "totalBytes",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AlbumMember": {
+      "title": "AlbumMember",
+      "description": "Authorized collaborator entry for private or unlisted albums.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "albumId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "memberName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "role": {
+          "type": "string",
+          "enum": ["viewer", "contributor"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "albumId", "ownerId", "memberName", "role", "createdAt"]
+    },
+    "MediaItem": {
+      "title": "MediaItem",
+      "description": "Uploaded photo or video metadata referencing streamed binary storage with no file size cap.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "albumId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "albumVisibility": {
+          "type": "string",
+          "enum": ["private", "unlisted", "public"]
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "caption": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["photo", "video"]
+        },
+        "mimeType": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "fileName": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "fileSize": {
+          "type": "number"
+        },
+        "mediaUrl": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "posterUrl": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "durationSec": {
+          "type": "number"
+        },
+        "cameraMeta": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "tags": {
+          "type": "array"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "albumId",
+        "albumVisibility",
+        "ownerId",
+        "ownerName",
+        "title",
+        "kind",
+        "mimeType",
+        "fileName",
+        "fileSize",
+        "mediaUrl",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "MediaComment": {
+      "title": "MediaComment",
+      "description": "User comment posted on a photo or video inside an album.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "albumId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "mediaId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "albumVisibility": {
+          "type": "string",
+          "enum": ["private", "unlisted", "public"]
+        },
+        "authorId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "authorName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "authorHandle": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 40,
+          "pattern": "^[a-z0-9_.\\-]+$"
+        },
+        "authorAvatarUrl": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "albumId",
+        "mediaId",
+        "albumVisibility",
+        "authorId",
+        "authorName",
+        "authorHandle",
+        "body",
+        "createdAt"
+      ]
+    },
+    "ChatConversation": {
+      "title": "ChatConversation",
+      "description": "Private 1:1 direct messaging thread between two users.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "participantA": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "participantB": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "lastMessagePreview": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "participantA",
+        "participantB",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Direct message sent within a 1:1 user conversation.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "conversationId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "senderId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "recipientId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "senderName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "senderHandle": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 40,
+          "pattern": "^[a-z0-9_.\\-]+$"
+        },
+        "senderAvatarUrl": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "readAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "conversationId",
+        "senderId",
+        "recipientId",
+        "senderName",
+        "senderHandle",
+        "body",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users_public/{userId}": {
+      "schema": { "$ref": "#/entities/UserPublicProfile" },
+      "description": "Public creator profiles with no PII."
+    },
+    "/users_private/{userId}": {
+      "schema": { "$ref": "#/entities/UserPrivateProfile" },
+      "description": "Strictly owner-private account records containing email and storage totals."
+    },
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Trusted administrator membership list for cPanel access."
+    },
+    "/site_settings/{settingId}": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "Live cPanel site branding, theme, announcement, and upload engine settings."
+    },
+    "/albums/{albumId}": {
+      "schema": { "$ref": "#/entities/Album" },
+      "description": "User albums with private, unlisted, and public visibility controls."
+    },
+    "/albums/{albumId}/members/{memberUid}": {
+      "schema": { "$ref": "#/entities/AlbumMember" },
+      "description": "Authorized album collaborators managed by the album owner."
+    },
+    "/albums/{albumId}/media/{mediaId}": {
+      "schema": { "$ref": "#/entities/MediaItem" },
+      "description": "Photo and video metadata items belonging to an album."
+    },
+    "/albums/{albumId}/media/{mediaId}/comments/{commentId}": {
+      "schema": { "$ref": "#/entities/MediaComment" },
+      "description": "User comments on photos and videos inside an album."
+    },
+    "/conversations/{conversationId}": {
+      "schema": { "$ref": "#/entities/ChatConversation" },
+      "description": "Private 1:1 direct chat conversations between two users."
+    },
+    "/conversations/{conversationId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ChatMessage" },
+      "description": "Direct messages exchanged between participants in a conversation."
+    }
+  }
+}

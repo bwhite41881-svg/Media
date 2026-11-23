@@ -1,0 +1,76 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --accent: #008732;
+    --accent-hover: #006d28;
+    --rasta-green: #009B3A;
+    --rasta-gold: #FCD116;
+    --rasta-red: #CE1126;
+    --canvas: #F8F6EE;
+    --surface: #FFFFFF;
+    --ink: #151811;
+    --muted: #5A5E52;
+    --border: #E2DCC8;
+    color-scheme: light;
+  }
+
+  html.dark {
+    --canvas: #0D0F0B;
+    --surface: #151912;
+    --ink: #F5F3EA;
+    --muted: #A6AA9C;
+    --border: #2A3124;
+    color-scheme: dark;
+  }
+
+  html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--canvas);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--canvas);
+    color: var(--ink);
+  }
+
+  button:not(:disabled),
+  a[href] {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--rasta-gold);
+    outline-offset: 2px;
+  }
+}
+
+.font-display {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+}
+
+.font-serif-editorial {
+  font-family: 'Newsreader', Georgia, serif;
+}
+
+.font-mono-tabular {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.rasta-stripe {
+  background: linear-gradient(
+    90deg,
+    #009B3A 0%,
+    #009B3A 33.333%,
+    #FCD116 33.333%,
+    #FCD116 66.666%,
+    #CE1126 66.666%,
+    #CE1126 100%
+  );
+}

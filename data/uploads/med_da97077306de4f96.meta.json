@@ -1,0 +1,26 @@
+{
+  "id": "med_da97077306de4f96",
+  "albumId": "alb_f8e05b17fcbc4e6f",
+  "albumVisibility": "public",
+  "ownerId": "usr_7a59efcb71e840e6",
+  "ownerName": "Quota Verifier",
+  "title": "Kingston Stage Dusk",
+  "caption": "Sample verification capture",
+  "kind": "photo",
+  "mimeType": "image/jpeg",
+  "fileName": "kingston-stage-dusk.jpg",
+  "fileSize": 18618,
+  "mediaUrl": "/api/media/med_da97077306de4f96",
+  "posterUrl": "/api/media/med_da97077306de4f96",
+  "width": 960,
+  "height": 720,
+  "durationSec": 0,
+  "cameraMeta": "",
+  "tags": [
+    "Reggae",
+    "Live"
+  ],
+  "createdAt": "2026-11-23T00:37:34.532Z",
+  "updatedAt": "2026-11-23T00:37:34.532Z",
+  "diskFileName": "med_da97077306de4f96.jpg"
+}

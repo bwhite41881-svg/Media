@@ -1,0 +1,25 @@
+{
+  "id": "med_9e27a5a9d6794416",
+  "albumId": "alb_9a988d6e1a4e43f9",
+  "albumVisibility": "public",
+  "ownerId": "usr_f1b04ae8b0a44168",
+  "ownerName": "Archive Verifier",
+  "title": "Emerald Frame",
+  "caption": "",
+  "kind": "photo",
+  "mimeType": "image/jpeg",
+  "fileName": "emerald-frame.jpg",
+  "fileSize": 11704,
+  "mediaUrl": "/api/media/med_9e27a5a9d6794416",
+  "posterUrl": "/api/media/med_9e27a5a9d6794416",
+  "width": 800,
+  "height": 600,
+  "durationSec": 0,
+  "cameraMeta": "",
+  "tags": [
+    "4K"
+  ],
+  "createdAt": "2026-11-23T00:45:17.396Z",
+  "updatedAt": "2026-11-23T00:45:17.396Z",
+  "diskFileName": "med_9e27a5a9d6794416.jpg"
+}

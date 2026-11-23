@@ -1,0 +1,644 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Reusable Hardened Primitives ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && (
+        request.auth.token.email == 'puffthafire509@gmail.com'
+        || exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isOptionalString(data, key, maxLen) {
+      return !(key in data) || (data[key] is string && data[key].size() <= maxLen);
+    }
+
+    function isOptionalNumber(data, key, minVal) {
+      return !(key in data) || (data[key] is number && data[key] >= minVal);
+    }
+
+    function isOptionalTimestamp(data, key) {
+      return !(key in data) || (data[key] is timestamp);
+    }
+
+    function isValidTagList(data) {
+      return !('tags' in data) || (
+        data.tags is list &&
+        data.tags.size() <= 10 &&
+        (data.tags.size() == 0 || (data.tags[0] is string && data.tags[0].size() <= 40))
+      );
+    }
+
+    // --- Validation Blueprints ---
+    function isValidUserPublicProfile(data, userId) {
+      return data.keys().hasAll(['uid', 'displayName', 'handle', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['uid', 'displayName', 'handle', 'bio', 'avatarUrl', 'createdAt', 'updatedAt'])
+        && data.uid == userId
+        && data.uid == request.auth.uid
+        && isValidId(data.uid)
+        && data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 80
+        && data.handle is string && data.handle.size() >= 2 && data.handle.size() <= 40 && data.handle.matches('^[a-z0-9_.\\-]+$')
+        && isOptionalString(data, 'bio', 280)
+        && isOptionalString(data, 'avatarUrl', 500)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidUserPrivateProfile(data, userId) {
+      return data.keys().hasAll(['uid', 'email', 'totalBytesUploaded', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['uid', 'email', 'totalBytesUploaded', 'createdAt', 'updatedAt'])
+        && data.uid == userId
+        && data.uid == request.auth.uid
+        && isValidId(data.uid)
+        && data.email is string && data.email.size() >= 3 && data.email.size() <= 254
+        && data.totalBytesUploaded is number && data.totalBytesUploaded >= 0
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidAdminRecord(data, adminUid) {
+      return data.keys().hasAll(['uid', 'grantedBy', 'createdAt'])
+        && data.keys().hasOnly(['uid', 'grantedBy', 'createdAt'])
+        && data.uid == adminUid
+        && isValidId(data.uid)
+        && isValidId(data.grantedBy)
+        && data.createdAt is timestamp;
+    }
+
+    function isValidSiteSettings(data, settingId) {
+      return data.keys().hasAll([
+          'id', 'siteName', 'heroHeadline', 'accentColor', 'themeMode',
+          'announcementEnabled', 'allowRegistrations', 'defaultAlbumVisibility',
+          'defaultAllowDownloads', 'uploadConcurrency', 'chunkSizeMb', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'siteName', 'heroKicker', 'heroHeadline', 'heroSubheadline',
+          'footerText', 'accentColor', 'themeMode', 'announcementEnabled',
+          'announcementText', 'allowRegistrations', 'defaultAlbumVisibility',
+          'defaultAllowDownloads', 'uploadConcurrency', 'chunkSizeMb', 'updatedAt'
+        ])
+        && data.id == settingId
+        && isValidId(data.id)
+        && data.siteName is string && data.siteName.size() >= 1 && data.siteName.size() <= 80
+        && isOptionalString(data, 'heroKicker', 100)
+        && data.heroHeadline is string && data.heroHeadline.size() >= 1 && data.heroHeadline.size() <= 180
+        && isOptionalString(data, 'heroSubheadline', 400)
+        && isOptionalString(data, 'footerText', 240)
+        && data.accentColor is string && data.accentColor.size() == 7 && data.accentColor.matches('^#[0-9a-fA-F]{6}$')
+        && data.themeMode is string && data.themeMode in ['light', 'dark']
+        && data.announcementEnabled is bool
+        && isOptionalString(data, 'announcementText', 240)
+        && data.allowRegistrations is bool
+        && data.defaultAlbumVisibility is string && data.defaultAlbumVisibility in ['private', 'unlisted', 'public']
+        && data.defaultAllowDownloads is bool
+        && data.uploadConcurrency is number && data.uploadConcurrency >= 1 && data.uploadConcurrency <= 16
+        && data.chunkSizeMb is number && data.chunkSizeMb >= 1 && data.chunkSizeMb <= 64
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidAlbum(data, albumId) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'ownerName', 'title', 'visibility',
+          'allowDownloads', 'shareToken', 'hasPasscode',
+          'itemCount', 'totalBytes', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerId', 'ownerName', 'title', 'description', 'visibility',
+          'allowDownloads', 'shareToken', 'hasPasscode', 'coverUrl',
+          'itemCount', 'totalBytes', 'createdAt', 'updatedAt'
+        ])
+        && data.id == albumId
+        && isValidId(data.id)
+        && isValidId(data.ownerId)
+        && data.ownerName is string && data.ownerName.size() >= 1 && data.ownerName.size() <= 80
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 120
+        && isOptionalString(data, 'description', 600)
+        && data.visibility is string && data.visibility in ['private', 'unlisted', 'public']
+        && data.allowDownloads is bool
+        && data.shareToken is string && data.shareToken.size() <= 64 && data.shareToken.matches('^[a-zA-Z0-9_\\-]*$')
+        && data.hasPasscode is bool
+        && isOptionalString(data, 'coverUrl', 500)
+        && data.itemCount is number && data.itemCount >= 0
+        && data.totalBytes is number && data.totalBytes >= 0
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidAlbumMember(data, albumId, memberUid) {
+      return data.keys().hasAll(['uid', 'albumId', 'ownerId', 'memberName', 'role', 'createdAt'])
+        && data.keys().hasOnly(['uid', 'albumId', 'ownerId', 'memberName', 'role', 'createdAt'])
+        && data.uid == memberUid
+        && isValidId(data.uid)
+        && data.albumId == albumId
+        && isValidId(data.albumId)
+        && isValidId(data.ownerId)
+        && data.memberName is string && data.memberName.size() >= 1 && data.memberName.size() <= 80
+        && data.role is string && data.role in ['viewer', 'contributor']
+        && data.createdAt is timestamp;
+    }
+
+    function isValidMediaItem(data, albumId, mediaId) {
+      return data.keys().hasAll([
+          'id', 'albumId', 'albumVisibility', 'ownerId', 'ownerName', 'title',
+          'kind', 'mimeType', 'fileName', 'fileSize', 'mediaUrl', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'albumId', 'albumVisibility', 'ownerId', 'ownerName', 'title', 'caption',
+          'kind', 'mimeType', 'fileName', 'fileSize', 'mediaUrl', 'posterUrl',
+          'width', 'height', 'durationSec', 'cameraMeta', 'tags', 'createdAt', 'updatedAt'
+        ])
+        && data.id == mediaId
+        && isValidId(data.id)
+        && data.albumId == albumId
+        && isValidId(data.albumId)
+        && data.albumVisibility is string && data.albumVisibility in ['private', 'unlisted', 'public']
+        && isValidId(data.ownerId)
+        && data.ownerName is string && data.ownerName.size() >= 1 && data.ownerName.size() <= 80
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 140
+        && isOptionalString(data, 'caption', 600)
+        && data.kind is string && data.kind in ['photo', 'video']
+        && data.mimeType is string && data.mimeType.size() >= 3 && data.mimeType.size() <= 100
+        && data.fileName is string && data.fileName.size() >= 1 && data.fileName.size() <= 200
+        && data.fileSize is number && data.fileSize >= 0
+        && data.mediaUrl is string && data.mediaUrl.size() >= 1 && data.mediaUrl.size() <= 500
+        && isOptionalString(data, 'posterUrl', 500)
+        && isOptionalNumber(data, 'width', 0)
+        && isOptionalNumber(data, 'height', 0)
+        && isOptionalNumber(data, 'durationSec', 0)
+        && isOptionalString(data, 'cameraMeta', 160)
+        && isValidTagList(data)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidMediaComment(data, albumId, mediaId, commentId) {
+      return data.keys().hasAll([
+          'id', 'albumId', 'mediaId', 'albumVisibility', 'authorId',
+          'authorName', 'authorHandle', 'body', 'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'albumId', 'mediaId', 'albumVisibility', 'authorId',
+          'authorName', 'authorHandle', 'authorAvatarUrl', 'body', 'createdAt'
+        ])
+        && data.id == commentId
+        && isValidId(data.id)
+        && data.albumId == albumId
+        && isValidId(data.albumId)
+        && data.mediaId == mediaId
+        && isValidId(data.mediaId)
+        && data.albumVisibility is string && data.albumVisibility in ['private', 'unlisted', 'public']
+        && isValidId(data.authorId)
+        && data.authorName is string && data.authorName.size() >= 1 && data.authorName.size() <= 80
+        && data.authorHandle is string && data.authorHandle.size() >= 2 && data.authorHandle.size() <= 40 && data.authorHandle.matches('^[a-z0-9_.\\-]+$')
+        && isOptionalString(data, 'authorAvatarUrl', 500)
+        && data.body is string && data.body.size() >= 1 && data.body.size() <= 600
+        && data.createdAt is timestamp;
+    }
+
+    function isValidChatConversation(data, conversationId) {
+      return data.keys().hasAll(['id', 'participantA', 'participantB', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'participantA', 'participantB', 'lastMessagePreview', 'createdAt', 'updatedAt'])
+        && data.id == conversationId
+        && isValidId(data.id)
+        && isValidId(data.participantA)
+        && isValidId(data.participantB)
+        && data.participantA < data.participantB
+        && conversationId == ('dm_' + data.participantA + '__' + data.participantB)
+        && isOptionalString(data, 'lastMessagePreview', 200)
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidChatMessage(data, conversationId, messageId) {
+      return data.keys().hasAll([
+          'id', 'conversationId', 'senderId', 'recipientId',
+          'senderName', 'senderHandle', 'body', 'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'conversationId', 'senderId', 'recipientId',
+          'senderName', 'senderHandle', 'senderAvatarUrl', 'body', 'createdAt', 'readAt'
+        ])
+        && data.id == messageId
+        && isValidId(data.id)
+        && data.conversationId == conversationId
+        && isValidId(data.conversationId)
+        && isValidId(data.senderId)
+        && isValidId(data.recipientId)
+        && data.senderId != data.recipientId
+        && data.senderName is string && data.senderName.size() >= 1 && data.senderName.size() <= 80
+        && data.senderHandle is string && data.senderHandle.size() >= 2 && data.senderHandle.size() <= 40 && data.senderHandle.matches('^[a-z0-9_.\\-]+$')
+        && isOptionalString(data, 'senderAvatarUrl', 500)
+        && data.body is string && data.body.size() >= 1 && data.body.size() <= 1000
+        && data.createdAt is timestamp
+        && isOptionalTimestamp(data, 'readAt');
+    }
+
+    // --- Collection: Admins ---
+    match /admins/{adminUid} {
+      allow get: if isValidId(adminUid) && (isOwner(adminUid) || isAdmin());
+      allow list: if isAdmin();
+      allow create: if isAdmin()
+        && isValidId(adminUid)
+        && isValidAdminRecord(incoming(), adminUid)
+        && incoming().grantedBy == request.auth.uid
+        && incoming().createdAt == request.time;
+      allow update: if false;
+      allow delete: if isAdmin() && isValidId(adminUid);
+    }
+
+    // --- Collection: Site Settings (cPanel) ---
+    match /site_settings/{settingId} {
+      allow get: if isValidId(settingId);
+      allow list: if false;
+      allow create: if isAdmin()
+        && isValidId(settingId)
+        && isValidSiteSettings(incoming(), settingId)
+        && incoming().updatedAt == request.time;
+      allow update: if isAdmin()
+        && isValidId(settingId)
+        && isValidSiteSettings(incoming(), settingId)
+        && incoming().id == existing().id
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'siteName', 'heroKicker', 'heroHeadline', 'heroSubheadline',
+          'footerText', 'accentColor', 'themeMode', 'announcementEnabled',
+          'announcementText', 'allowRegistrations', 'defaultAlbumVisibility',
+          'defaultAllowDownloads', 'uploadConcurrency', 'chunkSizeMb', 'updatedAt'
+        ]);
+      allow delete: if false;
+    }
+
+    // --- Collection: Public User Profiles (No PII) ---
+    match /users_public/{userId} {
+      allow get: if isValidId(userId);
+      allow list: if false;
+      allow create: if isVerifiedUser()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidUserPublicProfile(incoming(), userId)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidUserPublicProfile(incoming(), userId)
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'handle', 'bio', 'avatarUrl', 'updatedAt']);
+      allow delete: if isVerifiedUser() && isValidId(userId) && (isOwner(userId) || isAdmin());
+    }
+
+    // --- Collection: Private User Profiles (Strict PII Isolation) ---
+    match /users_private/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if false;
+      allow create: if isVerifiedUser()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidUserPrivateProfile(incoming(), userId)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+      allow update: if isVerifiedUser()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidUserPrivateProfile(incoming(), userId)
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly(['email', 'totalBytesUploaded', 'updatedAt']);
+      allow delete: if isVerifiedUser() && isValidId(userId) && (isOwner(userId) || isAdmin());
+    }
+
+    // --- Collection: Albums ---
+    match /albums/{albumId} {
+      allow get: if isValidId(albumId) && (
+        existing().visibility == 'public'
+        || isAdmin()
+        || (isSignedIn() && existing().ownerId == request.auth.uid)
+        || (isSignedIn() && exists(/databases/$(database)/documents/albums/$(albumId)/members/$(request.auth.uid)))
+      );
+
+      allow list: if existing().visibility == 'public'
+        || isAdmin()
+        || (isSignedIn() && existing().ownerId == request.auth.uid);
+
+      allow create: if isVerifiedUser()
+        && isValidId(albumId)
+        && isValidAlbum(incoming(), albumId)
+        && incoming().ownerId == request.auth.uid
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isVerifiedUser()
+        && isValidId(albumId)
+        && isValidAlbum(incoming(), albumId)
+        && (existing().ownerId == request.auth.uid || isAdmin())
+        && incoming().id == existing().id
+        && incoming().ownerId == existing().ownerId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          isAdmin()
+          // Action 1: Update album metadata and cover
+          || incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description', 'coverUrl', 'ownerName', 'updatedAt'])
+          // Action 2: Update privacy, download permissions, share link, and passcode lock
+          || incoming().diff(existing()).affectedKeys().hasOnly(['visibility', 'allowDownloads', 'shareToken', 'hasPasscode', 'updatedAt'])
+          // Action 3: Sync aggregate itemCount, totalBytes, and coverUrl after media mutation
+          || incoming().diff(existing()).affectedKeys().hasOnly(['itemCount', 'totalBytes', 'coverUrl', 'updatedAt'])
+        );
+
+      allow delete: if isVerifiedUser()
+        && isValidId(albumId)
+        && (existing().ownerId == request.auth.uid || isAdmin());
+
+      // --- Subcollection: Album Collaborators (Master Gate) ---
+      match /members/{memberUid} {
+        allow get: if isValidId(albumId) && isValidId(memberUid) && isSignedIn() && (
+          request.auth.uid == memberUid
+          || isAdmin()
+          || get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid
+        );
+
+        allow list: if isSignedIn() && (
+          isAdmin()
+          || existing().ownerId == request.auth.uid
+          || existing().uid == request.auth.uid
+        );
+
+        allow create: if isVerifiedUser()
+          && isValidId(albumId)
+          && isValidId(memberUid)
+          && isValidAlbumMember(incoming(), albumId, memberUid)
+          && incoming().ownerId == request.auth.uid
+          && incoming().createdAt == request.time
+          && exists(/databases/$(database)/documents/albums/$(albumId))
+          && get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid;
+
+        allow update: if isVerifiedUser()
+          && isValidId(albumId)
+          && isValidId(memberUid)
+          && isValidAlbumMember(incoming(), albumId, memberUid)
+          && (existing().ownerId == request.auth.uid || isAdmin())
+          && incoming().uid == existing().uid
+          && incoming().albumId == existing().albumId
+          && incoming().ownerId == existing().ownerId
+          && incoming().createdAt == existing().createdAt
+          && incoming().diff(existing()).affectedKeys().hasOnly(['role', 'memberName'])
+          && (isAdmin() || get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid);
+
+        allow delete: if isVerifiedUser()
+          && isValidId(albumId)
+          && isValidId(memberUid)
+          && (
+            request.auth.uid == memberUid
+            || isAdmin()
+            || get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid
+          );
+      }
+
+      // --- Subcollection: Media Items (Master Gate) ---
+      match /media/{mediaId} {
+        allow get: if isValidId(albumId) && isValidId(mediaId) && (
+          get(/databases/$(database)/documents/albums/$(albumId)).data.visibility == 'public'
+          || isAdmin()
+          || (isSignedIn() && get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid)
+          || (isSignedIn() && exists(/databases/$(database)/documents/albums/$(albumId)/members/$(request.auth.uid)))
+        );
+
+        allow list: if existing().albumVisibility == 'public'
+          || isAdmin()
+          || (isSignedIn() && existing().ownerId == request.auth.uid);
+
+        allow create: if isVerifiedUser()
+          && isValidId(albumId)
+          && isValidId(mediaId)
+          && isValidMediaItem(incoming(), albumId, mediaId)
+          && incoming().ownerId == request.auth.uid
+          && incoming().createdAt == request.time
+          && incoming().updatedAt == request.time
+          && exists(/databases/$(database)/documents/albums/$(albumId))
+          && incoming().albumVisibility == get(/databases/$(database)/documents/albums/$(albumId)).data.visibility
+          && (
+            get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid
+            || (
+              exists(/databases/$(database)/documents/albums/$(albumId)/members/$(request.auth.uid))
+              && get(/databases/$(database)/documents/albums/$(albumId)/members/$(request.auth.uid)).data.role == 'contributor'
+            )
+          );
+
+        allow update: if isVerifiedUser()
+          && isValidId(albumId)
+          && isValidId(mediaId)
+          && isValidMediaItem(incoming(), albumId, mediaId)
+          && incoming().id == existing().id
+          && incoming().albumId == existing().albumId
+          && incoming().ownerId == existing().ownerId
+          && incoming().createdAt == existing().createdAt
+          && incoming().updatedAt == request.time
+          && exists(/databases/$(database)/documents/albums/$(albumId))
+          && (
+            isAdmin()
+            // Tier 1: Album owner or media uploader editing metadata
+            || (
+              (existing().ownerId == request.auth.uid || get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid)
+              && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'caption', 'cameraMeta', 'tags', 'posterUrl', 'updatedAt'])
+            )
+            // Tier 2: Album owner syncing visibility flag after album privacy change
+            || (
+              get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid
+              && incoming().albumVisibility == get(/databases/$(database)/documents/albums/$(albumId)).data.visibility
+              && incoming().diff(existing()).affectedKeys().hasOnly(['albumVisibility', 'updatedAt'])
+            )
+          );
+
+        allow delete: if isVerifiedUser()
+          && isValidId(albumId)
+          && isValidId(mediaId)
+          && exists(/databases/$(database)/documents/albums/$(albumId))
+          && (
+            existing().ownerId == request.auth.uid
+            || isAdmin()
+            || get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid
+          );
+
+        // --- Subcollection: Media Comments (Master Gate) ---
+        match /comments/{commentId} {
+          allow get: if isValidId(albumId) && isValidId(mediaId) && isValidId(commentId) && (
+            get(/databases/$(database)/documents/albums/$(albumId)).data.visibility == 'public'
+            || isAdmin()
+            || (isSignedIn() && get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid)
+            || (isSignedIn() && exists(/databases/$(database)/documents/albums/$(albumId)/members/$(request.auth.uid)))
+          );
+
+          allow list: if existing().albumVisibility == 'public'
+            || isAdmin()
+            || (isSignedIn() && existing().authorId == request.auth.uid);
+
+          allow create: if isVerifiedUser()
+            && isValidId(albumId)
+            && isValidId(mediaId)
+            && isValidId(commentId)
+            && isValidMediaComment(incoming(), albumId, mediaId, commentId)
+            && incoming().authorId == request.auth.uid
+            && incoming().createdAt == request.time
+            && exists(/databases/$(database)/documents/albums/$(albumId))
+            && exists(/databases/$(database)/documents/albums/$(albumId)/media/$(mediaId))
+            && incoming().albumVisibility == get(/databases/$(database)/documents/albums/$(albumId)).data.visibility
+            && (
+              get(/databases/$(database)/documents/albums/$(albumId)).data.visibility == 'public'
+              || isAdmin()
+              || get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid
+              || exists(/databases/$(database)/documents/albums/$(albumId)/members/$(request.auth.uid))
+            );
+
+          allow update: if false;
+
+          allow delete: if isVerifiedUser()
+            && isValidId(albumId)
+            && isValidId(mediaId)
+            && isValidId(commentId)
+            && (
+              existing().authorId == request.auth.uid
+              || isAdmin()
+              || (
+                exists(/databases/$(database)/documents/albums/$(albumId))
+                && get(/databases/$(database)/documents/albums/$(albumId)).data.ownerId == request.auth.uid
+              )
+            );
+        }
+      }
+    }
+
+    // --- Collection: Direct Chat Conversations (Participant-Isolated) ---
+    match /conversations/{conversationId} {
+      allow get: if isValidId(conversationId) && isSignedIn() && (
+        existing().participantA == request.auth.uid
+        || existing().participantB == request.auth.uid
+        || isAdmin()
+      );
+
+      allow list: if isSignedIn() && (
+        existing().participantA == request.auth.uid
+        || existing().participantB == request.auth.uid
+        || isAdmin()
+      );
+
+      allow create: if isVerifiedUser()
+        && isValidId(conversationId)
+        && isValidChatConversation(incoming(), conversationId)
+        && (incoming().participantA == request.auth.uid || incoming().participantB == request.auth.uid)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isVerifiedUser()
+        && isValidId(conversationId)
+        && isValidChatConversation(incoming(), conversationId)
+        && (existing().participantA == request.auth.uid || existing().participantB == request.auth.uid || isAdmin())
+        && incoming().id == existing().id
+        && incoming().participantA == existing().participantA
+        && incoming().participantB == existing().participantB
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          isAdmin()
+          || incoming().diff(existing()).affectedKeys().hasOnly(['lastMessagePreview', 'updatedAt'])
+        );
+
+      allow delete: if false;
+
+      // --- Subcollection: Direct Messages (Master Gate + Terminal Read Receipt) ---
+      match /messages/{messageId} {
+        allow get: if isValidId(conversationId) && isValidId(messageId) && isSignedIn() && (
+          isAdmin()
+          || get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantA == request.auth.uid
+          || get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantB == request.auth.uid
+        );
+
+        allow list: if isSignedIn() && (
+          existing().senderId == request.auth.uid
+          || existing().recipientId == request.auth.uid
+          || isAdmin()
+        );
+
+        allow create: if isVerifiedUser()
+          && isValidId(conversationId)
+          && isValidId(messageId)
+          && isValidChatMessage(incoming(), conversationId, messageId)
+          && incoming().senderId == request.auth.uid
+          && incoming().createdAt == request.time
+          && !('readAt' in incoming())
+          && exists(/databases/$(database)/documents/conversations/$(conversationId))
+          && (
+            (
+              get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantA == incoming().senderId
+              && get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantB == incoming().recipientId
+            )
+            || (
+              get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantB == incoming().senderId
+              && get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantA == incoming().recipientId
+            )
+          );
+
+        allow update: if isVerifiedUser()
+          && isValidId(conversationId)
+          && isValidId(messageId)
+          && isValidChatMessage(incoming(), conversationId, messageId)
+          && incoming().id == existing().id
+          && incoming().conversationId == existing().conversationId
+          && incoming().senderId == existing().senderId
+          && incoming().recipientId == existing().recipientId
+          && incoming().senderName == existing().senderName
+          && incoming().senderHandle == existing().senderHandle
+          && incoming().body == existing().body
+          && incoming().createdAt == existing().createdAt
+          && exists(/databases/$(database)/documents/conversations/$(conversationId))
+          && (
+            isAdmin()
+            // Action: Recipient marks unread message as read (terminal once set)
+            || (
+              existing().recipientId == request.auth.uid
+              && !('readAt' in existing())
+              && 'readAt' in incoming()
+              && incoming().readAt == request.time
+              && incoming().diff(existing()).affectedKeys().hasOnly(['readAt'])
+            )
+          );
+
+        allow delete: if isVerifiedUser()
+          && isValidId(conversationId)
+          && isValidId(messageId)
+          && (existing().senderId == request.auth.uid || isAdmin());
+      }
+    }
+  }
+}

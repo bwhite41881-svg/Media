@@ -1,0 +1,26 @@
+{
+  "id": "med_eea3099d769046e5",
+  "albumId": "alb_0b4c665709aa4975",
+  "albumVisibility": "public",
+  "ownerId": "usr_e3fe2868cff34484",
+  "ownerName": "Archive Verifier",
+  "title": "Stage Reel",
+  "caption": "",
+  "kind": "video",
+  "mimeType": "video/mp4",
+  "fileName": "stage-reel.mp4",
+  "fileSize": 2325,
+  "mediaUrl": "/api/media/med_eea3099d769046e5",
+  "posterUrl": "/api/poster/med_eea3099d769046e5",
+  "width": 320,
+  "height": 240,
+  "durationSec": 1,
+  "cameraMeta": "",
+  "tags": [
+    "4K"
+  ],
+  "createdAt": "2026-11-23T00:46:12.520Z",
+  "updatedAt": "2026-11-23T00:46:12.715Z",
+  "diskFileName": "med_eea3099d769046e5.mp4",
+  "posterFileName": "med_eea3099d769046e5.jpg"
+}
