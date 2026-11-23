@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ArrowUpRight, Globe, Play, Search, X } from 'lucide-react';
+import { ArrowUpRight, Eye, Globe, Play, Search, X } from 'lucide-react';
 import type { Album, MediaItem, SiteSettings, UserAccount } from '../types/media';
 import {
   extractPopularTags,
@@ -10,6 +10,7 @@ import {
   formatRelativeDate,
   type SearchMatchMode,
 } from '../utils/albumLogic';
+import { formatViewCount } from '../utils/viewCounts';
 import { MediaSurface } from './MediaSurface';
 
 interface ExploreViewProps {
@@ -68,7 +69,7 @@ export function ExploreView({
       ? 'Filter public albums, photos, and videos by title...'
       : searchMode === 'tag'
         ? 'Filter public albums, photos, and videos by tag (e.g. 4K, Live)...'
-        : 'Search public albums, photos, and videos by title or #tag...';
+        : 'Search public albums, photos, and videos by title, #tag, or metadata...';
 
   const heroMedia = useMemo(
     () => media.find((m) => m.width > m.height) || media[0],
@@ -475,6 +476,11 @@ export function ExploreView({
                     </span>
                     <span aria-hidden="true">·</span>
                     <span className="text-[#B88600] dark:text-[#FFD600]">{formatBytes(album.totalBytes)}</span>
+                    <span aria-hidden="true">·</span>
+                    <span className="inline-flex items-center gap-1 text-[#00A846] dark:text-[#00E676]">
+                      <Eye className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>{formatViewCount(album.viewCount)}</span>
+                    </span>
                   </div>
                 </button>
                 {album.tags && album.tags.length > 0 && (
@@ -614,6 +620,11 @@ export function ExploreView({
                       )}
                       <span aria-hidden="true">·</span>
                       <span>{formatRelativeDate(item.createdAt)}</span>
+                      <span aria-hidden="true">·</span>
+                      <span className="inline-flex items-center gap-1 text-[#00A846] dark:text-[#00E676]">
+                        <Eye className="w-3 h-3" aria-hidden="true" />
+                        <span>{formatViewCount(item.viewCount)}</span>
+                      </span>
                     </div>
                   </button>
                   {item.tags && item.tags.length > 0 && (

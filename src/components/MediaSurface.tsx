@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Film, Image as ImageIcon, Play } from 'lucide-react';
+import { Image as ImageIcon, Play } from 'lucide-react';
 import type { MediaKind } from '../types/media';
 import { formatDuration } from '../utils/albumLogic';
 import { extractMediaIdFromApiUrl } from '../utils/backupSync';
@@ -130,13 +130,15 @@ export function MediaSurface({
           className={`w-full h-full object-cover pointer-events-none transition-transform duration-300 ease-out ${imgClassName}`}
         />
       ) : (
-        <div className="w-full h-full min-h-[160px] flex flex-col items-center justify-center bg-gradient-to-br from-[#E8EFEA] to-[#D4DFD7] dark:from-[#101813] dark:to-[#12160F] px-6 text-center">
+        <div className="w-full h-full min-h-[160px] flex flex-col items-center justify-center bg-gradient-to-br from-[#E8EFEA] to-[#D4DFD7] dark:from-[#0E1611] dark:to-[#070B08] px-6 pb-6 text-center">
           {kind === 'video' ? (
-            <Film className="w-7 h-7 text-[#526056] dark:text-[#FFD600]/80" aria-hidden="true" />
+            <span className="w-11 h-11 rounded-full bg-black/55 border border-[#FFD600]/35 flex items-center justify-center shadow-lg">
+              <Play className="w-4 h-4 fill-current text-[#FFD600] ml-0.5" aria-hidden="true" />
+            </span>
           ) : (
             <ImageIcon className="w-7 h-7 text-[#526056] dark:text-[#00E676]/80" aria-hidden="true" />
           )}
-          <span className="mt-2.5 text-xs font-medium text-[#526056] dark:text-[#8FA395] line-clamp-2 max-w-[200px]">
+          <span className="mt-3 text-xs font-medium text-[#526056] dark:text-[#8FA395] line-clamp-2 max-w-[200px]">
             {alt}
           </span>
         </div>
@@ -144,11 +146,13 @@ export function MediaSurface({
 
       {kind === 'video' && showVideoBadge && (
         <>
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <span className="w-11 h-11 rounded-full bg-black/55 backdrop-blur-xs border border-white/25 flex items-center justify-center shadow-lg transition-transform duration-200 group-hover:scale-105">
-              <Play className="w-4 h-4 fill-current text-[#FFD600] ml-0.5" aria-hidden="true" />
-            </span>
-          </div>
+          {(hasImage || hasVideoFallback) && (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <span className="w-11 h-11 rounded-full bg-black/55 backdrop-blur-xs border border-white/25 flex items-center justify-center shadow-lg transition-transform duration-200 group-hover:scale-105">
+                <Play className="w-4 h-4 fill-current text-[#FFD600] ml-0.5" aria-hidden="true" />
+              </span>
+            </div>
+          )}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center justify-between px-3.5 py-2.5 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white">
             <span className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide">
               <Play className="w-3.5 h-3.5 fill-current text-[#FFD600]" aria-hidden="true" />

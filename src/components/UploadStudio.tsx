@@ -7,6 +7,7 @@ import {
   FolderOpen,
   FolderPlus,
   Image as ImageIcon,
+  Link2,
   Pause,
   Play,
   Plus,
@@ -37,6 +38,7 @@ import {
 } from '../utils/albumLogic';
 import { runChunkedUpload } from '../lib/api';
 import { saveMediaToLocalBackup } from '../lib/localMediaBackup';
+import { LinkImportPanel } from './LinkImportPanel';
 
 interface UploadStudioProps {
   user: UserAccount | null;
@@ -235,6 +237,7 @@ export function UploadStudio({
   const [selectedAlbumId, setSelectedAlbumId] = useState<string>(
     initialAlbumId || albums[0]?.id || ''
   );
+  const [uploadMode, setUploadMode] = useState<'files' | 'link'>('files');
   const [showQuickAlbum, setShowQuickAlbum] = useState(albums.length === 0);
   const [quickTitle, setQuickTitle] = useState('');
   const [quickVisibility, setQuickVisibility] = useState<AlbumVisibility>(
@@ -674,9 +677,10 @@ export function UploadStudio({
           Bulk Upload Studio
         </h1>
         <p className="mt-2 text-sm text-[#526056] dark:text-[#8FA395] max-w-2xl">
-          Drop 5,000+ photos, entire folders, or multi-gigabyte 4K/8K videos at once. Files stream in{' '}
-          {siteSettings.chunkSizeMb} MiB binary chunks across parallel workers with zero size or
-          album file count limits.
+          Drop 5,000+ photos, entire folders, or multi-gigabyte 4K/8K videos at once—or paste a
+          link from another website to import an album, video, or photo directly into your vault.
+          Files stream in {siteSettings.chunkSizeMb} MiB binary chunks with zero size or count
+          limits.
         </p>
       </header>
 
@@ -804,8 +808,101 @@ export function UploadStudio({
         )}
       </section>
 
-      {/* Drag & Drop 5,000+ File / Folder Zone */}
-      <section className="mt-6">
+      {/* Source Mode Switcher: Local Files & Folders vs Import from External Link */}
+      <div
+        role="tablist"
+        aria-label="Upload source mode"
+        className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3"
+      >
+        <button
+          type="button"
+          role="tab"
+          aria-selected={uploadMode === 'files'}
+          onClick={() => setUploadMode('files')}
+          className={`flex items-center justify-between gap-3 px-5 py-3.5 rounded-xl border text-left transition-colors ${
+            uploadMode === 'files'
+              ? 'bg-[#00E676]/12 border-[#00E676] text-[#0C120E] dark:text-[#EEF4F0]'
+              : 'bg-white dark:bg-[#0C110E] border-[#D4DFD7] dark:border-[#1C2A21] text-[#526056] dark:text-[#8FA395] hover:border-[#00E676]/60'
+          }`}
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <span
+              className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                uploadMode === 'files'
+                  ? 'bg-[#00E676] text-[#060807]'
+                  : 'bg-[#F3F6F4] dark:bg-[#111A14] text-[#00A846] dark:text-[#00E676]'
+              }`}
+            >
+              <UploadCloud className="w-4 h-4" aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
+                Upload Files &amp; Folders
+              </p>
+              <p className="text-[11px] text-[#526056] dark:text-[#8FA395] truncate">
+                Drag &amp; drop local photos, videos, or full folders
+              </p>
+            </div>
+          </div>
+          {queue.length > 0 && (
+            <span className="shrink-0 px-2 py-0.5 text-[11px] font-mono-tabular font-semibold bg-[#00E676]/15 text-[#00A846] dark:text-[#00E676] rounded">
+              {queue.length}
+            </span>
+          )}
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          aria-selected={uploadMode === 'link'}
+          onClick={() => setUploadMode('link')}
+          className={`flex items-center justify-between gap-3 px-5 py-3.5 rounded-xl border text-left transition-colors ${
+            uploadMode === 'link'
+              ? 'bg-[#FFD600]/12 border-[#FFD600] text-[#0C120E] dark:text-[#EEF4F0]'
+              : 'bg-white dark:bg-[#0C110E] border-[#D4DFD7] dark:border-[#1C2A21] text-[#526056] dark:text-[#8FA395] hover:border-[#FFD600]/60'
+          }`}
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <span
+              className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                uploadMode === 'link'
+                  ? 'bg-[#FFD600] text-[#060807]'
+                  : 'bg-[#F3F6F4] dark:bg-[#111A14] text-[#D9A700] dark:text-[#FFD600]'
+              }`}
+            >
+              <Link2 className="w-4 h-4" aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
+                Import from Link
+              </p>
+              <p className="text-[11px] text-[#526056] dark:text-[#8FA395] truncate">
+                Paste a link from another site for an album, video, or photo
+              </p>
+            </div>
+          </div>
+          <span className="shrink-0 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider bg-[#FFD600]/15 text-[#B58900] dark:text-[#FFD600] rounded">
+            URL
+          </span>
+        </button>
+      </div>
+
+      {uploadMode === 'link' ? (
+        <LinkImportPanel
+          albums={albums}
+          selectedAlbumId={effectiveAlbumId}
+          concurrency={concurrency}
+          siteSettings={siteSettings}
+          onSelectAlbum={setSelectedAlbumId}
+          onCreateAlbumInline={onCreateAlbumInline}
+          onUploadCompleted={onUploadCompleted}
+          onBatchFinished={onBatchFinished}
+          onOpenAlbum={onOpenAlbum}
+        />
+      ) : (
+        <>
+          {/* Drag & Drop 5,000+ File / Folder Zone */}
+          <section className="mt-6">
         <div
           onDragOver={(e) => {
             e.preventDefault();
@@ -1355,6 +1452,8 @@ export function UploadStudio({
           </div>
         )}
       </section>
+        </>
+      )}
     </div>
   );
 }

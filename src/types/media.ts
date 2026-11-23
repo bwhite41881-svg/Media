@@ -79,6 +79,7 @@ export interface Album {
   coverUrl: string;
   itemCount: number;
   totalBytes: number;
+  viewCount?: number;
   createdAt: string;
   updatedAt: string;
   tags?: string[];
@@ -108,6 +109,7 @@ export interface MediaItem {
   cameraMeta: string;
   tags: string[];
   commentCount?: number;
+  viewCount?: number;
   createdAt: string;
   updatedAt: string;
 }

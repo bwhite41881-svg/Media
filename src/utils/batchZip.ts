@@ -92,8 +92,9 @@ export function buildBatchZipFilename(
 }
 
 /**
- * Safely appends an unlisted album share token to `/api/media/*` URLs without
- * clobbering existing query parameters or external URLs.
+ * Safely appends an unlisted album share token (`?share=...`) to protected
+ * `/api/media/*` and `/api/poster/*` URLs without clobbering existing query
+ * parameters or external URLs.
  */
 export function resolveMediaDownloadUrl(
   mediaUrl: string,
@@ -102,14 +103,16 @@ export function resolveMediaDownloadUrl(
   const trimmedUrl = (mediaUrl || '').trim();
   if (!trimmedUrl) return '';
   const trimmedToken = (shareToken || '').trim();
-  if (!trimmedToken || !trimmedUrl.startsWith('/api/media/')) {
+  const isProtectedPath =
+    trimmedUrl.startsWith('/api/media/') || trimmedUrl.startsWith('/api/poster/');
+  if (!trimmedToken || !isProtectedPath) {
     return trimmedUrl;
   }
-  if (/(?:[?&])token=/.test(trimmedUrl)) {
+  if (/(?:[?&])share=/.test(trimmedUrl)) {
     return trimmedUrl;
   }
   const sep = trimmedUrl.includes('?') ? '&' : '?';
-  return `${trimmedUrl}${sep}token=${encodeURIComponent(trimmedToken)}`;
+  return `${trimmedUrl}${sep}share=${encodeURIComponent(trimmedToken)}`;
 }
 
 /**

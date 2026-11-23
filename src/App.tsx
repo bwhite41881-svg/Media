@@ -557,6 +557,50 @@ function BigBzLeaksApp() {
     showToast('Media deleted');
   };
 
+  const [lastViewedMedia, setLastViewedMedia] = useState<{
+    mediaId: string;
+    viewCount: number;
+  } | null>(null);
+
+  const handleAlbumViewed = useCallback((albumId: string, viewCount: number) => {
+    setExploreAlbums((prev) =>
+      prev.map((a) => (a.id === albumId ? { ...a, viewCount } : a))
+    );
+    setOwnedAlbums((prev) =>
+      prev.map((a) => (a.id === albumId ? { ...a, viewCount } : a))
+    );
+    setSharedAlbums((prev) =>
+      prev.map((a) => (a.id === albumId ? { ...a, viewCount } : a))
+    );
+    setAlbumDetail((prev) =>
+      prev.album?.id === albumId
+        ? { ...prev, album: { ...prev.album, viewCount } }
+        : prev
+    );
+  }, []);
+
+  const handleMediaViewed = useCallback((mediaId: string, viewCount: number) => {
+    setLastViewedMedia({ mediaId, viewCount });
+    setExploreMedia((prev) =>
+      prev.map((m) => (m.id === mediaId ? { ...m, viewCount } : m))
+    );
+    setAlbumDetail((prev) => ({
+      ...prev,
+      media: prev.media.map((m) => (m.id === mediaId ? { ...m, viewCount } : m)),
+    }));
+    setLightboxState((prev) =>
+      prev
+        ? {
+            ...prev,
+            item: prev.item.id === mediaId ? { ...prev.item, viewCount } : prev.item,
+            collection: prev.collection.map((m) =>
+              m.id === mediaId ? { ...m, viewCount } : m
+            ),
+          }
+        : null
+    );
+  }, []);
+
   const shareModalAlbum = shareModalAlbumId
     ? ownedAlbums.find((a) => a.id === shareModalAlbumId) ||
       (albumDetail.album?.id === shareModalAlbumId ? albumDetail.album : null)
@@ -665,6 +709,7 @@ function BigBzLeaksApp() {
             onChangeCover={(album) => setCoverModalAlbumId(album.id)}
             onMessageUser={handleMessageUser}
             onNotify={showToast}
+            onAlbumViewed={handleAlbumViewed}
             onBatchDeleteMedia={async (mediaIds) => {
               for (const id of mediaIds) {
                 await api.deleteMedia(id);
@@ -751,6 +796,9 @@ function BigBzLeaksApp() {
               else url.searchParams.delete('share');
               window.history.replaceState({}, '', url.toString());
             }}
+            onNotify={showToast}
+            onAlbumViewed={handleAlbumViewed}
+            lastViewedMedia={lastViewedMedia}
           />
         )}
 
@@ -883,6 +931,7 @@ function BigBzLeaksApp() {
             showToast('Album cover updated');
           }}
           onDeleteMedia={handleDeleteMedia}
+          onMediaViewed={handleMediaViewed}
         />
       )}
 

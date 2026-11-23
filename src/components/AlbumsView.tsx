@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import {
+  Eye,
   FolderPlus,
   Globe,
   Image as ImageIcon,
@@ -18,7 +19,9 @@ import {
   filterAlbumsByQuery,
   formatBytes,
   formatRelativeDate,
+  type SearchMatchMode,
 } from '../utils/albumLogic';
+import { formatViewCount } from '../utils/viewCounts';
 import { MediaSurface } from './MediaSurface';
 
 interface AlbumsViewProps {
@@ -79,16 +82,17 @@ export function AlbumsView({
 }: AlbumsViewProps) {
   const [filter, setFilter] = useState<'all' | AlbumVisibility>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchMode, setSearchMode] = useState<SearchMatchMode>('all');
   const [changingId, setChangingId] = useState<string | null>(null);
 
   const filteredOwned = useMemo(
-    () => filterAlbumsByQuery(ownedAlbums, searchQuery, filter),
-    [ownedAlbums, searchQuery, filter]
+    () => filterAlbumsByQuery(ownedAlbums, searchQuery, filter, searchMode),
+    [ownedAlbums, searchQuery, filter, searchMode]
   );
 
   const filteredShared = useMemo(
-    () => filterAlbumsByQuery(sharedAlbums, searchQuery),
-    [sharedAlbums, searchQuery]
+    () => filterAlbumsByQuery(sharedAlbums, searchQuery, 'all', searchMode),
+    [sharedAlbums, searchQuery, searchMode]
   );
 
   const availableTags = useMemo(
@@ -97,6 +101,13 @@ export function AlbumsView({
   );
 
   const hasActiveSearch = searchQuery.trim().length > 0;
+
+  const searchPlaceholder =
+    searchMode === 'title'
+      ? 'Filter your albums by title...'
+      : searchMode === 'tag'
+        ? 'Filter your albums by tag (e.g. 4K, Private)...'
+        : 'Search albums by title, #tag, or metadata...';
 
   const handleToggleTag = (tag: string) => {
     const token = `#${tag}`;
@@ -166,41 +177,105 @@ export function AlbumsView({
         </button>
       </div>
 
-      {/* Filter & Search Toolbar */}
-      <div className="mt-6 space-y-3">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-1">
-            <div className="relative flex-1 max-w-md">
-              <Search
-                className="w-4 h-4 text-[#526056] dark:text-[#8FA395] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-                aria-hidden="true"
-              />
-              <input
-                id="albums-search-input"
-                type="text"
-                role="searchbox"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                aria-label="Search your albums by title or tag"
-                placeholder="Search albums by title or #tag..."
-                className="w-full pl-10 pr-9 py-2 text-sm bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0] placeholder:text-[#6A7B6F] dark:placeholder:text-[#6E8575] focus:border-[#00E676] dark:focus:border-[#FFD600] focus:outline-none"
-              />
-              {hasActiveSearch && (
+      {/* High-Tech Filter & Search Panel */}
+      <section
+        aria-label="Search and filter your albums"
+        className="mt-7 tech-panel rounded-2xl p-4 sm:p-5 space-y-3.5"
+      >
+        <div className="flex flex-col md:flex-row md:items-center gap-3">
+          <div className="relative flex-1">
+            <label htmlFor="albums-search-input" className="sr-only">
+              Search your albums by title, tags, or metadata
+            </label>
+            <Search
+              className="w-4 h-4 text-[#00A846] dark:text-[#00E676] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+              aria-hidden="true"
+            />
+            <input
+              id="albums-search-input"
+              type="text"
+              role="searchbox"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape' && hasActiveSearch) {
+                  setSearchQuery('');
+                }
+              }}
+              aria-label="Search your albums by title, tags, or metadata"
+              placeholder={searchPlaceholder}
+              className="w-full pl-10 pr-10 py-2.5 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#1F3126] rounded-xl text-[#0C120E] dark:text-[#EEF4F0] placeholder:text-[#6A7B6F] dark:placeholder:text-[#687E70] focus:border-[#00E676] dark:focus:border-[#FFD600] focus:outline-none transition-colors"
+            />
+            {hasActiveSearch && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear album search"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-[#EEF4F0] rounded-md"
+              >
+                <X className="w-4 h-4" aria-hidden="true" />
+              </button>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between md:justify-end gap-3 shrink-0">
+            <div
+              role="group"
+              aria-label="Album search filter field"
+              className="inline-flex items-center p-1 bg-[#E8EFEA] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#1C2A21] rounded-lg"
+            >
+              {(
+                [
+                  { id: 'all', label: 'All' },
+                  { id: 'title', label: 'Titles' },
+                  { id: 'tag', label: 'Tags' },
+                ] as const
+              ).map((mode) => (
+                <button
+                  key={mode.id}
+                  type="button"
+                  onClick={() => setSearchMode(mode.id)}
+                  aria-pressed={searchMode === mode.id}
+                  className={`px-2.5 py-1 text-xs font-medium rounded-md whitespace-nowrap shrink-0 transition-colors ${
+                    searchMode === mode.id
+                      ? 'bg-white dark:bg-[#132118] text-[#00A846] dark:text-[#FFD600] shadow-xs'
+                      : 'text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white'
+                  }`}
+                >
+                  {mode.label}
+                </button>
+              ))}
+            </div>
+
+            {hasActiveSearch && (
+              <div className="flex items-center gap-2.5 shrink-0">
+                <p
+                  data-testid="albums-search-summary"
+                  aria-live="polite"
+                  className="font-mono-tabular text-xs text-[#526056] dark:text-[#8FA395]"
+                >
+                  {filteredOwned.length} of {ownedAlbums.length}{' '}
+                  {ownedAlbums.length === 1 ? 'album' : 'albums'}
+                  {sharedAlbums.length > 0 ? ` · ${filteredShared.length} shared` : ''}
+                </p>
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  aria-label="Clear album search"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-[#EEF4F0] rounded-md"
+                  className="text-xs font-semibold text-[#E11D32] dark:text-[#FF2A3C] hover:underline"
                 >
-                  <X className="w-4 h-4" aria-hidden="true" />
+                  Clear
                 </button>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
+        </div>
 
+        <div className="pt-3 border-t border-[#E0E9E2] dark:border-[#17241C] flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <div
               role="group"
               aria-label="Filter albums by privacy visibility"
-              className="inline-flex items-center p-1 bg-[#E8EFEA] dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-lg overflow-x-auto max-w-full self-start sm:self-auto"
+              className="inline-flex items-center p-1 bg-[#E8EFEA] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#1C2A21] rounded-lg overflow-x-auto max-w-full"
             >
               {(
                 [
@@ -216,7 +291,7 @@ export function AlbumsView({
                   onClick={() => setFilter(tab.id)}
                   className={`px-3 py-1.5 text-xs font-medium rounded-md whitespace-nowrap shrink-0 tabular-nums transition-colors ${
                     filter === tab.id
-                      ? 'bg-white dark:bg-[#132118] text-[#0C120E] dark:text-[#FFD600] shadow-xs'
+                      ? 'bg-white dark:bg-[#132118] text-[#00A846] dark:text-[#FFD600] shadow-xs'
                       : 'text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white'
                   }`}
                 >
@@ -224,48 +299,39 @@ export function AlbumsView({
                 </button>
               ))}
             </div>
+
+            {availableTags.length > 0 && (
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                <span className="font-mono-tabular text-[11px] uppercase tracking-wider text-[#6A7B6F] dark:text-[#6E8575]">
+                  Tags:
+                </span>
+                {availableTags.map((tag) => {
+                  const isSelected = searchQuery.trim().toLowerCase() === `#${tag.toLowerCase()}`;
+                  return (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => handleToggleTag(tag)}
+                      aria-pressed={isSelected}
+                      className={`font-mono-tabular transition-colors ${
+                        isSelected
+                          ? 'text-[#00A846] dark:text-[#FFD600] font-semibold underline underline-offset-4'
+                          : 'text-[#526056] dark:text-[#8FA395] hover:text-[#00A846] dark:hover:text-[#00E676]'
+                      }`}
+                    >
+                      #{tag}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <p className="font-mono-tabular text-xs text-[#526056] dark:text-[#8FA395] shrink-0">
-            {hasActiveSearch
-              ? `Showing ${filteredOwned.length} of ${ownedAlbums.length} albums`
-              : `Total archived: ${formatBytes(user.totalBytesUploaded)} · Unlimited files & size`}
+            Total archived: {formatBytes(user.totalBytesUploaded)} · Unlimited storage
           </p>
         </div>
-
-        {availableTags.length > 0 && (
-          <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1.5 text-xs">
-            <span className="text-[#6A7B6F] dark:text-[#6E8575] font-medium">Tags:</span>
-            {availableTags.map((tag) => {
-              const isSelected = searchQuery.trim().toLowerCase() === `#${tag.toLowerCase()}`;
-              return (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => handleToggleTag(tag)}
-                  aria-pressed={isSelected}
-                  className={`font-mono-tabular transition-colors ${
-                    isSelected
-                      ? 'text-[#00A846] dark:text-[#FFD600] font-semibold underline underline-offset-4'
-                      : 'text-[#526056] dark:text-[#8FA395] hover:text-[#00A846] dark:hover:text-[#FFD600]'
-                  }`}
-                >
-                  #{tag}
-                </button>
-              );
-            })}
-            {hasActiveSearch && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery('')}
-                className="text-xs font-medium text-[#E11D32] dark:text-[#FF4D5E] hover:underline"
-              >
-                Clear search
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+      </section>
 
       {/* Owned Albums Grid */}
       {loading ? (
@@ -317,7 +383,7 @@ export function AlbumsView({
           {filteredOwned.map((album) => (
             <article
               key={album.id}
-              className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl overflow-hidden flex flex-col"
+              className="tech-panel rounded-2xl overflow-hidden flex flex-col hover:border-[#00E676]/55 dark:hover:border-[#FFD600]/55 transition-colors"
             >
               <button
                 type="button"
@@ -360,12 +426,19 @@ export function AlbumsView({
                     </p>
                   )}
 
-                  <p className="mt-2.5 text-xs text-[#6A7B6F] dark:text-[#6E8575]">
-                    Updated {formatRelativeDate(album.updatedAt)}
-                    {album.members && album.members.length > 0
-                      ? ` · ${album.members.length} ${album.members.length === 1 ? 'collaborator' : 'collaborators'}`
-                      : ''}
-                  </p>
+                  <div className="mt-2.5 flex flex-wrap items-center gap-2 text-xs text-[#6A7B6F] dark:text-[#6E8575]">
+                    <span className="inline-flex items-center gap-1 font-mono-tabular text-[#00A846] dark:text-[#00E676]">
+                      <Eye className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>{formatViewCount(album.viewCount)}</span>
+                    </span>
+                    <span aria-hidden="true">·</span>
+                    <span>
+                      Updated {formatRelativeDate(album.updatedAt)}
+                      {album.members && album.members.length > 0
+                        ? ` · ${album.members.length} ${album.members.length === 1 ? 'collaborator' : 'collaborators'}`
+                        : ''}
+                    </span>
+                  </div>
 
                   {album.tags && album.tags.length > 0 && (
                     <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] font-mono-tabular text-[#6A7B6F] dark:text-[#6E8575]">
@@ -506,12 +579,17 @@ export function AlbumsView({
                     <p className="font-serif-editorial text-lg font-medium text-[#0C120E] dark:text-[#EEF4F0]">
                       {album.title}
                     </p>
-                    <div className="mt-1.5 flex items-center gap-2 text-xs text-[#526056] dark:text-[#8FA395]">
+                    <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-[#526056] dark:text-[#8FA395]">
                       <span>By {album.ownerName}</span>
                       <span aria-hidden="true">·</span>
                       <span className="capitalize">{album.viewerRole}</span>
                       <span aria-hidden="true">·</span>
                       <span className="font-mono-tabular">{album.itemCount.toLocaleString()} items</span>
+                      <span aria-hidden="true">·</span>
+                      <span className="inline-flex items-center gap-1 font-mono-tabular text-[#00A846] dark:text-[#00E676]">
+                        <Eye className="w-3 h-3" aria-hidden="true" />
+                        <span>{formatViewCount(album.viewCount)}</span>
+                      </span>
                     </div>
                   </div>
                 </button>

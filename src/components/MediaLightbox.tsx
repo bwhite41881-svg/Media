@@ -7,6 +7,7 @@ import {
   Copy,
   Download,
   Edit3,
+  Eye,
   Image as ImageIcon,
   MessageSquare,
   Send,
@@ -22,6 +23,7 @@ import {
   mergeUniqueById,
   validateCommentBody,
 } from '../utils/albumLogic';
+import { formatViewCount } from '../utils/viewCounts';
 import { api, resolveProtectedUrl } from '../lib/api';
 import { deleteCommentFromFirestore, syncCommentToFirestore } from '../lib/firestoreSync';
 import { getLocalMediaBackup } from '../lib/localMediaBackup';
@@ -46,6 +48,7 @@ interface MediaLightboxProps {
   ) => Promise<void>;
   onSetAlbumCover?: (albumId: string, coverUrl: string) => Promise<void>;
   onDeleteMedia: (mediaId: string) => Promise<void>;
+  onMediaViewed?: (mediaId: string, viewCount: number) => void;
 }
 
 export function MediaLightbox({
@@ -63,6 +66,7 @@ export function MediaLightbox({
   onUpdateMedia,
   onSetAlbumCover,
   onDeleteMedia,
+  onMediaViewed,
 }: MediaLightboxProps) {
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(item.title);
@@ -76,7 +80,10 @@ export function MediaLightbox({
   const [coverSaved, setCoverSaved] = useState(false);
   const [localFallbackUrl, setLocalFallbackUrl] = useState<string | null>(null);
   const [mediaLoadError, setMediaLoadError] = useState(false);
+  const [liveViewCount, setLiveViewCount] = useState<number>(Math.max(0, Number(item.viewCount) || 0));
   const fallbackAttemptedRef = useRef<string | null>(null);
+  const onMediaViewedRef = useRef(onMediaViewed);
+  onMediaViewedRef.current = onMediaViewed;
 
   // Real-time comments state
   const [comments, setComments] = useState<MediaComment[]>([]);
@@ -104,9 +111,26 @@ export function MediaLightbox({
     setCameraMeta(item.cameraMeta);
     setTagsText(item.tags.join(', '));
     setTargetAlbumId(item.albumId);
+    setLiveViewCount(Math.max(0, Number(item.viewCount) || 0));
     setCommentDraft('');
     setCommentError('');
   }, [item]);
+
+  // Record a view whenever a photo or video is opened or stepped to in the lightbox
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .recordMediaView(item.id, shareToken || undefined)
+      .then((res) => {
+        if (cancelled) return;
+        setLiveViewCount(res.viewCount);
+        onMediaViewedRef.current?.(item.id, res.viewCount);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [item.id, shareToken]);
 
   useEffect(() => {
     return () => {
@@ -338,6 +362,16 @@ export function MediaLightbox({
               )}
 
               <dl className="mt-6 pt-6 border-t border-white/10 space-y-3 text-xs">
+                <div className="flex justify-between gap-4">
+                  <dt className="text-white/55">Views</dt>
+                  <dd
+                    data-testid="lightbox-view-count"
+                    className="inline-flex items-center gap-1.5 font-mono-tabular font-medium text-[#00E676]"
+                  >
+                    <Eye className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>{formatViewCount(liveViewCount)}</span>
+                  </dd>
+                </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-white/55">File Size</dt>
                   <dd className="font-mono-tabular text-white">{formatBytes(item.fileSize)}</dd>

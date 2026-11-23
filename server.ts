@@ -1,8 +1,11 @@
 import crypto from 'node:crypto';
+import dns from 'node:dns/promises';
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
+import { Readable } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
 import { ZipArchive, type ArchiverError } from 'archiver';
 import cookieParser from 'cookie-parser';
 import express, { type Request, type Response } from 'express';
@@ -50,7 +53,17 @@ import {
   writeMediaSidecarSync,
 } from './src/utils/uploadPersistence.ts';
 import { validatePreferredMediaId } from './src/utils/backupSync.ts';
+import {
+  detectMediaKindFromUrlOrMime,
+  extractMediaCandidatesFromHtml,
+  inferFilenameFromUrl,
+  isBlockedIpAddress,
+  validateExternalImportUrl,
+  type RemoteInspectResult,
+  type RemoteMediaCandidate,
+} from './src/utils/remoteImport.ts';
 import { generateVideoPoster } from './src/utils/videoThumbnail.ts';
+import { shouldRecordView } from './src/utils/viewCounts.ts';
 
 const BOOTSTRAP_ADMIN_EMAILS = new Set(['puffthafire509@gmail.com']);
 
@@ -618,6 +631,7 @@ function toPublicAlbum(
     coverUrl: album.coverUrl,
     itemCount: album.itemCount,
     totalBytes: album.totalBytes,
+    viewCount: Math.max(0, Number(album.viewCount) || 0),
     createdAt: album.createdAt,
     updatedAt: album.updatedAt,
     tags: collectAlbumTags(album),
@@ -673,6 +687,7 @@ function toPublicMedia(item: StoredMedia, shareToken?: string): MediaItem {
     cameraMeta: item.cameraMeta,
     tags: item.tags,
     commentCount: (db.comments[item.id] || []).length,
+    viewCount: Math.max(0, Number(item.viewCount) || 0),
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
   };
@@ -868,6 +883,477 @@ async function startServer(): Promise<void> {
     res.json({ ok: true });
   });
 
+  // Prevent stale browser/proxy caching of dynamic API JSON responses
+  app.use('/api', (req, res, next) => {
+    const p = req.path;
+    const isBinaryAsset =
+      p.startsWith('/media/') ||
+      p.startsWith('/poster/') ||
+      p.startsWith('/covers/') ||
+      p.startsWith('/avatars/');
+    if (!isBinaryAsset) {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+    }
+    next();
+  });
+
+  // Use JSON parser ONLY on non-binary routes (chunk PUT streams raw bytes directly to disk!)
+  app.use((req, res, next) => {
+    if (req.path.includes('/api/uploads/') && req.path.includes('/chunk/')) {
+      return next();
+    }
+    return express.json({ limit: '12mb' })(req, res, next);
+  });
+
+  // =========================================================================
+  // IMPORT ALBUM / VIDEO / PHOTO FROM EXTERNAL LINK (SSRF-HARDENED)
+  // =========================================================================
+  class ExternalImportError extends Error {
+    status: number;
+    constructor(status: number, message: string) {
+      super(message);
+      this.status = status;
+    }
+  }
+
+  async function verifyHostResolvesToPublicIp(hostname: string): Promise<void> {
+    const cleanHost = hostname.replace(/^\[|\]$/g, '').toLowerCase();
+    // If already an IP literal, validateExternalImportUrl already checked it, double check here.
+    if (/^\d{1,3}(\.\d{1,3}){3}$/.test(cleanHost) || cleanHost.includes(':')) {
+      if (isBlockedIpAddress(cleanHost)) {
+        throw new ExternalImportError(400, 'Private, loopback, or local network addresses cannot be imported.');
+      }
+      return;
+    }
+    let records: Array<{ address: string; family: number }>;
+    try {
+      records = await dns.lookup(cleanHost, { all: true });
+    } catch {
+      throw new ExternalImportError(400, `Could not resolve website domain "${cleanHost}". Please verify the link.`);
+    }
+    if (!records || records.length === 0) {
+      throw new ExternalImportError(400, `Could not resolve website domain "${cleanHost}".`);
+    }
+    for (const rec of records) {
+      if (isBlockedIpAddress(rec.address)) {
+        throw new ExternalImportError(400, 'Links pointing to private or local network addresses cannot be imported.');
+      }
+    }
+  }
+
+  async function safeFetchExternal(
+    rawUrl: string,
+    options?: {
+      method?: 'GET' | 'HEAD';
+      accept?: string;
+      referer?: string;
+      timeoutMs?: number;
+      maxRedirects?: number;
+    }
+  ): Promise<{ response: globalThis.Response; finalUrl: string }> {
+    const method = options?.method || 'GET';
+    const maxRedirects = options?.maxRedirects ?? 5;
+    const timeoutMs = options?.timeoutMs ?? 30_000;
+    let currentUrl = rawUrl;
+
+    for (let hop = 0; hop <= maxRedirects; hop++) {
+      const validation = validateExternalImportUrl(currentUrl);
+      if (!validation.ok || !validation.url) {
+        throw new ExternalImportError(400, validation.error || 'Invalid external URL.');
+      }
+      await verifyHostResolvesToPublicIp(validation.url.hostname);
+
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      let res: globalThis.Response;
+      try {
+        const headers: Record<string, string> = {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+          Accept: options?.accept || 'text/html,application/xhtml+xml,image/*,video/*,*/*;q=0.8',
+        };
+        if (options?.referer) {
+          headers.Referer = options.referer;
+        }
+        res = await fetch(validation.url.toString(), {
+          method,
+          redirect: 'manual',
+          signal: controller.signal,
+          headers,
+        });
+      } catch (err) {
+        clearTimeout(timer);
+        const isAbort = err instanceof Error && err.name === 'AbortError';
+        throw new ExternalImportError(
+          isAbort ? 504 : 502,
+          isAbort
+            ? 'The remote website took too long to respond.'
+            : 'Could not reach the remote website. Check the link and try again.'
+        );
+      }
+      clearTimeout(timer);
+
+      if (res.status >= 300 && res.status < 400) {
+        const location = res.headers.get('location');
+        await res.body?.cancel().catch(() => undefined);
+        if (!location) {
+          throw new ExternalImportError(502, 'Remote website returned an invalid redirect.');
+        }
+        try {
+          currentUrl = new URL(location, validation.url).toString();
+        } catch {
+          throw new ExternalImportError(400, 'Remote website redirected to an invalid URL.');
+        }
+        continue;
+      }
+
+      return { response: res, finalUrl: validation.url.toString() };
+    }
+
+    throw new ExternalImportError(400, 'Too many redirects while loading the external link.');
+  }
+
+  async function readLimitedResponseText(res: globalThis.Response, maxBytes: number): Promise<string> {
+    if (!res.body) return '';
+    const reader = res.body.getReader();
+    const chunks: Uint8Array[] = [];
+    let total = 0;
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (!value) continue;
+        const remaining = maxBytes - total;
+        if (remaining <= 0) {
+          await reader.cancel().catch(() => undefined);
+          break;
+        }
+        if (value.byteLength > remaining) {
+          chunks.push(value.subarray(0, remaining));
+          total += remaining;
+          await reader.cancel().catch(() => undefined);
+          break;
+        }
+        chunks.push(value);
+        total += value.byteLength;
+      }
+    } finally {
+      reader.releaseLock();
+    }
+    const merged = new Uint8Array(total);
+    let offset = 0;
+    for (const chunk of chunks) {
+      merged.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+    return new TextDecoder('utf-8', { fatal: false }).decode(merged);
+  }
+
+  async function inspectSingleExternalUrl(rawUrl: string): Promise<RemoteInspectResult> {
+    const { response, finalUrl } = await safeFetchExternal(rawUrl, {
+      method: 'GET',
+      timeoutMs: 25_000,
+    });
+
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new ExternalImportError(
+        400,
+        `Remote site returned HTTP ${response.status} when scanning this link.`
+      );
+    }
+
+    const contentType = response.headers.get('content-type') || '';
+    const contentDisposition = response.headers.get('content-disposition') || '';
+    const contentLengthHeader = response.headers.get('content-length');
+    const parsedLength = contentLengthHeader ? Number(contentLengthHeader) : undefined;
+    const fileSize =
+      typeof parsedLength === 'number' && Number.isFinite(parsedLength) && parsedLength > 0
+        ? parsedLength
+        : undefined;
+
+    const directMedia = detectMediaKindFromUrlOrMime(contentType, finalUrl);
+    const isHtml =
+      contentType.toLowerCase().includes('text/html') ||
+      contentType.toLowerCase().includes('application/xhtml+xml');
+
+    if (directMedia && !isHtml) {
+      await response.body?.cancel().catch(() => undefined);
+      const { fileName, title } = inferFilenameFromUrl(
+        finalUrl,
+        directMedia.mimeType,
+        undefined,
+        contentDisposition
+      );
+      const candidate: RemoteMediaCandidate = {
+        url: finalUrl,
+        kind: directMedia.kind,
+        title,
+        fileName,
+        mimeType: directMedia.mimeType,
+        fileSize,
+        previewUrl: directMedia.kind === 'photo' ? finalUrl : undefined,
+      };
+      return {
+        mode: 'direct',
+        sourceUrl: finalUrl,
+        pageTitle: title,
+        pageDescription: '',
+        items: [candidate],
+      };
+    }
+
+    if (isHtml) {
+      // Read up to 2 MiB of HTML safely to discover photos and videos on the external gallery/album page
+      const html = await readLimitedResponseText(response, 2 * 1024 * 1024);
+      const parsed = extractMediaCandidatesFromHtml(html, finalUrl, 200);
+      if (parsed.items.length === 0) {
+        throw new ExternalImportError(
+          400,
+          'No importable photos or videos were found on that page. Some sites load media only after login or via protected scripts—try pasting a direct image or video URL instead.'
+        );
+      }
+      return parsed;
+    }
+
+    await response.body?.cancel().catch(() => undefined);
+    throw new ExternalImportError(
+      400,
+      `Unsupported link type (${contentType.split(';')[0] || 'unknown'}). Paste a direct photo/video link or a public gallery webpage.`
+    );
+  }
+
+  app.post('/api/import/inspect', async (req, res) => {
+    const user = getSessionUser(req);
+    if (!user) return res.status(401).json({ error: 'Please sign in before importing from a link.' });
+
+    const singleUrl = typeof req.body?.url === 'string' ? req.body.url.trim() : '';
+    const batchUrls: string[] = Array.isArray(req.body?.urls)
+      ? req.body.urls.map((u: unknown) => String(u || '').trim()).filter(Boolean)
+      : singleUrl
+        ? [singleUrl]
+        : [];
+
+    if (batchUrls.length === 0) {
+      return res.status(400).json({ error: 'Please paste at least one link to scan.' });
+    }
+    if (batchUrls.length > 50) {
+      return res.status(400).json({ error: 'You can scan up to 50 links at once.' });
+    }
+
+    try {
+      if (batchUrls.length === 1) {
+        const result = await inspectSingleExternalUrl(batchUrls[0]);
+        return res.json(result);
+      }
+
+      // Multi-link batch mode: inspect each URL and combine discovered items
+      const combinedItems: RemoteMediaCandidate[] = [];
+      const seenUrls = new Set<string>();
+      const errors: string[] = [];
+      let firstTitle = '';
+
+      for (const link of batchUrls) {
+        try {
+          const single = await inspectSingleExternalUrl(link);
+          if (!firstTitle && single.pageTitle) firstTitle = single.pageTitle;
+          for (const item of single.items) {
+            if (!seenUrls.has(item.url) && combinedItems.length < 200) {
+              seenUrls.add(item.url);
+              combinedItems.push(item);
+            }
+          }
+        } catch (err) {
+          errors.push(err instanceof Error ? err.message : `Failed to scan ${link}`);
+        }
+      }
+
+      if (combinedItems.length === 0) {
+        return res.status(400).json({
+          error: errors[0] || 'No valid photos or videos were found in the pasted links.',
+        });
+      }
+
+      const batchResult: RemoteInspectResult = {
+        mode: 'batch_links',
+        sourceUrl: batchUrls[0],
+        pageTitle: firstTitle || 'Imported Link Collection',
+        pageDescription: `Imported from ${batchUrls.length} external links`,
+        items: combinedItems,
+        skippedCount: errors.length,
+      };
+      return res.json(batchResult);
+    } catch (err) {
+      if (err instanceof ExternalImportError) {
+        return res.status(err.status).json({ error: err.message });
+      }
+      console.error('External link inspect error:', err);
+      return res.status(500).json({ error: 'Could not scan that link right now.' });
+    }
+  });
+
+  app.post('/api/import/url', async (req, res) => {
+    const user = getSessionUser(req);
+    if (!user) return res.status(401).json({ error: 'Please sign in before importing media.' });
+
+    const albumId = String(req.body?.albumId || '').trim();
+    const album = db.albums[albumId];
+    if (!album) return res.status(404).json({ error: 'Destination album was not found.' });
+
+    const members = db.members[album.id] || [];
+    const decision = canAccessAlbum(album, user, members);
+    if (!decision.canUpload) {
+      return res.status(403).json({ error: 'You do not have upload permission for this album.' });
+    }
+
+    const rawUrl = typeof req.body?.url === 'string' ? req.body.url.trim() : '';
+    const rawSourceUrl = typeof req.body?.sourceUrl === 'string' ? req.body.sourceUrl.trim() : '';
+    const requestedTitle = typeof req.body?.title === 'string' ? req.body.title.trim().slice(0, 140) : '';
+    const requestedCaption = typeof req.body?.caption === 'string' ? req.body.caption.trim().slice(0, 600) : '';
+    const requestedTags = sanitizeTags(Array.isArray(req.body?.tags) ? req.body.tags.map(String) : []);
+
+    let safeReferer: string | undefined;
+    if (rawSourceUrl) {
+      const refCheck = validateExternalImportUrl(rawSourceUrl);
+      if (refCheck.ok && refCheck.url) {
+        safeReferer = refCheck.url.toString();
+      }
+    }
+
+    const tempId = generateSafeId('imp');
+    const resolvedTmpRoot = path.resolve(TMP_DIR);
+    const tempPath = path.resolve(resolvedTmpRoot, `${tempId}.part`);
+    if (!tempPath.startsWith(resolvedTmpRoot + path.sep)) {
+      return res.status(400).json({ error: 'Invalid temporary path.' });
+    }
+
+    try {
+      const { response, finalUrl } = await safeFetchExternal(rawUrl, {
+        method: 'GET',
+        accept: 'image/*,video/*,*/*;q=0.8',
+        referer: safeReferer,
+        timeoutMs: 120_000,
+      });
+
+      if (!response.ok || !response.body) {
+        await response.body?.cancel().catch(() => undefined);
+        throw new ExternalImportError(
+          400,
+          `Remote site returned HTTP ${response.status} while downloading this media file.`
+        );
+      }
+
+      const contentType = response.headers.get('content-type') || '';
+      const contentDisposition = response.headers.get('content-disposition') || '';
+      const detected = detectMediaKindFromUrlOrMime(contentType, finalUrl);
+      if (!detected || contentType.toLowerCase().includes('text/html')) {
+        await response.body?.cancel().catch(() => undefined);
+        throw new ExternalImportError(
+          400,
+          `That link did not return a direct photo or video file (${contentType.split(';')[0] || 'unknown type'}).`
+        );
+      }
+
+      const { fileName, title } = inferFilenameFromUrl(
+        finalUrl,
+        detected.mimeType,
+        requestedTitle || undefined,
+        contentDisposition
+      );
+
+      const mediaId = generateSafeId('med');
+      const rawExt = path.extname(fileName).replace(/[^a-zA-Z0-9.]/g, '').slice(0, 12);
+      const diskFileName = `${mediaId}${rawExt || ''}`;
+
+      const resolvedUploadsRoot = path.resolve(UPLOADS_DIR);
+      const finalPath = path.resolve(resolvedUploadsRoot, diskFileName);
+      if (!finalPath.startsWith(resolvedUploadsRoot + path.sep)) {
+        await response.body?.cancel().catch(() => undefined);
+        throw new ExternalImportError(400, 'Invalid destination filename.');
+      }
+
+      // Stream remote media body directly to disk without buffering in RAM
+      const webStream = response.body as unknown as Parameters<typeof Readable.fromWeb>[0];
+      await pipeline(Readable.fromWeb(webStream), fs.createWriteStream(tempPath));
+
+      const stat = await fsp.stat(tempPath);
+      if (!stat.size || stat.size <= 0) {
+        await safeUnlink(tempPath);
+        throw new ExternalImportError(400, 'Remote file was empty (0 bytes).');
+      }
+
+      await fsp.rename(tempPath, finalPath);
+
+      const now = new Date().toISOString();
+      const mediaUrl = `/api/media/${mediaId}`;
+      const posterUrl = detected.kind === 'photo' ? mediaUrl : '';
+      let sourceHost = '';
+      try {
+        sourceHost = new URL(finalUrl).hostname.replace(/^www\./, '');
+      } catch {
+        sourceHost = '';
+      }
+
+      const mediaItem: StoredMedia = {
+        id: mediaId,
+        albumId: album.id,
+        albumVisibility: album.visibility,
+        ownerId: user.uid,
+        ownerName: user.displayName,
+        title: requestedTitle || title,
+        caption: requestedCaption,
+        kind: detected.kind,
+        mimeType: detected.mimeType,
+        fileName,
+        fileSize: stat.size,
+        mediaUrl,
+        posterUrl,
+        width: 0,
+        height: 0,
+        durationSec: 0,
+        cameraMeta: sourceHost ? `Imported from ${sourceHost}` : 'Imported from external link',
+        tags: requestedTags.length > 0 ? requestedTags : ['imported'],
+        viewCount: 0,
+        createdAt: now,
+        updatedAt: now,
+        diskFileName,
+      };
+
+      db.media[mediaId] = mediaItem;
+
+      if (mediaItem.kind === 'video') {
+        await ensureVideoPoster(mediaItem);
+      }
+
+      album.itemCount = (album.itemCount || 0) + 1;
+      album.totalBytes = (album.totalBytes || 0) + (mediaItem.fileSize || 0);
+      if (!album.coverUrl && (mediaItem.posterUrl || detected.kind === 'photo')) {
+        album.coverUrl = mediaItem.posterUrl || mediaUrl;
+      }
+      album.updatedAt = now;
+      user.totalBytesUploaded = (user.totalBytesUploaded || 0) + (mediaItem.fileSize || 0);
+
+      writeMediaSidecarSync(UPLOADS_DIR, mediaItem);
+      persistDb();
+
+      return res.status(201).json({
+        media: toPublicMedia(mediaItem),
+        album: toPublicAlbum(album, {
+          includeShareToken: album.ownerId === user.uid,
+          viewerRole: album.ownerId === user.uid ? 'owner' : 'contributor',
+        }),
+      });
+    } catch (err) {
+      await safeUnlink(tempPath);
+      if (err instanceof ExternalImportError) {
+        return res.status(err.status).json({ error: err.message });
+      }
+      console.error('External URL import error:', err);
+      return res.status(500).json({ error: 'Failed to import media from the external link.' });
+    }
+  });
+
   // =========================================================================
   // REAL-TIME WEBSOCKET HUB (LIVE CHAT, PRESENCE & LIVE MEDIA COMMENTS)
   // =========================================================================
@@ -982,29 +1468,6 @@ async function startServer(): Promise<void> {
     ws.on('error', () => {
       // cleanup happens in close handler
     });
-  });
-
-  // Prevent stale browser/proxy caching of dynamic API JSON responses
-  app.use('/api', (req, res, next) => {
-    const p = req.path;
-    const isBinaryAsset =
-      p.startsWith('/media/') ||
-      p.startsWith('/poster/') ||
-      p.startsWith('/covers/') ||
-      p.startsWith('/avatars/');
-    if (!isBinaryAsset) {
-      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-    }
-    next();
-  });
-
-  // Use JSON parser ONLY on non-binary routes (chunk PUT streams raw bytes directly to disk!)
-  app.use((req, res, next) => {
-    if (req.path.includes('/api/uploads/') && req.path.includes('/chunk/')) {
-      return next();
-    }
-    return express.json({ limit: '12mb' })(req, res, next);
   });
 
   // =========================================================================
@@ -1637,6 +2100,7 @@ Node.js host (Render, Railway, Fly.io, DigitalOcean, VPS, or cPanel Node.js App)
       coverUrl: '',
       itemCount: 0,
       totalBytes: 0,
+      viewCount: 0,
       tags,
       createdAt: now,
       updatedAt: now,
@@ -1699,6 +2163,89 @@ Node.js host (Render, Railway, Fly.io, DigitalOcean, VPS, or cPanel Node.js App)
       media: items,
       members: isOwner ? members : [],
       access: decision,
+    });
+  });
+
+  // Track unique recent views per viewer + resource so rapid re-renders do not double-count
+  const recentViews = new Map<string, number>();
+
+  function getViewerTrackingKey(req: Request, user: StoredUser | null): string {
+    if (user?.uid) return `u:${user.uid}`;
+    const forwarded = String(req.headers['x-forwarded-for'] || req.ip || 'anon').split(',')[0].trim();
+    const ua = String(req.headers['user-agent'] || '').slice(0, 120);
+    return `a:${crypto.createHash('sha256').update(`${forwarded}|${ua}`).digest('hex').slice(0, 20)}`;
+  }
+
+  app.post('/api/albums/:albumId/view', (req, res) => {
+    const album = db.albums[req.params.albumId];
+    if (!album) return res.status(404).json({ error: 'Album not found.' });
+
+    const user = getSessionUser(req);
+    const members = db.members[album.id] || [];
+    const shareToken =
+      typeof req.body?.shareToken === 'string' && req.body.shareToken.trim()
+        ? req.body.shareToken.trim()
+        : typeof req.query.share === 'string'
+          ? req.query.share
+          : undefined;
+    const unlocked = getUnlockedAlbums(req);
+
+    const decision = canAccessAlbum(album, user, members, {
+      shareToken,
+      unlockedAlbumIds: unlocked,
+    });
+    if (!decision.allowed) {
+      return res.status(403).json({ error: 'You do not have permission to view this album.' });
+    }
+
+    const viewerKey = getViewerTrackingKey(req, user);
+    if (shouldRecordView(viewerKey, `album:${album.id}`, Date.now(), recentViews)) {
+      album.viewCount = (Number(album.viewCount) || 0) + 1;
+      persistDb();
+    }
+
+    return res.json({
+      albumId: album.id,
+      viewCount: Math.max(0, Number(album.viewCount) || 0),
+    });
+  });
+
+  app.post('/api/media/:mediaId/view', (req, res) => {
+    const item = db.media[req.params.mediaId];
+    if (!item) return res.status(404).json({ error: 'Media item not found.' });
+
+    const album = db.albums[item.albumId];
+    if (!album) return res.status(404).json({ error: 'Parent album not found.' });
+
+    const user = getSessionUser(req);
+    const members = db.members[album.id] || [];
+    const shareToken =
+      typeof req.body?.shareToken === 'string' && req.body.shareToken.trim()
+        ? req.body.shareToken.trim()
+        : typeof req.query.share === 'string'
+          ? req.query.share
+          : undefined;
+    const unlocked = getUnlockedAlbums(req);
+
+    const decision = canAccessAlbum(album, user, members, {
+      shareToken,
+      unlockedAlbumIds: unlocked,
+    });
+    if (!decision.allowed) {
+      return res.status(403).json({ error: 'You do not have permission to view this media item.' });
+    }
+
+    const viewerKey = getViewerTrackingKey(req, user);
+    if (shouldRecordView(viewerKey, `media:${item.id}`, Date.now(), recentViews)) {
+      item.viewCount = (Number(item.viewCount) || 0) + 1;
+      writeMediaSidecarSync(UPLOADS_DIR, item);
+      persistDb();
+    }
+
+    return res.json({
+      mediaId: item.id,
+      albumId: item.albumId,
+      viewCount: Math.max(0, Number(item.viewCount) || 0),
     });
   });
 
@@ -2359,6 +2906,7 @@ Node.js host (Render, Railway, Fly.io, DigitalOcean, VPS, or cPanel Node.js App)
       durationSec: session.durationSec,
       cameraMeta: session.cameraMeta,
       tags: session.tags,
+      viewCount: 0,
       createdAt,
       updatedAt: now,
       diskFileName,

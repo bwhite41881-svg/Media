@@ -525,6 +525,7 @@ export function filterAlbumsByQuery<
       album.description,
       album.ownerName,
       album.ownerHandle,
+      album.visibility,
     ]
       .filter(Boolean)
       .join(' ')
@@ -543,7 +544,8 @@ export function filterAlbumsByQuery<
 }
 
 export function filterMediaByQuery<
-  T extends Pick<MediaItem, 'title' | 'caption' | 'ownerName' | 'albumTitle' | 'kind' | 'tags'>
+  T extends Pick<MediaItem, 'title' | 'caption' | 'ownerName' | 'albumTitle' | 'kind' | 'tags'> &
+    Partial<Pick<MediaItem, 'cameraMeta' | 'fileName'>>
 >(
   media: ReadonlyArray<T>,
   query: string,
@@ -562,6 +564,9 @@ export function filterMediaByQuery<
       item.caption,
       item.ownerName,
       item.albumTitle || '',
+      item.kind,
+      item.cameraMeta || '',
+      item.fileName || '',
     ]
       .filter(Boolean)
       .join(' ')
@@ -852,15 +857,16 @@ export function buildUniqueZipEntryNames(
   });
 }
 
-export const DEFAULT_STORAGE_QUOTA_BYTES = 10 * 1024 * 1024 * 1024; // 10 GiB standard creator quota
-export const ADMIN_STORAGE_QUOTA_BYTES = 100 * 1024 * 1024 * 1024; // 100 GiB studio/admin quota
+export const DEFAULT_STORAGE_QUOTA_BYTES: number | null = null; // Unlimited storage for all standard accounts
+export const ADMIN_STORAGE_QUOTA_BYTES: number | null = null; // Unlimited storage for all admin accounts
 
-export type StorageQuotaStatus = 'healthy' | 'warning' | 'critical';
+export type StorageQuotaStatus = 'unlimited' | 'healthy' | 'warning' | 'critical';
 
 export interface StorageQuotaSummary {
   usedBytes: number;
-  allocatedBytes: number;
-  remainingBytes: number;
+  allocatedBytes: number | null;
+  remainingBytes: number | null;
+  isUnlimited: boolean;
   percentUsed: number;
   percentClamped: number;
   percentBarWidth: number;
@@ -872,11 +878,13 @@ export interface StorageQuotaSummary {
 
 /**
  * Resolves the effective storage allocation for an account.
+ * Returns `null` (Unlimited) by default for both standard users and admins unless
+ * an explicit positive finite byte cap is assigned on the account.
  */
 export function getAllocatedStorageBytes(user: {
   isAdmin?: boolean;
-  storageQuotaBytes?: number;
-}): number {
+  storageQuotaBytes?: number | null;
+}): number | null {
   if (
     typeof user.storageQuotaBytes === 'number' &&
     Number.isFinite(user.storageQuotaBytes) &&
@@ -888,21 +896,40 @@ export function getAllocatedStorageBytes(user: {
 }
 
 /**
- * Pure storage utilization calculation for AccountView quota indicator & progress bar.
+ * Pure storage utilization calculation for AccountView storage indicator & breakdown bar.
+ * Supports unlimited allocations (`allocatedBytes === null`) as well as optional finite caps.
  */
 export function computeStorageQuota(
   usedBytes: number,
-  allocatedBytes: number = DEFAULT_STORAGE_QUOTA_BYTES
+  allocatedBytes: number | null = DEFAULT_STORAGE_QUOTA_BYTES
 ): StorageQuotaSummary {
   const safeUsed =
     typeof usedBytes === 'number' && Number.isFinite(usedBytes) && usedBytes > 0
       ? usedBytes
       : 0;
-  const safeAllocated =
-    typeof allocatedBytes === 'number' && Number.isFinite(allocatedBytes) && allocatedBytes > 0
-      ? allocatedBytes
-      : DEFAULT_STORAGE_QUOTA_BYTES;
 
+  const hasFiniteCap =
+    typeof allocatedBytes === 'number' &&
+    Number.isFinite(allocatedBytes) &&
+    allocatedBytes > 0;
+
+  if (!hasFiniteCap) {
+    return {
+      usedBytes: safeUsed,
+      allocatedBytes: null,
+      remainingBytes: null,
+      isUnlimited: true,
+      percentUsed: 0,
+      percentClamped: 0,
+      percentBarWidth: safeUsed > 0 ? 100 : 0,
+      percentLabel: 'Unlimited',
+      status: 'unlimited',
+      statusLabel: 'Unlimited',
+      isOverQuota: false,
+    };
+  }
+
+  const safeAllocated = allocatedBytes;
   const remainingBytes = Math.max(0, safeAllocated - safeUsed);
   const percentUsed = (safeUsed / safeAllocated) * 100;
   const percentClamped = Math.min(100, Math.max(0, Number(percentUsed.toFixed(1))));
@@ -939,6 +966,7 @@ export function computeStorageQuota(
     usedBytes: safeUsed,
     allocatedBytes: safeAllocated,
     remainingBytes,
+    isUnlimited: false,
     percentUsed,
     percentClamped,
     percentBarWidth,

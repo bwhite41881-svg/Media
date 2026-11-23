@@ -6,6 +6,7 @@ import {
   ChevronRight,
   Download,
   Edit3,
+  Eye,
   Globe,
   Image as ImageIcon,
   KeyRound,
@@ -21,13 +22,14 @@ import {
 } from 'lucide-react';
 import type { Album, MediaItem, UserAccount } from '../types/media';
 import { formatBytes, formatRelativeDate } from '../utils/albumLogic';
+import { formatViewCount } from '../utils/viewCounts';
 import {
   computeSelectedBytes,
   createBrowserMediaZip,
   triggerBlobDownload,
   type BatchZipProgressState,
 } from '../utils/batchZip';
-import { resolveProtectedUrl } from '../lib/api';
+import { api, resolveProtectedUrl } from '../lib/api';
 import { MediaSurface } from './MediaSurface';
 
 interface AlbumDetailViewProps {
@@ -50,6 +52,7 @@ interface AlbumDetailViewProps {
   onChangeCover?: (album: Album) => void;
   onMessageUser?: (uid: string) => void;
   onNotify?: (message: string) => void;
+  onAlbumViewed?: (albumId: string, viewCount: number) => void;
   shareToken?: string | null;
   onBatchDeleteMedia: (mediaIds: string[]) => Promise<void>;
 }
@@ -71,6 +74,7 @@ export function AlbumDetailView({
   onChangeCover,
   onMessageUser,
   onNotify,
+  onAlbumViewed,
   shareToken,
   onBatchDeleteMedia,
 }: AlbumDetailViewProps) {
@@ -82,21 +86,35 @@ export function AlbumDetailView({
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const zipAbortRef = useRef<AbortController | null>(null);
+  const onAlbumViewedRef = useRef(onAlbumViewed);
+  onAlbumViewedRef.current = onAlbumViewed;
 
   const isZipping = zipMode !== null;
   const canSelectItems = Boolean((access?.canDownload || access?.canEdit) && media.length > 0);
 
-  // Reset selection and cancel any active ZIP when switching albums or unmounting
+  // Reset selection, record album view, and cancel any active ZIP when switching albums
   useEffect(() => {
     setSelectMode(false);
     setSelectedIds(new Set());
     setDownloadError(null);
     setPage(1);
+
+    let cancelled = false;
+    if (album?.id) {
+      api
+        .recordAlbumView(album.id, shareToken || undefined)
+        .then((res) => {
+          if (!cancelled) onAlbumViewedRef.current?.(album.id, res.viewCount);
+        })
+        .catch(() => undefined);
+    }
+
     return () => {
+      cancelled = true;
       zipAbortRef.current?.abort();
       zipAbortRef.current = null;
     };
-  }, [album?.id]);
+  }, [album?.id, shareToken]);
 
   // Prune selected IDs if items are deleted while select mode is open
   useEffect(() => {
@@ -333,6 +351,14 @@ export function AlbumDetailView({
               </span>
               <span aria-hidden="true">·</span>
               <span className="font-mono-tabular">{formatBytes(album.totalBytes)}</span>
+              <span aria-hidden="true">·</span>
+              <span
+                data-testid="album-view-count"
+                className="inline-flex items-center gap-1 font-mono-tabular font-medium text-[#00A846] dark:text-[#00E676]"
+              >
+                <Eye className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>{formatViewCount(album.viewCount)}</span>
+              </span>
             </div>
 
             <h1 className="mt-2.5 font-serif-editorial text-3xl sm:text-4xl font-medium tracking-tight text-[#0C120E] dark:text-[#EEF4F0] text-balance">
@@ -668,7 +694,7 @@ export function AlbumDetailView({
                         {formatBytes(item.fileSize)}
                       </span>
                     </div>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-[#526056] dark:text-[#8FA395]">
+                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#526056] dark:text-[#8FA395]">
                       <span className="capitalize">{item.kind}</span>
                       {item.width > 0 && item.height > 0 && (
                         <>
@@ -680,6 +706,14 @@ export function AlbumDetailView({
                       )}
                       <span aria-hidden="true">·</span>
                       <span>{formatRelativeDate(item.createdAt)}</span>
+                      <span aria-hidden="true">·</span>
+                      <span
+                        data-testid={`media-view-count-${item.id}`}
+                        className="inline-flex items-center gap-1 font-mono-tabular text-[#00A846] dark:text-[#00E676]"
+                      >
+                        <Eye className="w-3.5 h-3.5" aria-hidden="true" />
+                        <span>{formatViewCount(item.viewCount)}</span>
+                      </span>
                     </div>
                   </button>
                 </article>

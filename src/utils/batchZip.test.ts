@@ -17,15 +17,16 @@ test('buildBatchZipFilename distinguishes full album archives from selected subs
   assert.equal(buildBatchZipFilename('Summer / Trip: 2026!', 2, 10), 'Summer-Trip-2026-2-items.zip');
 });
 
-test('resolveMediaDownloadUrl safely attaches share tokens to protected media URLs only', () => {
-  assert.equal(resolveMediaDownloadUrl('/api/media/med_1', 'tok_abc'), '/api/media/med_1?token=tok_abc');
+test('resolveMediaDownloadUrl safely attaches share tokens to protected media and poster URLs only', () => {
+  assert.equal(resolveMediaDownloadUrl('/api/media/med_1', 'tok_abc'), '/api/media/med_1?share=tok_abc');
+  assert.equal(resolveMediaDownloadUrl('/api/poster/med_1', 'tok_abc'), '/api/poster/med_1?share=tok_abc');
   assert.equal(
     resolveMediaDownloadUrl('/api/media/med_1?auth=xyz', 'tok_abc'),
-    '/api/media/med_1?auth=xyz&token=tok_abc'
+    '/api/media/med_1?auth=xyz&share=tok_abc'
   );
   assert.equal(
-    resolveMediaDownloadUrl('/api/media/med_1?token=existing', 'tok_abc'),
-    '/api/media/med_1?token=existing'
+    resolveMediaDownloadUrl('/api/media/med_1?share=existing', 'tok_abc'),
+    '/api/media/med_1?share=existing'
   );
   assert.equal(resolveMediaDownloadUrl('https://cdn.example.com/a.jpg', 'tok_abc'), 'https://cdn.example.com/a.jpg');
   assert.equal(resolveMediaDownloadUrl('/api/media/med_1', null), '/api/media/med_1');
@@ -78,9 +79,9 @@ test('computeBatchZipProgress weights fetching (0-85%) and zipping (85-99%) smoo
 
 test('createBrowserMediaZip bundles mixed images and videos into a readable ZIP with unique filenames and progress updates', async () => {
   const payloads: Record<string, string> = {
-    '/api/media/med_1?token=sec_1': 'JPEG-PHOTO-ONE',
-    '/api/media/med_2?token=sec_1': 'JPEG-PHOTO-TWO',
-    '/api/media/med_3?token=sec_1': 'MP4-VIDEO-MASTER',
+    '/api/media/med_1?share=sec_1': 'JPEG-PHOTO-ONE',
+    '/api/media/med_2?share=sec_1': 'JPEG-PHOTO-TWO',
+    '/api/media/med_3?share=sec_1': 'MP4-VIDEO-MASTER',
   };
 
   const progressLog: BatchZipProgressState[] = [];

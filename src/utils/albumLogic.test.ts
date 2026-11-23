@@ -253,6 +253,8 @@ test('filterAlbumsByQuery, filterMediaByQuery, and extractPopularTags filter by 
       ownerName: 'Maren Lindqvist',
       albumTitle: 'Nordic Silence & Concrete',
       kind: 'photo' as const,
+      cameraMeta: 'Hasselblad X2D 100C · 38mm',
+      fileName: 'fjord-pavilion.jpg',
       tags: ['Brutalism', 'Coastal'],
     },
     {
@@ -261,6 +263,8 @@ test('filterAlbumsByQuery, filterMediaByQuery, and extractPopularTags filter by 
       ownerName: 'Big B',
       albumTitle: 'Roots Festival 4K Reels',
       kind: 'video' as const,
+      cameraMeta: 'RED V-RAPTOR 8K VV',
+      fileName: 'kingston-soundcheck.mp4',
       tags: ['Reggae', '4K', 'Live'],
     },
   ];
@@ -302,6 +306,13 @@ test('filterAlbumsByQuery, filterMediaByQuery, and extractPopularTags filter by 
   assert.equal(filterMediaByQuery(sampleMedia, 'coastal', 'all', 'title').length, 0);
   assert.equal(filterMediaByQuery(sampleMedia, 'coastal', 'all', 'tag').length, 1);
   assert.equal(filterMediaByQuery(sampleMedia, 'pavilion', 'all', 'tag').length, 0);
+
+  // Metadata search (visibility on albums; cameraMeta, kind, fileName on media)
+  assert.equal(filterAlbumsByQuery(sampleAlbums, 'private', 'all', 'all').length, 1);
+  assert.equal(filterAlbumsByQuery(sampleAlbums, 'private', 'all', 'title').length, 0);
+  assert.equal(filterMediaByQuery(sampleMedia, 'hasselblad', 'all', 'all').length, 1);
+  assert.equal(filterMediaByQuery(sampleMedia, 'v-raptor', 'all', 'all').length, 1);
+  assert.equal(filterMediaByQuery(sampleMedia, 'mp4', 'all', 'all').length, 1);
 
   // Popular tags extraction
   const popular = extractPopularTags(sampleAlbums, sampleMedia, 4);
@@ -453,19 +464,40 @@ test('buildAlbumZipFilename, sanitizeZipEntryName, and buildUniqueZipEntryNames 
   );
 });
 
-test('computeStorageQuota, getAllocatedStorageBytes, and computeStorageBreakdownByVisibility handle all utilization tiers and edge cases', () => {
-  // Tier resolution
-  assert.equal(getAllocatedStorageBytes({ isAdmin: false }), DEFAULT_STORAGE_QUOTA_BYTES);
-  assert.equal(getAllocatedStorageBytes({ isAdmin: true }), ADMIN_STORAGE_QUOTA_BYTES);
+test('computeStorageQuota, getAllocatedStorageBytes, and computeStorageBreakdownByVisibility default to unlimited storage and support optional finite caps', () => {
+  // Unlimited default for both standard users and admins
+  assert.equal(DEFAULT_STORAGE_QUOTA_BYTES, null);
+  assert.equal(ADMIN_STORAGE_QUOTA_BYTES, null);
+  assert.equal(getAllocatedStorageBytes({ isAdmin: false }), null);
+  assert.equal(getAllocatedStorageBytes({ isAdmin: true }), null);
   assert.equal(
     getAllocatedStorageBytes({ isAdmin: false, storageQuotaBytes: 5 * 1024 * 1024 * 1024 }),
     5 * 1024 * 1024 * 1024
   );
 
+  // Unlimited summary with 0 bytes and with multi-terabyte usage
+  const unlimitedEmpty = computeStorageQuota(0, null);
+  assert.equal(unlimitedEmpty.isUnlimited, true);
+  assert.equal(unlimitedEmpty.allocatedBytes, null);
+  assert.equal(unlimitedEmpty.remainingBytes, null);
+  assert.equal(unlimitedEmpty.percentBarWidth, 0);
+  assert.equal(unlimitedEmpty.percentLabel, 'Unlimited');
+  assert.equal(unlimitedEmpty.status, 'unlimited');
+  assert.equal(unlimitedEmpty.statusLabel, 'Unlimited');
+  assert.equal(unlimitedEmpty.isOverQuota, false);
+
+  const unlimitedLarge = computeStorageQuota(500 * 1024 * 1024 * 1024);
+  assert.equal(unlimitedLarge.isUnlimited, true);
+  assert.equal(unlimitedLarge.usedBytes, 500 * 1024 * 1024 * 1024);
+  assert.equal(unlimitedLarge.percentBarWidth, 100);
+  assert.equal(unlimitedLarge.status, 'unlimited');
+  assert.equal(unlimitedLarge.isOverQuota, false);
+
   const tenGb = 10 * 1024 * 1024 * 1024;
 
-  // 0 bytes used
+  // Explicit finite cap: 0 bytes used
   const empty = computeStorageQuota(0, tenGb);
+  assert.equal(empty.isUnlimited, false);
   assert.equal(empty.usedBytes, 0);
   assert.equal(empty.remainingBytes, tenGb);
   assert.equal(empty.percentBarWidth, 0);
@@ -481,7 +513,7 @@ test('computeStorageQuota, getAllocatedStorageBytes, and computeStorageBreakdown
   assert.equal(tiny.percentBarWidth, 1.5);
   assert.equal(tiny.status, 'healthy');
 
-  // Healthy mid usage (4.2%)
+  // Healthy mid usage (42% & 4.2%)
   const healthy = computeStorageQuota(0.42 * tenGb, tenGb);
   assert.equal(healthy.percentLabel, '42%');
   assert.equal(healthy.status, 'healthy');
@@ -512,10 +544,11 @@ test('computeStorageQuota, getAllocatedStorageBytes, and computeStorageBreakdown
   assert.equal(over.percentClamped, 100);
   assert.equal(over.percentBarWidth, 100);
 
-  // Defensive negative / NaN handling
+  // Defensive negative / NaN handling falls back to unlimited with 0 bytes used
   const defensive = computeStorageQuota(-500, Number.NaN);
   assert.equal(defensive.usedBytes, 0);
-  assert.equal(defensive.allocatedBytes, DEFAULT_STORAGE_QUOTA_BYTES);
+  assert.equal(defensive.allocatedBytes, null);
+  assert.equal(defensive.isUnlimited, true);
 
   // Visibility breakdown
   const breakdown = computeStorageBreakdownByVisibility([

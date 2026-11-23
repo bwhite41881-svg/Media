@@ -18,6 +18,7 @@ import {
   getChunkRange,
   shouldRetryUploadRequest,
 } from '../utils/albumLogic';
+import type { RemoteInspectResult } from '../utils/remoteImport';
 
 class ApiRequestError extends Error {
   status?: number;
@@ -576,6 +577,47 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
+
+  inspectExternalLink: (payload: { url?: string; urls?: string[] }) =>
+    apiJson<RemoteInspectResult>('/api/import/inspect', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
+
+  importMediaFromUrl: (
+    payload: {
+      albumId: string;
+      url: string;
+      title?: string;
+      caption?: string;
+      tags?: string[];
+      sourceUrl?: string;
+    },
+    signal?: AbortSignal
+  ) =>
+    apiJson<{ media: MediaItem; album: Album }>('/api/import/url', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      signal,
+    }),
+
+  recordAlbumView: (albumId: string, shareToken?: string) =>
+    apiJson<{ albumId: string; viewCount: number }>(
+      `/api/albums/${encodeURIComponent(albumId)}/view`,
+      {
+        method: 'POST',
+        body: JSON.stringify(shareToken ? { shareToken } : {}),
+      }
+    ),
+
+  recordMediaView: (mediaId: string, shareToken?: string) =>
+    apiJson<{ mediaId: string; albumId: string; viewCount: number }>(
+      `/api/media/${encodeURIComponent(mediaId)}/view`,
+      {
+        method: 'POST',
+        body: JSON.stringify(shareToken ? { shareToken } : {}),
+      }
+    ),
 };
 
 async function retryUploadStep<T>(

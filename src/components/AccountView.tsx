@@ -120,6 +120,14 @@ export function AccountView({
           ? 'bg-[#D99B00] dark:bg-[#FFD600]'
           : 'bg-[#00A846] dark:bg-[#00E676]';
 
+    const totalBreakdownBytes = breakdown.totalAlbumBytes;
+    const publicPct =
+      totalBreakdownBytes > 0 ? (breakdown.publicBytes / totalBreakdownBytes) * 100 : 0;
+    const unlistedPct =
+      totalBreakdownBytes > 0 ? (breakdown.unlistedBytes / totalBreakdownBytes) * 100 : 0;
+    const privatePct =
+      totalBreakdownBytes > 0 ? (breakdown.privateBytes / totalBreakdownBytes) * 100 : 0;
+
     return (
       <div className="max-w-[1000px] mx-auto px-6 sm:px-8 pt-10 pb-24">
         <header className="pb-8 border-b border-[#D4DFD7] dark:border-[#1C2A21] flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -159,8 +167,10 @@ export function AccountView({
             <p className="mt-1 font-mono-tabular text-xl font-medium text-[#0C120E] dark:text-[#EEF4F0]">
               {formatBytes(quota.usedBytes)}
             </p>
-            <p className="mt-0.5 text-xs text-[#526056] dark:text-[#8FA395]">
-              of {formatBytes(quota.allocatedBytes)} allocated
+            <p className="mt-0.5 text-xs text-[#00A846] dark:text-[#00E676]">
+              {quota.isUnlimited || quota.allocatedBytes === null
+                ? 'Unlimited storage · No cap'
+                : `of ${formatBytes(quota.allocatedBytes)} allocated`}
             </p>
           </div>
           <div>
@@ -186,9 +196,9 @@ export function AccountView({
           </div>
         </section>
 
-        {/* Visual Storage Quota Indicator */}
+        {/* Visual Storage Allocation Indicator */}
         <section
-          aria-label="Storage quota utilization"
+          aria-label="Storage allocation and utilization"
           data-testid="storage-quota-section"
           className="mt-8 tech-panel rounded-2xl p-5 sm:p-6"
         >
@@ -198,17 +208,32 @@ export function AccountView({
                 // VAULT TELEMETRY
               </p>
               <h2 className="mt-1 font-display text-base font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
-                Storage Quota
+                Storage Allocation
               </h2>
               <p className="mt-0.5 text-xs text-[#526056] dark:text-[#8FA395]">
-                <span className="font-mono-tabular font-medium text-[#0C120E] dark:text-[#EEF4F0]">
-                  {formatBytes(quota.usedBytes)}
-                </span>{' '}
-                used of{' '}
-                <span className="font-mono-tabular font-medium text-[#0C120E] dark:text-[#EEF4F0]">
-                  {formatBytes(quota.allocatedBytes)}
-                </span>{' '}
-                {user.isAdmin ? 'studio allocation' : 'standard allocation'}
+                {quota.isUnlimited || quota.allocatedBytes === null ? (
+                  <>
+                    <span className="font-mono-tabular font-medium text-[#0C120E] dark:text-[#EEF4F0]">
+                      {formatBytes(quota.usedBytes)}
+                    </span>{' '}
+                    archived ·{' '}
+                    <span className="font-medium text-[#00A846] dark:text-[#00E676]">
+                      Unlimited capacity
+                    </span>{' '}
+                    (no per-user, album, or file size limits)
+                  </>
+                ) : (
+                  <>
+                    <span className="font-mono-tabular font-medium text-[#0C120E] dark:text-[#EEF4F0]">
+                      {formatBytes(quota.usedBytes)}
+                    </span>{' '}
+                    used of{' '}
+                    <span className="font-mono-tabular font-medium text-[#0C120E] dark:text-[#EEF4F0]">
+                      {formatBytes(quota.allocatedBytes)}
+                    </span>{' '}
+                    allocated
+                  </>
+                )}
               </p>
             </div>
 
@@ -227,48 +252,103 @@ export function AccountView({
                 data-testid="storage-quota-percent"
                 className="font-mono-tabular text-[#0C120E] dark:text-[#EEF4F0]"
               >
-                {quota.percentLabel}
+                {quota.isUnlimited ? 'No Cap' : quota.percentLabel}
               </span>
             </div>
           </div>
 
-          <div
-            role="progressbar"
-            aria-label="Storage quota utilization"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={quota.percentClamped}
-            aria-valuetext={`${formatBytes(quota.usedBytes)} used of ${formatBytes(
-              quota.allocatedBytes
-            )} (${quota.percentLabel}, ${quota.statusLabel})`}
-            className="mt-4 h-2.5 w-full rounded-full overflow-hidden bg-[#E8EFEA] dark:bg-[#132018] border border-transparent dark:border-[#1E3125]"
-          >
+          {quota.isUnlimited || quota.allocatedBytes === null ? (
             <div
-              data-testid="storage-quota-bar"
-              style={{ width: `${quota.percentBarWidth}%` }}
-              className={`h-full rounded-full transition-[width] duration-300 ease-out shadow-[0_0_12px_rgba(0,230,118,0.5)] ${statusBarClass}`}
-            />
-          </div>
+              role="progressbar"
+              aria-label="Storage allocation breakdown"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={quota.usedBytes > 0 ? 100 : 0}
+              aria-valuetext={`${formatBytes(quota.usedBytes)} archived with unlimited storage capacity (Public ${formatBytes(
+                breakdown.publicBytes
+              )}, Unlisted ${formatBytes(breakdown.unlistedBytes)}, Private ${formatBytes(
+                breakdown.privateBytes
+              )})`}
+              className="mt-4 h-2.5 w-full rounded-full overflow-hidden bg-[#E8EFEA] dark:bg-[#132018] border border-transparent dark:border-[#1E3125] flex"
+            >
+              {totalBreakdownBytes > 0 ? (
+                <>
+                  {publicPct > 0 && (
+                    <div
+                      data-testid="storage-quota-bar"
+                      style={{ width: `${publicPct}%` }}
+                      className="h-full bg-[#00A846] dark:bg-[#00E676] shadow-[0_0_12px_rgba(0,230,118,0.5)] transition-[width] duration-300 ease-out"
+                    />
+                  )}
+                  {unlistedPct > 0 && (
+                    <div
+                      style={{ width: `${unlistedPct}%` }}
+                      className="h-full bg-[#D99B00] dark:bg-[#FFD600] shadow-[0_0_10px_rgba(255,214,0,0.4)] transition-[width] duration-300 ease-out"
+                    />
+                  )}
+                  {privatePct > 0 && (
+                    <div
+                      style={{ width: `${privatePct}%` }}
+                      className="h-full bg-[#E11D32] dark:bg-[#FF2A3C] shadow-[0_0_10px_rgba(255,42,60,0.45)] transition-[width] duration-300 ease-out"
+                    />
+                  )}
+                </>
+              ) : (
+                <div
+                  data-testid="storage-quota-bar"
+                  style={{ width: `${quota.usedBytes > 0 ? 100 : 0}%` }}
+                  className="h-full rounded-full bg-[#00A846] dark:bg-[#00E676] shadow-[0_0_12px_rgba(0,230,118,0.5)] transition-[width] duration-300 ease-out"
+                />
+              )}
+            </div>
+          ) : (
+            <div
+              role="progressbar"
+              aria-label="Storage quota utilization"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={quota.percentClamped}
+              aria-valuetext={`${formatBytes(quota.usedBytes)} used of ${formatBytes(
+                quota.allocatedBytes
+              )} (${quota.percentLabel}, ${quota.statusLabel})`}
+              className="mt-4 h-2.5 w-full rounded-full overflow-hidden bg-[#E8EFEA] dark:bg-[#132018] border border-transparent dark:border-[#1E3125]"
+            >
+              <div
+                data-testid="storage-quota-bar"
+                style={{ width: `${quota.percentBarWidth}%` }}
+                className={`h-full rounded-full transition-[width] duration-300 ease-out shadow-[0_0_12px_rgba(0,230,118,0.5)] ${statusBarClass}`}
+              />
+            </div>
+          )}
 
           <div className="mt-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#526056] dark:text-[#8FA395]">
             <p className="font-mono-tabular">
-              {quota.isOverQuota
-                ? `Quota exceeded by ${formatBytes(quota.usedBytes - quota.allocatedBytes)}`
-                : `${formatBytes(quota.remainingBytes)} remaining`}
+              {quota.isUnlimited || quota.allocatedBytes === null
+                ? 'Unlimited remaining · Zero per-user upload cap'
+                : quota.isOverQuota
+                  ? `Quota exceeded by ${formatBytes(quota.usedBytes - quota.allocatedBytes)}`
+                  : `${formatBytes(quota.remainingBytes ?? 0)} remaining`}
             </p>
-            <p className="font-mono-tabular flex flex-wrap items-center gap-x-2 gap-y-1">
-              <span>Public {formatBytes(breakdown.publicBytes)}</span>
-              <span aria-hidden="true">·</span>
-              <span>Unlisted {formatBytes(breakdown.unlistedBytes)}</span>
-              <span aria-hidden="true">·</span>
-              <span>Private {formatBytes(breakdown.privateBytes)}</span>
+            <p className="font-mono-tabular flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#00A846] dark:bg-[#00E676]" aria-hidden="true" />
+                Public {formatBytes(breakdown.publicBytes)}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#D99B00] dark:bg-[#FFD600]" aria-hidden="true" />
+                Unlisted {formatBytes(breakdown.unlistedBytes)}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#E11D32] dark:bg-[#FF2A3C]" aria-hidden="true" />
+                Private {formatBytes(breakdown.privateBytes)}
+              </span>
             </p>
           </div>
         </section>
 
         {/* Quick Actions + Profile Form */}
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-7 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6">
+          <div className="lg:col-span-7 tech-panel rounded-2xl p-6">
             <h2 className="font-display text-lg font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Creator Profile
             </h2>
@@ -427,7 +507,7 @@ export function AccountView({
             </form>
           </div>
 
-          <div className="lg:col-span-5 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6 flex flex-col justify-between gap-6">
+          <div className="lg:col-span-5 tech-panel rounded-2xl p-6 flex flex-col justify-between gap-6">
             <div>
               <ShieldCheck className="w-6 h-6 text-[#00A846] dark:text-[#FFD600]" aria-hidden="true" />
               <h2 className="mt-3 font-display text-lg font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
