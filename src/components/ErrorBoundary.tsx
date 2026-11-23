@@ -25,14 +25,14 @@ export class ErrorBoundary extends React.Component<{ children: React.ReactNode }
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-[#F8F6EE] dark:bg-[#0D0F0B] px-6 py-16">
-          <div className="max-w-lg w-full bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center bg-[#F3F6F4] dark:bg-[#060807] px-6 py-16">
+          <div className="max-w-lg w-full bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl overflow-hidden">
             <div className="h-[3px] w-full rasta-stripe" aria-hidden="true" />
             <div className="p-8">
-              <h1 className="font-display text-2xl font-semibold tracking-tight text-[#151811] dark:text-[#F5F3EA]">
+              <h1 className="font-display text-2xl font-semibold tracking-tight text-[#0C120E] dark:text-[#EEF4F0]">
                 Something interrupted this view
               </h1>
-              <p className="mt-3 text-sm leading-relaxed text-[#5A5E52] dark:text-[#A6AA9C] break-words">
+              <p className="mt-3 text-sm leading-relaxed text-[#526056] dark:text-[#8FA395] break-words">
                 {this.state.message}
               </p>
               <button

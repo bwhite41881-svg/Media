@@ -236,7 +236,7 @@ export function MediaLightbox({
       role="dialog"
       aria-modal="true"
       aria-label={`Viewing ${item.title}`}
-      className="fixed inset-0 z-50 bg-[#050604] text-[#F5F3EA] flex flex-col lg:flex-row overflow-hidden"
+      className="fixed inset-0 z-50 bg-[#050604] text-[#EEF4F0] flex flex-col lg:flex-row overflow-hidden"
     >
       {/* Main Media Stage */}
       <div className="relative flex-1 flex items-center justify-center min-h-[50vh] bg-[#050604] p-4 sm:p-10">
@@ -273,7 +273,7 @@ export function MediaLightbox({
 
         {mediaLoadError ? (
           <div className="max-w-md w-full rounded-2xl border border-white/15 bg-white/5 p-8 text-center">
-            <AlertTriangle className="w-8 h-8 text-[#FCD116] mx-auto" aria-hidden="true" />
+            <AlertTriangle className="w-8 h-8 text-[#FFD600] mx-auto" aria-hidden="true" />
             <h3 className="mt-4 font-display text-lg font-semibold text-white">
               {item.kind === 'video' ? 'Video file unavailable' : 'Photo file unavailable'}
             </h3>
@@ -325,7 +325,7 @@ export function MediaLightbox({
                   <button
                     type="button"
                     onClick={() => onMessageUser(item.ownerId)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-[#FCD116] bg-white/10 hover:bg-white/15 rounded-md shrink-0 transition-colors"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-[#FFD600] bg-white/10 hover:bg-white/15 rounded-md shrink-0 transition-colors"
                   >
                     <MessageSquare className="w-3 h-3" aria-hidden="true" />
                     <span>Message</span>
@@ -388,7 +388,7 @@ export function MediaLightbox({
               >
                 <div className="flex items-center justify-between">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-white/75 flex items-center gap-1.5">
-                    <MessageSquare className="w-3.5 h-3.5 text-[#FCD116]" aria-hidden="true" />
+                    <MessageSquare className="w-3.5 h-3.5 text-[#FFD600]" aria-hidden="true" />
                     <span>Comments ({comments.length})</span>
                   </h3>
                 </div>
@@ -409,7 +409,7 @@ export function MediaLightbox({
                       onChange={(e) => setCommentDraft(e.target.value)}
                       placeholder={`Comment on this ${item.kind}...`}
                       maxLength={600}
-                      className="flex-1 px-3 py-2 text-xs bg-white/10 border border-white/15 rounded-lg text-white placeholder:text-white/45 focus:outline-none focus:border-[#FCD116]"
+                      className="flex-1 px-3 py-2 text-xs bg-white/10 border border-white/15 rounded-lg text-white placeholder:text-white/45 focus:outline-none focus:border-[#FFD600]"
                     />
                     <button
                       type="submit"
@@ -429,7 +429,7 @@ export function MediaLightbox({
                       <button
                         type="button"
                         onClick={onSignIn}
-                        className="px-2.5 py-1 text-xs font-medium text-[#151811] bg-[#FCD116] rounded-md hover:bg-[#E5BD0E] shrink-0"
+                        className="px-2.5 py-1 text-xs font-medium text-[#0C120E] bg-[#FFD600] rounded-md hover:bg-[#E5BD0E] shrink-0"
                       >
                         Sign in
                       </button>

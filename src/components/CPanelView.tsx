@@ -36,9 +36,9 @@ interface CPanelViewProps {
 }
 
 const ACCENT_PRESETS = [
-  { label: 'Rasta Green', hex: '#008732' },
+  { label: 'Rasta Green', hex: '#00A846' },
   { label: 'Lion Gold', hex: '#C68B00' },
-  { label: 'Rasta Crimson', hex: '#CE1126' },
+  { label: 'Rasta Crimson', hex: '#E11D32' },
   { label: 'Roots Amber', hex: '#B45309' },
   { label: 'Studio Cobalt', hex: '#1D4ED8' },
 ];
@@ -125,12 +125,12 @@ export function CPanelView({
   if (!user || !user.isAdmin) {
     return (
       <div className="max-w-[1360px] mx-auto px-6 sm:px-8 py-20">
-        <div className="max-w-lg mx-auto bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-8 text-center">
-          <Shield className="w-8 h-8 text-[#CE1126] dark:text-[#FCD116] mx-auto" aria-hidden="true" />
-          <h1 className="mt-4 font-display text-2xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+        <div className="max-w-lg mx-auto bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-8 text-center">
+          <Shield className="w-8 h-8 text-[#E11D32] dark:text-[#FFD600] mx-auto" aria-hidden="true" />
+          <h1 className="mt-4 font-display text-2xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
             Administrator Access Required
           </h1>
-          <p className="mt-2 text-sm text-[#5A5E52] dark:text-[#A6AA9C]">
+          <p className="mt-2 text-sm text-[#526056] dark:text-[#8FA395]">
             Sign in with an administrator account to customize site branding, theme, upload engine
             limits, albums, and user permissions in the cPanel.
           </p>
@@ -220,15 +220,15 @@ export function CPanelView({
 
   return (
     <div className="max-w-[1360px] mx-auto px-6 sm:px-8 pt-10 pb-24">
-      <header className="pb-8 border-b border-[#E2DCC8] dark:border-[#2A3124] flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <header className="pb-8 border-b border-[#D4DFD7] dark:border-[#1C2A21] flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-medium text-[#008732] dark:text-[#FCD116]">
+          <p className="text-xs font-medium text-[#00A846] dark:text-[#FFD600]">
             Administrator Control Panel · {user.email}
           </p>
-          <h1 className="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-[#151811] dark:text-[#F5F3EA]">
+          <h1 className="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-[#0C120E] dark:text-[#EEF4F0]">
             Site cPanel
           </h1>
-          <p className="mt-2 text-sm text-[#5A5E52] dark:text-[#A6AA9C]">
+          <p className="mt-2 text-sm text-[#526056] dark:text-[#8FA395]">
             Live-edit branding, Rasta theme mode, announcement banner, bulk upload concurrency,
             albums, and admin roles.
           </p>
@@ -253,7 +253,7 @@ export function CPanelView({
             type="button"
             onClick={() => void loadOverview()}
             disabled={loadingOverview}
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#151811] dark:text-[#F5F3EA] bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] whitespace-nowrap"
+            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] whitespace-nowrap"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loadingOverview ? 'animate-spin' : ''}`} aria-hidden="true" />
             <span>Refresh Stats</span>
@@ -264,39 +264,39 @@ export function CPanelView({
       {/* Platform Overview Strip */}
       {overview && (
         <section className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-xl p-4">
-            <p className="text-xs text-[#5A5E52] dark:text-[#A6AA9C]">Total Archived Media</p>
-            <p className="mt-1 font-mono-tabular text-2xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+          <div className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-xl p-4">
+            <p className="text-xs text-[#526056] dark:text-[#8FA395]">Total Archived Media</p>
+            <p className="mt-1 font-mono-tabular text-2xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               {overview.stats.totalMedia.toLocaleString()}
             </p>
-            <p className="mt-0.5 font-mono-tabular text-xs text-[#008732] dark:text-[#FCD116]">
+            <p className="mt-0.5 font-mono-tabular text-xs text-[#00A846] dark:text-[#FFD600]">
               {formatBytes(overview.stats.totalBytes)} · No cap
             </p>
           </div>
-          <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-xl p-4">
-            <p className="text-xs text-[#5A5E52] dark:text-[#A6AA9C]">Total Albums</p>
-            <p className="mt-1 font-mono-tabular text-2xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+          <div className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-xl p-4">
+            <p className="text-xs text-[#526056] dark:text-[#8FA395]">Total Albums</p>
+            <p className="mt-1 font-mono-tabular text-2xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               {overview.stats.totalAlbums.toLocaleString()}
             </p>
-            <p className="mt-0.5 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+            <p className="mt-0.5 text-xs text-[#526056] dark:text-[#8FA395]">
               {overview.stats.publicAlbums} public · {overview.stats.privateAlbums} private
             </p>
           </div>
-          <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-xl p-4">
-            <p className="text-xs text-[#5A5E52] dark:text-[#A6AA9C]">Registered Accounts</p>
-            <p className="mt-1 font-mono-tabular text-2xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+          <div className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-xl p-4">
+            <p className="text-xs text-[#526056] dark:text-[#8FA395]">Registered Accounts</p>
+            <p className="mt-1 font-mono-tabular text-2xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               {overview.stats.totalUsers.toLocaleString()}
             </p>
-            <p className="mt-0.5 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+            <p className="mt-0.5 text-xs text-[#526056] dark:text-[#8FA395]">
               Sign-ups {allowRegistrations ? 'Open' : 'Paused'}
             </p>
           </div>
-          <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-xl p-4">
-            <p className="text-xs text-[#5A5E52] dark:text-[#A6AA9C]">Bulk Upload Engine</p>
-            <p className="mt-1 font-mono-tabular text-2xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+          <div className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-xl p-4">
+            <p className="text-xs text-[#526056] dark:text-[#8FA395]">Bulk Upload Engine</p>
+            <p className="mt-1 font-mono-tabular text-2xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               {uploadConcurrency}× Parallel
             </p>
-            <p className="mt-0.5 font-mono-tabular text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+            <p className="mt-0.5 font-mono-tabular text-xs text-[#526056] dark:text-[#8FA395]">
               {chunkSizeMb} MiB chunks · 5,000+ batch ready
             </p>
           </div>
@@ -307,7 +307,7 @@ export function CPanelView({
       <div
         role="tablist"
         aria-label="cPanel sections"
-        className="mt-8 inline-flex items-center p-1 bg-[#EFEBD9] dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-xl overflow-x-auto max-w-full"
+        className="mt-8 inline-flex items-center p-1 bg-[#E8EFEA] dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-xl overflow-x-auto max-w-full"
       >
         {(
           [
@@ -329,8 +329,8 @@ export function CPanelView({
               onClick={() => setActiveTab(tab.id)}
               className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg whitespace-nowrap shrink-0 transition-colors ${
                 active
-                  ? 'bg-white dark:bg-[#232B1E] text-[#151811] dark:text-[#FCD116] shadow-xs'
-                  : 'text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white'
+                  ? 'bg-white dark:bg-[#132118] text-[#0C120E] dark:text-[#FFD600] shadow-xs'
+                  : 'text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white'
               }`}
             >
               <Icon className="w-3.5 h-3.5" aria-hidden="true" />
@@ -343,7 +343,7 @@ export function CPanelView({
       {error && (
         <p
           role="alert"
-          className="mt-5 text-xs font-medium text-[#CE1126] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/50 border border-[#FECACA] dark:border-red-900 rounded-lg px-4 py-3"
+          className="mt-5 text-xs font-medium text-[#E11D32] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/50 border border-[#FECACA] dark:border-red-900 rounded-lg px-4 py-3"
         >
           {error}
         </p>
@@ -351,7 +351,7 @@ export function CPanelView({
       {savedNotice && (
         <p
           role="status"
-          className="mt-5 inline-flex items-center gap-2 text-xs font-medium text-[#008732] dark:text-[#4ADE80] bg-[#F0FDF4] dark:bg-emerald-950/50 border border-[#BBF7D0] dark:border-emerald-900 rounded-lg px-4 py-3"
+          className="mt-5 inline-flex items-center gap-2 text-xs font-medium text-[#00A846] dark:text-[#00E676] bg-[#F0FDF4] dark:bg-emerald-950/50 border border-[#BBF7D0] dark:border-emerald-900 rounded-lg px-4 py-3"
         >
           <Check className="w-4 h-4" aria-hidden="true" />
           <span>{savedNotice}</span>
@@ -362,11 +362,11 @@ export function CPanelView({
       {activeTab === 'branding' && (
         <form
           onSubmit={handleSave}
-          className="mt-6 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-6 sm:p-8 space-y-6"
+          className="mt-6 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6 sm:p-8 space-y-6"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label htmlFor="cp-site-name" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <label htmlFor="cp-site-name" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Website Name
               </label>
               <input
@@ -376,12 +376,12 @@ export function CPanelView({
                 maxLength={80}
                 value={siteName}
                 onChange={(e) => setSiteName(e.target.value)}
-                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
               />
             </div>
 
             <div>
-              <label htmlFor="cp-hero-kicker" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <label htmlFor="cp-hero-kicker" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Hero Kicker Label
               </label>
               <input
@@ -390,13 +390,13 @@ export function CPanelView({
                 maxLength={60}
                 value={heroKicker}
                 onChange={(e) => setHeroKicker(e.target.value)}
-                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="cp-hero-headline" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+            <label htmlFor="cp-hero-headline" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Homepage Hero Headline
             </label>
             <input
@@ -406,12 +406,12 @@ export function CPanelView({
               maxLength={160}
               value={heroHeadline}
               onChange={(e) => setHeroHeadline(e.target.value)}
-              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
             />
           </div>
 
           <div>
-            <label htmlFor="cp-hero-sub" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+            <label htmlFor="cp-hero-sub" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Homepage Hero Description
             </label>
             <textarea
@@ -420,12 +420,12 @@ export function CPanelView({
               maxLength={400}
               value={heroSubheadline}
               onChange={(e) => setHeroSubheadline(e.target.value)}
-              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
             />
           </div>
 
           <div>
-            <label htmlFor="cp-footer-text" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+            <label htmlFor="cp-footer-text" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Footer Text
             </label>
             <input
@@ -434,14 +434,14 @@ export function CPanelView({
               maxLength={240}
               value={footerText}
               onChange={(e) => setFooterText(e.target.value)}
-              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
             />
           </div>
 
           {/* Theme Mode + Accent Swatches */}
-          <div className="pt-5 border-t border-[#ECE8D9] dark:border-[#262C21] grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="pt-5 border-t border-[#E1EAE3] dark:border-[#262C21] grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div>
-              <p className="text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <p className="text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Site Theme Mode (Rasta Palette)
               </p>
               <div className="mt-2.5 grid grid-cols-2 gap-3">
@@ -450,8 +450,8 @@ export function CPanelView({
                   onClick={() => setThemeMode('dark')}
                   className={`flex items-center gap-2.5 px-4 py-3 rounded-xl border text-left text-xs font-medium transition-colors ${
                     themeMode === 'dark'
-                      ? 'border-[#FCD116] bg-[#1E2418] text-[#FCD116]'
-                      : 'border-[#D8D1BC] dark:border-[#2E3627] text-[#5A5E52] dark:text-[#A6AA9C]'
+                      ? 'border-[#FFD600] bg-[#1E2418] text-[#FFD600]'
+                      : 'border-[#C6D5CA] dark:border-[#24382B] text-[#526056] dark:text-[#8FA395]'
                   }`}
                 >
                   <Moon className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -462,8 +462,8 @@ export function CPanelView({
                   onClick={() => setThemeMode('light')}
                   className={`flex items-center gap-2.5 px-4 py-3 rounded-xl border text-left text-xs font-medium transition-colors ${
                     themeMode === 'light'
-                      ? 'border-[#008732] bg-[#008732]/10 text-[#008732] dark:text-[#4ADE80]'
-                      : 'border-[#D8D1BC] dark:border-[#2E3627] text-[#5A5E52] dark:text-[#A6AA9C]'
+                      ? 'border-[#00A846] bg-[#00A846]/10 text-[#00A846] dark:text-[#00E676]'
+                      : 'border-[#C6D5CA] dark:border-[#24382B] text-[#526056] dark:text-[#8FA395]'
                   }`}
                 >
                   <Sun className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -473,7 +473,7 @@ export function CPanelView({
             </div>
 
             <div>
-              <label htmlFor="cp-accent-hex" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <label htmlFor="cp-accent-hex" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Primary Button Accent Color
               </label>
               <div className="mt-2.5 flex flex-wrap items-center gap-2">
@@ -485,8 +485,8 @@ export function CPanelView({
                     title={preset.label}
                     className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium ${
                       accentColor.toLowerCase() === preset.hex.toLowerCase()
-                        ? 'border-[#151811] dark:border-[#FCD116] text-[#151811] dark:text-[#F5F3EA]'
-                        : 'border-[#D8D1BC] dark:border-[#2E3627] text-[#5A5E52] dark:text-[#A6AA9C]'
+                        ? 'border-[#0C120E] dark:border-[#FFD600] text-[#0C120E] dark:text-[#EEF4F0]'
+                        : 'border-[#C6D5CA] dark:border-[#24382B] text-[#526056] dark:text-[#8FA395]'
                     }`}
                   >
                     <span
@@ -502,22 +502,22 @@ export function CPanelView({
                   value={accentColor}
                   onChange={(e) => setAccentColor(e.target.value)}
                   maxLength={7}
-                  className="w-24 px-2.5 py-1.5 text-xs font-mono-tabular bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                  className="w-24 px-2.5 py-1.5 text-xs font-mono-tabular bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                 />
               </div>
             </div>
           </div>
 
           {/* Live Announcement Banner */}
-          <div className="pt-5 border-t border-[#ECE8D9] dark:border-[#262C21] space-y-3">
+          <div className="pt-5 border-t border-[#E1EAE3] dark:border-[#262C21] space-y-3">
             <label className="inline-flex items-center gap-2.5 cursor-pointer">
               <input
                 type="checkbox"
                 checked={announcementEnabled}
                 onChange={(e) => setAnnouncementEnabled(e.target.checked)}
-                className="w-4 h-4 rounded accent-[#008732]"
+                className="w-4 h-4 rounded accent-[#00A846]"
               />
-              <span className="text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <span className="text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Display site-wide announcement banner below the header
               </span>
             </label>
@@ -528,7 +528,7 @@ export function CPanelView({
               onChange={(e) => setAnnouncementText(e.target.value)}
               maxLength={280}
               placeholder="e.g., Fresh drops live now — 5,000+ bulk upload enabled!"
-              className="w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+              className="w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
             />
           </div>
 
@@ -549,21 +549,21 @@ export function CPanelView({
       {activeTab === 'uploads' && (
         <form
           onSubmit={handleSave}
-          className="mt-6 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-6 sm:p-8 space-y-6"
+          className="mt-6 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6 sm:p-8 space-y-6"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="cp-concurrency" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <label htmlFor="cp-concurrency" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Default Parallel Upload Streams (1–16)
               </label>
-              <p className="mt-1 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+              <p className="mt-1 text-xs text-[#526056] dark:text-[#8FA395]">
                 Controls how many files stream concurrently during 5,000+ file drops.
               </p>
               <select
                 id="cp-concurrency"
                 value={uploadConcurrency}
                 onChange={(e) => setUploadConcurrency(Number(e.target.value))}
-                className="mt-2 w-full px-3.5 py-2.5 text-sm font-mono-tabular bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                className="mt-2 w-full px-3.5 py-2.5 text-sm font-mono-tabular bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
               >
                 {[1, 2, 4, 6, 8, 12, 16].map((n) => (
                   <option key={n} value={n}>
@@ -574,17 +574,17 @@ export function CPanelView({
             </div>
 
             <div>
-              <label htmlFor="cp-chunk-size" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <label htmlFor="cp-chunk-size" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Chunk Stream Size (MiB)
               </label>
-              <p className="mt-1 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+              <p className="mt-1 text-xs text-[#526056] dark:text-[#8FA395]">
                 Larger chunks speed up multi-gigabyte 4K/8K videos on fast connections.
               </p>
               <select
                 id="cp-chunk-size"
                 value={chunkSizeMb}
                 onChange={(e) => setChunkSizeMb(Number(e.target.value))}
-                className="mt-2 w-full px-3.5 py-2.5 text-sm font-mono-tabular bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                className="mt-2 w-full px-3.5 py-2.5 text-sm font-mono-tabular bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
               >
                 {[2, 4, 8, 16, 32].map((mb) => (
                   <option key={mb} value={mb}>
@@ -595,16 +595,16 @@ export function CPanelView({
             </div>
           </div>
 
-          <div className="pt-5 border-t border-[#ECE8D9] dark:border-[#262C21] grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="pt-5 border-t border-[#E1EAE3] dark:border-[#262C21] grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="cp-default-vis" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <label htmlFor="cp-default-vis" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Default Visibility for New Albums
               </label>
               <select
                 id="cp-default-vis"
                 value={defaultAlbumVisibility}
                 onChange={(e) => setDefaultAlbumVisibility(e.target.value as AlbumVisibility)}
-                className="mt-2 w-full px-3.5 py-2.5 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                className="mt-2 w-full px-3.5 py-2.5 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
               >
                 <option value="private">Private (Owner & Invited)</option>
                 <option value="unlisted">Unlisted (Share Link)</option>
@@ -618,9 +618,9 @@ export function CPanelView({
                   type="checkbox"
                   checked={allowRegistrations}
                   onChange={(e) => setAllowRegistrations(e.target.checked)}
-                  className="w-4 h-4 rounded accent-[#008732]"
+                  className="w-4 h-4 rounded accent-[#00A846]"
                 />
-                <span className="text-xs font-medium text-[#151811] dark:text-[#F5F3EA]">
+                <span className="text-xs font-medium text-[#0C120E] dark:text-[#EEF4F0]">
                   Allow new user account registrations
                 </span>
               </label>
@@ -630,9 +630,9 @@ export function CPanelView({
                   type="checkbox"
                   checked={defaultAllowDownloads}
                   onChange={(e) => setDefaultAllowDownloads(e.target.checked)}
-                  className="w-4 h-4 rounded accent-[#008732]"
+                  className="w-4 h-4 rounded accent-[#00A846]"
                 />
-                <span className="text-xs font-medium text-[#151811] dark:text-[#F5F3EA]">
+                <span className="text-xs font-medium text-[#0C120E] dark:text-[#EEF4F0]">
                   Enable original file downloads by default on new albums
                 </span>
               </label>
@@ -654,9 +654,9 @@ export function CPanelView({
 
       {/* TAB 3: Albums Moderation */}
       {activeTab === 'albums' && (
-        <section className="mt-6 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl overflow-hidden">
-          <div className="p-5 border-b border-[#ECE8D9] dark:border-[#262C21] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <h2 className="font-display text-base font-semibold text-[#151811] dark:text-[#F5F3EA]">
+        <section className="mt-6 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl overflow-hidden">
+          <div className="p-5 border-b border-[#E1EAE3] dark:border-[#262C21] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h2 className="font-display text-base font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               All Site Albums ({filteredAlbums.length})
             </h2>
             <input
@@ -664,11 +664,11 @@ export function CPanelView({
               value={albumSearch}
               onChange={(e) => setAlbumSearch(e.target.value)}
               placeholder="Search albums or owners..."
-              className="px-3.5 py-2 text-xs bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA] w-full sm:w-64"
+              className="px-3.5 py-2 text-xs bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0] w-full sm:w-64"
             />
           </div>
 
-          <div className="divide-y divide-[#ECE8D9] dark:divide-[#262C21]">
+          <div className="divide-y divide-[#E1EAE3] dark:divide-[#262C21]">
             {filteredAlbums.map((album) => (
               <div
                 key={album.id}
@@ -678,12 +678,12 @@ export function CPanelView({
                   <button
                     type="button"
                     onClick={() => onOpenAlbum(album.id)}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#151811] dark:text-[#F5F3EA] hover:text-[#008732] dark:hover:text-[#FCD116]"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0C120E] dark:text-[#EEF4F0] hover:text-[#00A846] dark:hover:text-[#FFD600]"
                   >
                     <span className="truncate">{album.title}</span>
                     <ExternalLink className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   </button>
-                  <p className="mt-1 text-xs font-mono-tabular text-[#5A5E52] dark:text-[#A6AA9C]">
+                  <p className="mt-1 text-xs font-mono-tabular text-[#526056] dark:text-[#8FA395]">
                     By {album.ownerName} · {album.itemCount.toLocaleString()} files ·{' '}
                     {formatBytes(album.totalBytes)} · Updated {formatRelativeDate(album.updatedAt)}
                   </p>
@@ -707,7 +707,7 @@ export function CPanelView({
                         setBusyId(null);
                       }
                     }}
-                    className="px-3 py-1.5 text-xs bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                    className="px-3 py-1.5 text-xs bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                   >
                     <option value="private">Private</option>
                     <option value="unlisted">Unlisted</option>
@@ -730,7 +730,7 @@ export function CPanelView({
                       }
                     }}
                     aria-label={`Delete album ${album.title}`}
-                    className="p-2 text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#CE1126] rounded-lg"
+                    className="p-2 text-[#526056] dark:text-[#8FA395] hover:text-[#E11D32] rounded-lg"
                   >
                     <Trash2 className="w-4 h-4" aria-hidden="true" />
                   </button>
@@ -743,20 +743,20 @@ export function CPanelView({
 
       {/* TAB 4: Users & Roles */}
       {activeTab === 'users' && (
-        <section className="mt-6 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl overflow-hidden divide-y divide-[#ECE8D9] dark:divide-[#262C21]">
+        <section className="mt-6 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl overflow-hidden divide-y divide-[#E1EAE3] dark:divide-[#262C21]">
           {(overview?.users || []).map((account) => (
             <div
               key={account.uid}
               className="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
             >
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-[#151811] dark:text-[#F5F3EA] truncate">
+                <p className="text-sm font-semibold text-[#0C120E] dark:text-[#EEF4F0] truncate">
                   {account.displayName}{' '}
-                  <span className="font-normal text-[#5A5E52] dark:text-[#A6AA9C]">
+                  <span className="font-normal text-[#526056] dark:text-[#8FA395]">
                     @{account.handle}
                   </span>
                 </p>
-                <p className="mt-0.5 text-xs font-mono-tabular text-[#5A5E52] dark:text-[#A6AA9C]">
+                <p className="mt-0.5 text-xs font-mono-tabular text-[#526056] dark:text-[#8FA395]">
                   {account.email} · {account.provider} · {formatBytes(account.totalBytesUploaded)}
                 </p>
               </div>
@@ -765,8 +765,8 @@ export function CPanelView({
                 <span
                   className={`text-xs font-medium ${
                     account.isAdmin
-                      ? 'text-[#008732] dark:text-[#FCD116]'
-                      : 'text-[#5A5E52] dark:text-[#A6AA9C]'
+                      ? 'text-[#00A846] dark:text-[#FFD600]'
+                      : 'text-[#526056] dark:text-[#8FA395]'
                   }`}
                 >
                   {account.isAdmin ? 'Admin' : 'Member'}
@@ -786,7 +786,7 @@ export function CPanelView({
                       setBusyId(null);
                     }
                   }}
-                  className="px-3 py-1.5 text-xs font-medium text-[#151811] dark:text-[#F5F3EA] bg-[#F8F6EE] dark:bg-[#1D2318] border border-[#D8D1BC] dark:border-[#343D2C] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] disabled:opacity-50 whitespace-nowrap"
+                  className="px-3 py-1.5 text-xs font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-[#F3F6F4] dark:bg-[#111A14] border border-[#C6D5CA] dark:border-[#294031] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] disabled:opacity-50 whitespace-nowrap"
                 >
                   {account.isAdmin ? 'Revoke Admin' : 'Make Admin'}
                 </button>
@@ -800,16 +800,16 @@ export function CPanelView({
       {activeTab === 'export' && (
         <section className="mt-6 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-6 flex flex-col justify-between gap-5">
+            <div className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6 flex flex-col justify-between gap-5">
               <div>
-                <div className="inline-flex items-center gap-2 text-xs font-medium text-[#008732] dark:text-[#FCD116]">
+                <div className="inline-flex items-center gap-2 text-xs font-medium text-[#00A846] dark:text-[#FFD600]">
                   <Package className="w-4 h-4" aria-hidden="true" />
                   <span>Recommended for Hosting</span>
                 </div>
-                <h2 className="mt-2 font-display text-xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+                <h2 className="mt-2 font-display text-xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                   App Source &amp; Production Build (.zip)
                 </h2>
-                <p className="mt-2 text-sm leading-relaxed text-[#5A5E52] dark:text-[#A6AA9C]">
+                <p className="mt-2 text-sm leading-relaxed text-[#526056] dark:text-[#8FA395]">
                   Lightweight deployment package containing all frontend and backend source code,
                   the compiled <code className="font-mono-tabular">dist/</code> bundle, Firebase
                   config/rules, and a <code className="font-mono-tabular">DEPLOY_README.txt</code>{' '}
@@ -835,19 +835,19 @@ export function CPanelView({
               </button>
             </div>
 
-            <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-6 flex flex-col justify-between gap-5">
+            <div className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6 flex flex-col justify-between gap-5">
               <div>
-                <div className="inline-flex items-center gap-2 text-xs font-medium text-[#B88200] dark:text-[#FCD116]">
+                <div className="inline-flex items-center gap-2 text-xs font-medium text-[#B88200] dark:text-[#FFD600]">
                   <HardDrive className="w-4 h-4" aria-hidden="true" />
                   <span>
                     Complete Migration Backup
                     {overview ? ` · ~${formatBytes(overview.stats.totalBytes)}` : ''}
                   </span>
                 </div>
-                <h2 className="mt-2 font-display text-xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+                <h2 className="mt-2 font-display text-xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                   Full Site + Uploaded Media Backup (.zip)
                 </h2>
-                <p className="mt-2 text-sm leading-relaxed text-[#5A5E52] dark:text-[#A6AA9C]">
+                <p className="mt-2 text-sm leading-relaxed text-[#526056] dark:text-[#8FA395]">
                   Includes everything in the deployment ZIP plus your vault database, all uploaded
                   videos and photos, video thumbnails, custom album covers, and profile avatars so
                   you can move your entire existing library to another server.
@@ -857,7 +857,7 @@ export function CPanelView({
                 type="button"
                 onClick={() => void handleDownloadAppZip(true)}
                 disabled={exportingMode !== null}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium text-[#151811] dark:text-[#F5F3EA] bg-[#F8F6EE] dark:bg-[#1D2318] border border-[#D8D1BC] dark:border-[#343D2C] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] disabled:opacity-60"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-[#F3F6F4] dark:bg-[#111A14] border border-[#C6D5CA] dark:border-[#294031] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] disabled:opacity-60"
               >
                 {exportingMode === 'full' ? (
                   <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
@@ -871,19 +871,19 @@ export function CPanelView({
             </div>
           </div>
 
-          <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-6">
-            <h3 className="font-display text-lg font-semibold text-[#151811] dark:text-[#F5F3EA]">
+          <div className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6">
+            <h3 className="font-display text-lg font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Quick Hosting Checklist
             </h3>
-            <ol className="mt-3 space-y-2 text-sm text-[#5A5E52] dark:text-[#A6AA9C] list-decimal list-inside">
+            <ol className="mt-3 space-y-2 text-sm text-[#526056] dark:text-[#8FA395] list-decimal list-inside">
               <li>
                 Upload and unzip on a Node.js host (Render, Railway, Fly.io, DigitalOcean, VPS, or
                 cPanel Node.js App — Node 20+ recommended).
               </li>
               <li>
-                Run <code className="font-mono-tabular text-[#151811] dark:text-[#F5F3EA]">npm install</code>,{' '}
-                <code className="font-mono-tabular text-[#151811] dark:text-[#F5F3EA]">npm run build</code>, and start with{' '}
-                <code className="font-mono-tabular text-[#151811] dark:text-[#F5F3EA]">npx tsx server.ts</code>.
+                Run <code className="font-mono-tabular text-[#0C120E] dark:text-[#EEF4F0]">npm install</code>,{' '}
+                <code className="font-mono-tabular text-[#0C120E] dark:text-[#EEF4F0]">npm run build</code>, and start with{' '}
+                <code className="font-mono-tabular text-[#0C120E] dark:text-[#EEF4F0]">npx tsx server.ts</code>.
               </li>
               <li>
                 If you connect a custom domain, add it under Firebase Console → Authentication →

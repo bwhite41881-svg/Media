@@ -3,30 +3,34 @@
 
 @layer base {
   :root {
-    --accent: #008732;
-    --accent-hover: #006d28;
-    --rasta-green: #009B3A;
-    --rasta-gold: #FCD116;
-    --rasta-red: #CE1126;
-    --canvas: #F8F6EE;
+    --accent: #00A846;
+    --accent-hover: #008A38;
+    --rasta-green: #00E676;
+    --rasta-gold: #FFD600;
+    --rasta-red: #FF2A3C;
+    --canvas: #F3F6F4;
     --surface: #FFFFFF;
-    --ink: #151811;
-    --muted: #5A5E52;
-    --border: #E2DCC8;
+    --surface-elevated: #F8FAF8;
+    --ink: #0C120E;
+    --muted: #526056;
+    --border: #D4DFD7;
     color-scheme: light;
   }
 
   html.dark {
-    --canvas: #0D0F0B;
-    --surface: #151912;
-    --ink: #F5F3EA;
-    --muted: #A6AA9C;
-    --border: #2A3124;
+    --accent: #00B84C;
+    --accent-hover: #009A3E;
+    --canvas: #060807;
+    --surface: #0C110E;
+    --surface-elevated: #111914;
+    --ink: #EEF4F0;
+    --muted: #8FA395;
+    --border: #1C2A21;
     color-scheme: dark;
   }
 
   html {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: var(--canvas);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
@@ -51,11 +55,12 @@
 }
 
 .font-display {
-  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
 }
 
 .font-serif-editorial {
-  font-family: 'Newsreader', Georgia, serif;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.025em;
 }
 
 .font-mono-tabular {
@@ -63,14 +68,93 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Signature High-Tech Luminous Rasta Tricolor Beam */
 .rasta-stripe {
   background: linear-gradient(
     90deg,
-    #009B3A 0%,
-    #009B3A 33.333%,
-    #FCD116 33.333%,
-    #FCD116 66.666%,
-    #CE1126 66.666%,
-    #CE1126 100%
+    #00E676 0%,
+    #00C853 31%,
+    #FFD600 35%,
+    #FFD600 65%,
+    #FF2A3C 69%,
+    #E11D32 100%
   );
+  box-shadow: 0 0 18px rgba(0, 230, 118, 0.28), 0 0 22px rgba(255, 214, 0, 0.16);
+}
+
+/* Precision Architectural Matrix Canvas */
+.tech-grid-bg {
+  background-color: var(--canvas);
+  background-image:
+    radial-gradient(ellipse 75% 40% at 15% -5%, rgba(0, 230, 118, 0.08), transparent 60%),
+    radial-gradient(ellipse 60% 35% at 85% -5%, rgba(255, 214, 0, 0.06), transparent 60%),
+    linear-gradient(to right, rgba(20, 40, 28, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20, 40, 28, 0.06) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+}
+
+html.dark .tech-grid-bg {
+  background-image:
+    radial-gradient(ellipse 70% 42% at 14% -4%, rgba(0, 230, 118, 0.12), transparent 62%),
+    radial-gradient(ellipse 55% 34% at 86% -4%, rgba(255, 214, 0, 0.08), transparent 60%),
+    radial-gradient(ellipse 40% 28% at 50% -8%, rgba(255, 42, 60, 0.06), transparent 58%),
+    linear-gradient(to right, rgba(0, 230, 118, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 230, 118, 0.045) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+}
+
+/* Elevated High-Tech Carbon Glass Surface */
+.tech-panel {
+  background-color: rgba(255, 255, 255, 0.92);
+  border: 1px solid #D4DFD7;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 10px 30px -16px rgba(10, 24, 15, 0.12);
+}
+
+html.dark .tech-panel {
+  background-color: rgba(12, 17, 14, 0.86);
+  border: 1px solid #1E2E24;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 14px 36px -18px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+}
+
+/* Controlled Signal Glow for Primary Actions */
+.tech-glow-green {
+  box-shadow: 0 0 24px -6px rgba(0, 230, 118, 0.55), 0 1px 0 rgba(255, 255, 255, 0.22) inset;
+}
+
+.tech-glow-gold {
+  box-shadow: 0 0 20px -6px rgba(255, 214, 0, 0.5);
+}
+
+/* Precision Optical Reticle Corners */
+.tech-reticle {
+  position: relative;
+}
+
+.tech-reticle::before,
+.tech-reticle::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.tech-reticle::before {
+  top: 10px;
+  left: 10px;
+  border-top: 2px solid #00E676;
+  border-left: 2px solid #00E676;
+  border-top-left-radius: 3px;
+}
+
+.tech-reticle::after {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 2px solid #FFD600;
+  border-right: 2px solid #FFD600;
+  border-bottom-right-radius: 3px;
 }

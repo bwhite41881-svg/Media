@@ -81,14 +81,14 @@ export function ChangeCoverModal({
       aria-label={`Change cover photo for ${album.title}`}
       className="fixed inset-0 z-50 bg-black/65 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto"
     >
-      <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden my-auto">
+      <div className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden my-auto">
         <div className="h-[3px] w-full rasta-stripe" aria-hidden="true" />
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#ECE8D9] dark:border-[#262C21]">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#E1EAE3] dark:border-[#262C21]">
           <div>
-            <h2 className="font-display text-xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+            <h2 className="font-display text-xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Change Album Cover Photo
             </h2>
-            <p className="mt-0.5 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+            <p className="mt-0.5 text-xs text-[#526056] dark:text-[#8FA395]">
               Upload a custom cover image or pick a frame from “{album.title}”.
             </p>
           </div>
@@ -96,7 +96,7 @@ export function ChangeCoverModal({
             type="button"
             onClick={onClose}
             aria-label="Close cover photo dialog"
-            className="p-2 text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white rounded-lg hover:bg-[#EFEBD9] dark:hover:bg-[#1E2418]"
+            className="p-2 text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white rounded-lg hover:bg-[#E8EFEA] dark:hover:bg-[#1E2418]"
           >
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -106,15 +106,15 @@ export function ChangeCoverModal({
           {error && (
             <p
               role="alert"
-              className="text-xs font-medium text-[#CE1126] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/50 border border-[#FECACA] dark:border-red-900 rounded-lg px-3.5 py-2.5"
+              className="text-xs font-medium text-[#E11D32] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/50 border border-[#FECACA] dark:border-red-900 rounded-lg px-3.5 py-2.5"
             >
               {error}
             </p>
           )}
 
           {/* Current Cover Preview + Upload Custom Photo */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 p-4 rounded-xl bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#E2DCC8] dark:border-[#2A3124]">
-            <div className="w-full sm:w-44 aspect-[16/10] rounded-lg overflow-hidden bg-[#EFEBD9] dark:bg-[#1B2117] border border-[#D8D1BC] dark:border-[#2E3627] flex items-center justify-center shrink-0">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 p-4 rounded-xl bg-[#F3F6F4] dark:bg-[#060807] border border-[#D4DFD7] dark:border-[#1C2A21]">
+            <div className="w-full sm:w-44 aspect-[16/10] rounded-lg overflow-hidden bg-[#E8EFEA] dark:bg-[#1B2117] border border-[#C6D5CA] dark:border-[#24382B] flex items-center justify-center shrink-0">
               {album.coverUrl ? (
                 <img
                   src={resolveProtectedUrl(album.coverUrl)}
@@ -123,17 +123,17 @@ export function ChangeCoverModal({
                 />
               ) : (
                 <div className="text-center px-3">
-                  <ImageIcon className="w-6 h-6 mx-auto text-[#787B6E]" aria-hidden="true" />
-                  <span className="mt-1 block text-[11px] text-[#787B6E]">No cover yet</span>
+                  <ImageIcon className="w-6 h-6 mx-auto text-[#6A7B6F]" aria-hidden="true" />
+                  <span className="mt-1 block text-[11px] text-[#6A7B6F]">No cover yet</span>
                 </div>
               )}
             </div>
 
             <div className="flex-1 min-w-0">
-              <h3 className="text-sm font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <h3 className="text-sm font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Upload Custom Cover Photo
               </h3>
-              <p className="mt-1 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+              <p className="mt-1 text-xs text-[#526056] dark:text-[#8FA395]">
                 Choose any JPEG, PNG, or WebP photo from your phone or computer.
               </p>
 
@@ -163,7 +163,7 @@ export function ChangeCoverModal({
                     type="button"
                     disabled={busy}
                     onClick={() => void handleRemove()}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-[#CE1126] dark:text-red-400 hover:bg-red-500/10 rounded-lg disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-[#E11D32] dark:text-red-400 hover:bg-red-500/10 rounded-lg disabled:opacity-50"
                   >
                     <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>Reset Cover</span>
@@ -175,12 +175,12 @@ export function ChangeCoverModal({
 
           {/* Choose from existing photos/video posters in this album */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#5A5E52] dark:text-[#A6AA9C]">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#526056] dark:text-[#8FA395]">
               Or Choose From Album Media ({selectableMedia.length})
             </h3>
 
             {selectableMedia.length === 0 ? (
-              <p className="mt-2 text-xs text-[#787B6E] dark:text-[#8E9384]">
+              <p className="mt-2 text-xs text-[#6A7B6F] dark:text-[#6E8575]">
                 No photos or video thumbnails in this album yet — upload a custom cover photo above.
               </p>
             ) : (
@@ -197,8 +197,8 @@ export function ChangeCoverModal({
                       aria-label={`Set ${item.title} as album cover`}
                       className={`group relative aspect-[4/3] rounded-xl overflow-hidden border text-left transition-all ${
                         isActive
-                          ? 'border-[#009B3A] dark:border-[#FCD116] ring-2 ring-[#009B3A] dark:ring-[#FCD116]'
-                          : 'border-[#E2DCC8] dark:border-[#2A3124] hover:border-[#009B3A] dark:hover:border-[#FCD116]'
+                          ? 'border-[#00E676] dark:border-[#FFD600] ring-2 ring-[#00E676] dark:ring-[#FFD600]'
+                          : 'border-[#D4DFD7] dark:border-[#1C2A21] hover:border-[#00E676] dark:hover:border-[#FFD600]'
                       }`}
                     >
                       <img
@@ -210,7 +210,7 @@ export function ChangeCoverModal({
                         {item.title}
                       </span>
                       {isActive && (
-                        <span className="absolute top-2 right-2 w-6 h-6 rounded-full bg-[#008732] dark:bg-[#FCD116] text-white dark:text-[#151811] flex items-center justify-center shadow">
+                        <span className="absolute top-2 right-2 w-6 h-6 rounded-full bg-[#00A846] dark:bg-[#FFD600] text-white dark:text-[#0C120E] flex items-center justify-center shadow">
                           <Check className="w-3.5 h-3.5" aria-hidden="true" />
                         </span>
                       )}

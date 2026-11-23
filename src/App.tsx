@@ -115,7 +115,7 @@ function BigBzLeaksApp() {
   useEffect(() => {
     document.title = `${siteSettings.siteName} — Unlimited Photo & Video Vault`;
     document.documentElement.classList.toggle('dark', siteSettings.themeMode === 'dark');
-    document.documentElement.style.setProperty('--accent', siteSettings.accentColor || '#008732');
+    document.documentElement.style.setProperty('--accent', siteSettings.accentColor || '#00B84C');
     try {
       window.localStorage.setItem('bigbz_theme_mode', siteSettings.themeMode);
     } catch {
@@ -576,7 +576,7 @@ function BigBzLeaksApp() {
     coverModalAlbum && albumDetail.album?.id === coverModalAlbum.id ? albumDetail.media : [];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8F6EE] dark:bg-[#0D0F0B] text-[#151811] dark:text-[#F5F3EA]">
+    <div className="min-h-screen flex flex-col tech-grid-bg text-[#0C120E] dark:text-[#EEF4F0]">
       <TopBar
         activeView={view}
         user={user}
@@ -812,35 +812,36 @@ function BigBzLeaksApp() {
       </main>
 
       {/* Quiet Editorial Footer with subtle Rasta hairline */}
-      <footer className="border-t border-[#E2DCC8] dark:border-[#2A3124] bg-[#F8F6EE] dark:bg-[#0D0F0B] py-8 px-6 sm:px-8">
-        <div className="max-w-[1360px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
-          <p>{siteSettings.footerText}</p>
+      <footer className="relative border-t border-[#D4DFD7] dark:border-[#1C2A21] bg-[#F3F6F4]/90 dark:bg-[#060807]/90 backdrop-blur-md py-8 px-6 sm:px-8">
+        <div className="absolute inset-x-0 top-0 h-[1px] rasta-stripe opacity-70" aria-hidden="true" />
+        <div className="max-w-[1360px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#526056] dark:text-[#8FA395]">
+          <p className="font-mono-tabular">{siteSettings.footerText}</p>
           <div className="flex items-center gap-6">
             <button
               type="button"
               onClick={() => setView('explore')}
-              className="hover:text-[#151811] dark:hover:text-[#FCD116] transition-colors"
+              className="hover:text-[#0C120E] dark:hover:text-[#FFD600] transition-colors"
             >
               Explore
             </button>
             <button
               type="button"
               onClick={() => setView('albums')}
-              className="hover:text-[#151811] dark:hover:text-[#FCD116] transition-colors"
+              className="hover:text-[#0C120E] dark:hover:text-[#FFD600] transition-colors"
             >
               Albums
             </button>
             <button
               type="button"
               onClick={() => setView('shared')}
-              className="hover:text-[#151811] dark:hover:text-[#FCD116] transition-colors"
+              className="hover:text-[#0C120E] dark:hover:text-[#FFD600] transition-colors"
             >
               Share Lookup
             </button>
             <button
               type="button"
               onClick={() => setView('messages')}
-              className="hover:text-[#151811] dark:hover:text-[#FCD116] transition-colors"
+              className="hover:text-[#0C120E] dark:hover:text-[#FFD600] transition-colors"
             >
               Messages
             </button>
@@ -848,7 +849,7 @@ function BigBzLeaksApp() {
               <button
                 type="button"
                 onClick={() => setView('cpanel')}
-                className="hover:text-[#151811] dark:hover:text-[#FCD116] transition-colors"
+                className="hover:text-[#0C120E] dark:hover:text-[#FFD600] transition-colors"
               >
                 cPanel
               </button>
@@ -956,11 +957,11 @@ function BigBzLeaksApp() {
           aria-label={`Confirm delete album ${deleteConfirmAlbum.title}`}
           className="fixed inset-0 z-50 bg-black/65 backdrop-blur-[2px] flex items-center justify-center p-4"
         >
-          <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl max-w-md w-full p-6 shadow-2xl">
-            <h2 className="font-display text-lg font-semibold text-[#151811] dark:text-[#F5F3EA]">
+          <div className="tech-panel rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <h2 className="font-display text-lg font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Delete “{deleteConfirmAlbum.title}”?
             </h2>
-            <p className="mt-2 text-sm text-[#5A5E52] dark:text-[#A6AA9C]">
+            <p className="mt-2 text-sm text-[#526056] dark:text-[#8FA395]">
               This permanently removes the album, revokes its share link, and deletes all{' '}
               {deleteConfirmAlbum.itemCount.toLocaleString()}{' '}
               {deleteConfirmAlbum.itemCount === 1 ? 'file' : 'files'} inside it.
@@ -969,14 +970,14 @@ function BigBzLeaksApp() {
               <button
                 type="button"
                 onClick={() => setDeleteConfirmAlbum(null)}
-                className="px-4 py-2 text-sm font-medium text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white"
+                className="px-4 py-2 text-sm font-medium text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={() => void handleDeleteAlbumConfirmed()}
-                className="px-4 py-2 text-sm font-medium text-white bg-[#CE1126] rounded-lg hover:bg-[#AE0E20]"
+                className="px-4 py-2 text-sm font-semibold text-white bg-[#FF2A3C] rounded-lg hover:bg-[#E11D32]"
               >
                 Delete Permanently
               </button>
@@ -990,7 +991,7 @@ function BigBzLeaksApp() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-6 right-6 z-50 bg-[#151912] dark:bg-[#FCD116] text-[#F5F3EA] dark:text-[#151811] border border-[#2A3124] dark:border-transparent text-xs font-semibold px-4 py-3 rounded-lg shadow-xl"
+          className="fixed bottom-6 right-6 z-50 bg-[#0C110E] dark:bg-[#FFD600] text-[#EEF4F0] dark:text-[#060807] border border-[#00E676]/40 dark:border-transparent font-mono-tabular text-xs font-semibold px-4 py-3 rounded-lg shadow-2xl"
         >
           {toast}
         </div>

@@ -44,7 +44,7 @@ export function UserAvatar({
   return (
     <span className={`relative inline-flex shrink-0 ${className}`}>
       <span
-        className={`${SIZE_CLASSES[size]} rounded-full overflow-hidden inline-flex items-center justify-center font-display font-semibold select-none border border-[#D8D1BC] dark:border-[#2E3627] bg-[#EFEBD9] dark:bg-[#1E2519] text-[#008732] dark:text-[#FCD116]`}
+        className={`${SIZE_CLASSES[size]} rounded-full overflow-hidden inline-flex items-center justify-center font-display font-semibold select-none border border-[#C6D5CA] dark:border-[#24382B] bg-[#E8EFEA] dark:bg-[#1E2519] text-[#00A846] dark:text-[#FFD600]`}
       >
         {showImage ? (
           <img
@@ -61,7 +61,7 @@ export function UserAvatar({
       {online && (
         <span
           aria-label="Online"
-          className={`absolute bottom-0 right-0 ${DOT_CLASSES[size]} rounded-full bg-[#22C55E] ring-2 ring-[#F8F6EE] dark:ring-[#151912]`}
+          className={`absolute bottom-0 right-0 ${DOT_CLASSES[size]} rounded-full bg-[#22C55E] ring-2 ring-[#F3F6F4] dark:ring-[#0C110E]`}
         />
       )}
     </span>

@@ -108,35 +108,35 @@ export function AccountView({
 
     const statusTextClass =
       quota.status === 'critical'
-        ? 'text-[#CE1126] dark:text-[#F87171]'
+        ? 'text-[#E11D32] dark:text-[#FF4D5E]'
         : quota.status === 'warning'
-          ? 'text-[#B88200] dark:text-[#FCD116]'
-          : 'text-[#008732] dark:text-[#4ADE80]';
+          ? 'text-[#B88200] dark:text-[#FFD600]'
+          : 'text-[#00A846] dark:text-[#00E676]';
 
     const statusBarClass =
       quota.status === 'critical'
-        ? 'bg-[#CE1126] dark:bg-[#F87171]'
+        ? 'bg-[#E11D32] dark:bg-[#FF4D5E]'
         : quota.status === 'warning'
-          ? 'bg-[#D99B00] dark:bg-[#FCD116]'
-          : 'bg-[#008732] dark:bg-[#4ADE80]';
+          ? 'bg-[#D99B00] dark:bg-[#FFD600]'
+          : 'bg-[#00A846] dark:bg-[#00E676]';
 
     return (
       <div className="max-w-[1000px] mx-auto px-6 sm:px-8 pt-10 pb-24">
-        <header className="pb-8 border-b border-[#E2DCC8] dark:border-[#2A3124] flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <header className="pb-8 border-b border-[#D4DFD7] dark:border-[#1C2A21] flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="flex items-center gap-4 sm:gap-5">
             <UserAvatar name={user.displayName} avatarUrl={user.avatarUrl} size="xl" />
             <div>
-              <p className="text-xs font-medium text-[#008732] dark:text-[#FCD116]">
+              <p className="text-xs font-medium text-[#00A846] dark:text-[#FFD600]">
                 Signed in via{' '}
                 {user.provider === 'google'
                   ? 'Google Account (Cloud Sync)'
                   : `${siteSettings.siteName} Account`}
                 {user.isAdmin ? ' · Site Admin' : ''}
               </p>
-              <h1 className="mt-1.5 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-[#151811] dark:text-[#F5F3EA]">
+              <h1 className="mt-1.5 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-[#0C120E] dark:text-[#EEF4F0]">
                 {user.displayName}
               </h1>
-              <p className="mt-1 text-sm text-[#5A5E52] dark:text-[#A6AA9C]">
+              <p className="mt-1 text-sm text-[#526056] dark:text-[#8FA395]">
                 @{user.handle} · {user.email} · Joined {formatRelativeDate(user.createdAt)}
               </p>
             </div>
@@ -145,7 +145,7 @@ export function AccountView({
           <button
             type="button"
             onClick={() => void onSignOut()}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#151811] dark:text-[#F5F3EA] bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg hover:border-[#CE1126] transition-colors self-start sm:self-auto"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg hover:border-[#E11D32] transition-colors self-start sm:self-auto"
           >
             <LogOut className="w-4 h-4" aria-hidden="true" />
             <span>Sign out</span>
@@ -153,36 +153,36 @@ export function AccountView({
         </header>
 
         {/* Storage & Privacy Summary */}
-        <section className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-6 pb-8 border-b border-[#E2DCC8] dark:border-[#2A3124]">
+        <section className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-6 pb-8 border-b border-[#D4DFD7] dark:border-[#1C2A21]">
           <div>
-            <p className="text-xs text-[#5A5E52] dark:text-[#A6AA9C]">Archived Volume</p>
-            <p className="mt-1 font-mono-tabular text-xl font-medium text-[#151811] dark:text-[#F5F3EA]">
+            <p className="text-xs text-[#526056] dark:text-[#8FA395]">Archived Volume</p>
+            <p className="mt-1 font-mono-tabular text-xl font-medium text-[#0C120E] dark:text-[#EEF4F0]">
               {formatBytes(quota.usedBytes)}
             </p>
-            <p className="mt-0.5 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+            <p className="mt-0.5 text-xs text-[#526056] dark:text-[#8FA395]">
               of {formatBytes(quota.allocatedBytes)} allocated
             </p>
           </div>
           <div>
-            <p className="text-xs text-[#5A5E52] dark:text-[#A6AA9C]">Private Albums</p>
-            <p className="mt-1 font-mono-tabular text-xl font-medium text-[#151811] dark:text-[#F5F3EA]">
+            <p className="text-xs text-[#526056] dark:text-[#8FA395]">Private Albums</p>
+            <p className="mt-1 font-mono-tabular text-xl font-medium text-[#0C120E] dark:text-[#EEF4F0]">
               {privateCount}
             </p>
-            <p className="mt-0.5 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">Owner & invited only</p>
+            <p className="mt-0.5 text-xs text-[#526056] dark:text-[#8FA395]">Owner & invited only</p>
           </div>
           <div>
-            <p className="text-xs text-[#5A5E52] dark:text-[#A6AA9C]">Unlisted Links</p>
-            <p className="mt-1 font-mono-tabular text-xl font-medium text-[#151811] dark:text-[#F5F3EA]">
+            <p className="text-xs text-[#526056] dark:text-[#8FA395]">Unlisted Links</p>
+            <p className="mt-1 font-mono-tabular text-xl font-medium text-[#0C120E] dark:text-[#EEF4F0]">
               {unlistedCount}
             </p>
-            <p className="mt-0.5 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">Token-gated</p>
+            <p className="mt-0.5 text-xs text-[#526056] dark:text-[#8FA395]">Token-gated</p>
           </div>
           <div>
-            <p className="text-xs text-[#5A5E52] dark:text-[#A6AA9C]">Public Albums</p>
-            <p className="mt-1 font-mono-tabular text-xl font-medium text-[#151811] dark:text-[#F5F3EA]">
+            <p className="text-xs text-[#526056] dark:text-[#8FA395]">Public Albums</p>
+            <p className="mt-1 font-mono-tabular text-xl font-medium text-[#0C120E] dark:text-[#EEF4F0]">
               {publicCount}
             </p>
-            <p className="mt-0.5 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">Listed in Explore</p>
+            <p className="mt-0.5 text-xs text-[#526056] dark:text-[#8FA395]">Listed in Explore</p>
           </div>
         </section>
 
@@ -190,19 +190,22 @@ export function AccountView({
         <section
           aria-label="Storage quota utilization"
           data-testid="storage-quota-section"
-          className="mt-8 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-5 sm:p-6"
+          className="mt-8 tech-panel rounded-2xl p-5 sm:p-6"
         >
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
             <div>
-              <h2 className="font-display text-base font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <p className="font-mono-tabular text-[10px] uppercase tracking-[0.14em] text-[#00A846] dark:text-[#00E676]">
+                // VAULT TELEMETRY
+              </p>
+              <h2 className="mt-1 font-display text-base font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Storage Quota
               </h2>
-              <p className="mt-0.5 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
-                <span className="font-mono-tabular font-medium text-[#151811] dark:text-[#F5F3EA]">
+              <p className="mt-0.5 text-xs text-[#526056] dark:text-[#8FA395]">
+                <span className="font-mono-tabular font-medium text-[#0C120E] dark:text-[#EEF4F0]">
                   {formatBytes(quota.usedBytes)}
                 </span>{' '}
                 used of{' '}
-                <span className="font-mono-tabular font-medium text-[#151811] dark:text-[#F5F3EA]">
+                <span className="font-mono-tabular font-medium text-[#0C120E] dark:text-[#EEF4F0]">
                   {formatBytes(quota.allocatedBytes)}
                 </span>{' '}
                 {user.isAdmin ? 'studio allocation' : 'standard allocation'}
@@ -217,12 +220,12 @@ export function AccountView({
               <span data-testid="storage-quota-status" className={statusTextClass}>
                 {quota.statusLabel}
               </span>
-              <span aria-hidden="true" className="text-[#C8C2AE] dark:text-[#3A4332]">
+              <span aria-hidden="true" className="text-[#B8C7BC] dark:text-[#294031]">
                 ·
               </span>
               <span
                 data-testid="storage-quota-percent"
-                className="font-mono-tabular text-[#151811] dark:text-[#F5F3EA]"
+                className="font-mono-tabular text-[#0C120E] dark:text-[#EEF4F0]"
               >
                 {quota.percentLabel}
               </span>
@@ -238,16 +241,16 @@ export function AccountView({
             aria-valuetext={`${formatBytes(quota.usedBytes)} used of ${formatBytes(
               quota.allocatedBytes
             )} (${quota.percentLabel}, ${quota.statusLabel})`}
-            className="mt-4 h-2.5 w-full rounded-full overflow-hidden bg-[#EFEBD9] dark:bg-[#22281D]"
+            className="mt-4 h-2.5 w-full rounded-full overflow-hidden bg-[#E8EFEA] dark:bg-[#132018] border border-transparent dark:border-[#1E3125]"
           >
             <div
               data-testid="storage-quota-bar"
               style={{ width: `${quota.percentBarWidth}%` }}
-              className={`h-full rounded-full transition-[width] duration-300 ease-out ${statusBarClass}`}
+              className={`h-full rounded-full transition-[width] duration-300 ease-out shadow-[0_0_12px_rgba(0,230,118,0.5)] ${statusBarClass}`}
             />
           </div>
 
-          <div className="mt-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+          <div className="mt-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#526056] dark:text-[#8FA395]">
             <p className="font-mono-tabular">
               {quota.isOverQuota
                 ? `Quota exceeded by ${formatBytes(quota.usedBytes - quota.allocatedBytes)}`
@@ -265,23 +268,23 @@ export function AccountView({
 
         {/* Quick Actions + Profile Form */}
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-7 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-6">
-            <h2 className="font-display text-lg font-semibold text-[#151811] dark:text-[#F5F3EA]">
+          <div className="lg:col-span-7 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6">
+            <h2 className="font-display text-lg font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Creator Profile
             </h2>
-            <p className="mt-1 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+            <p className="mt-1 text-xs text-[#526056] dark:text-[#8FA395]">
               Your profile photo, display name, and handle appear on public albums, comments, and
               direct messages. Your email address remains strictly private.
             </p>
 
             {/* Profile Photo Uploader */}
-            <div className="mt-5 p-4 rounded-xl bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#E2DCC8] dark:border-[#2A3124] flex flex-wrap items-center gap-4">
+            <div className="mt-5 p-4 rounded-xl bg-[#F3F6F4] dark:bg-[#060807] border border-[#D4DFD7] dark:border-[#1C2A21] flex flex-wrap items-center gap-4">
               <UserAvatar name={user.displayName} avatarUrl={user.avatarUrl} size="lg" />
               <div className="flex-1 min-w-[180px]">
-                <p className="text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+                <p className="text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                   Profile Photo
                 </p>
-                <p className="mt-0.5 text-[11px] text-[#5A5E52] dark:text-[#A6AA9C]">
+                <p className="mt-0.5 text-[11px] text-[#526056] dark:text-[#8FA395]">
                   JPEG, PNG, or WebP — cropped cleanly to a square avatar.
                 </p>
                 <input
@@ -328,7 +331,7 @@ export function AccountView({
                           setAvatarBusy(false);
                         }
                       }}
-                      className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-[#CE1126] dark:text-red-400 hover:bg-red-500/10 rounded-lg disabled:opacity-50"
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-[#E11D32] dark:text-red-400 hover:bg-red-500/10 rounded-lg disabled:opacity-50"
                     >
                       <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                       <span>Remove</span>
@@ -360,18 +363,18 @@ export function AccountView({
               className="mt-5 space-y-4"
             >
               {error && (
-                <p role="alert" className="text-xs text-[#CE1126] dark:text-red-400">
+                <p role="alert" className="text-xs text-[#E11D32] dark:text-red-400">
                   {error}
                 </p>
               )}
               {profileSaved && (
-                <p role="status" className="text-xs text-[#008732] dark:text-[#4ADE80]">
+                <p role="status" className="text-xs text-[#00A846] dark:text-[#00E676]">
                   {profileSaved}
                 </p>
               )}
 
               <div>
-                <label htmlFor="prof-name" className="block text-xs font-medium text-[#5A5E52] dark:text-[#A6AA9C]">
+                <label htmlFor="prof-name" className="block text-xs font-medium text-[#526056] dark:text-[#8FA395]">
                   Display Name
                 </label>
                 <input
@@ -380,12 +383,12 @@ export function AccountView({
                   value={editName || user.displayName}
                   onChange={(e) => setEditName(e.target.value)}
                   maxLength={80}
-                  className="mt-1 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                  className="mt-1 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                 />
               </div>
 
               <div>
-                <label htmlFor="prof-handle" className="block text-xs font-medium text-[#5A5E52] dark:text-[#A6AA9C]">
+                <label htmlFor="prof-handle" className="block text-xs font-medium text-[#526056] dark:text-[#8FA395]">
                   Public Handle
                 </label>
                 <input
@@ -394,12 +397,12 @@ export function AccountView({
                   value={editHandle || user.handle}
                   onChange={(e) => setEditHandle(e.target.value)}
                   maxLength={40}
-                  className="mt-1 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                  className="mt-1 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                 />
               </div>
 
               <div>
-                <label htmlFor="prof-bio" className="block text-xs font-medium text-[#5A5E52] dark:text-[#A6AA9C]">
+                <label htmlFor="prof-bio" className="block text-xs font-medium text-[#526056] dark:text-[#8FA395]">
                   Bio (optional)
                 </label>
                 <textarea
@@ -409,7 +412,7 @@ export function AccountView({
                   onChange={(e) => setEditBio(e.target.value)}
                   maxLength={280}
                   placeholder="Creator bio or studio notes..."
-                  className="mt-1 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                  className="mt-1 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                 />
               </div>
 
@@ -424,13 +427,13 @@ export function AccountView({
             </form>
           </div>
 
-          <div className="lg:col-span-5 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-6 flex flex-col justify-between gap-6">
+          <div className="lg:col-span-5 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6 flex flex-col justify-between gap-6">
             <div>
-              <ShieldCheck className="w-6 h-6 text-[#008732] dark:text-[#FCD116]" aria-hidden="true" />
-              <h2 className="mt-3 font-display text-lg font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <ShieldCheck className="w-6 h-6 text-[#00A846] dark:text-[#FFD600]" aria-hidden="true" />
+              <h2 className="mt-3 font-display text-lg font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Account Security
               </h2>
-              <p className="mt-2 text-xs leading-relaxed text-[#5A5E52] dark:text-[#A6AA9C]">
+              <p className="mt-2 text-xs leading-relaxed text-[#526056] dark:text-[#8FA395]">
                 Private album files are protected at the media streaming layer. Direct file URLs
                 return 403 Forbidden unless authenticated as the owner, invited collaborator, or
                 unlocked via an active share link.
@@ -449,7 +452,7 @@ export function AccountView({
               <button
                 type="button"
                 onClick={onGoToAlbums}
-                className="w-full px-4 py-2.5 text-sm font-medium text-[#151811] dark:text-[#F5F3EA] bg-[#F8F6EE] dark:bg-[#1D2318] border border-[#D8D1BC] dark:border-[#343D2C] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116]"
+                className="w-full px-4 py-2.5 text-sm font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-[#F3F6F4] dark:bg-[#111A14] border border-[#C6D5CA] dark:border-[#294031] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600]"
               >
                 Manage My Albums
               </button>
@@ -457,7 +460,7 @@ export function AccountView({
                 <button
                   type="button"
                   onClick={onGoToCPanel}
-                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#151811] bg-[#FCD116] rounded-lg hover:bg-[#E6BE0E]"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#0C120E] bg-[#FFD600] rounded-lg hover:bg-[#E6BE0E]"
                 >
                   <Sliders className="w-4 h-4" aria-hidden="true" />
                   <span>Open Site cPanel</span>
@@ -474,19 +477,19 @@ export function AccountView({
     <div className="max-w-[960px] mx-auto px-6 sm:px-8 pt-12 pb-24">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         <div className="lg:col-span-5 pt-2">
-          <UserIcon className="w-7 h-7 text-[#008732] dark:text-[#FCD116]" aria-hidden="true" />
-          <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight text-[#151811] dark:text-[#F5F3EA] text-balance">
+          <UserIcon className="w-7 h-7 text-[#00A846] dark:text-[#FFD600]" aria-hidden="true" />
+          <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight text-[#0C120E] dark:text-[#EEF4F0] text-balance">
             Your {siteSettings.siteName} vault, under your control.
           </h1>
-          <p className="mt-3 text-sm leading-relaxed text-[#5A5E52] dark:text-[#A6AA9C]">
+          <p className="mt-3 text-sm leading-relaxed text-[#526056] dark:text-[#8FA395]">
             Create an account to upload 5,000+ photos and full-length videos at once with zero file
             size caps, organize private and public albums, and issue revocable passcode-locked share
             links.
           </p>
 
-          <div className="mt-8 pt-6 border-t border-[#E2DCC8] dark:border-[#2A3124] space-y-4 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+          <div className="mt-8 pt-6 border-t border-[#D4DFD7] dark:border-[#1C2A21] space-y-4 text-xs text-[#526056] dark:text-[#8FA395]">
             <div>
-              <p className="font-semibold text-[#151811] dark:text-[#FCD116]">
+              <p className="font-semibold text-[#0C120E] dark:text-[#FFD600]">
                 5,000+ Files & Unlimited Size
               </p>
               <p className="mt-0.5">
@@ -494,7 +497,7 @@ export function AccountView({
               </p>
             </div>
             <div>
-              <p className="font-semibold text-[#151811] dark:text-[#4ADE80]">
+              <p className="font-semibold text-[#0C120E] dark:text-[#00E676]">
                 Granular Album Privacy
               </p>
               <p className="mt-0.5">
@@ -504,7 +507,7 @@ export function AccountView({
           </div>
         </div>
 
-        <div className="lg:col-span-7 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-6 sm:p-8">
+        <div className="lg:col-span-7 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6 sm:p-8">
           {/* Google Sign-In via Firebase Auth */}
           <button
             type="button"
@@ -520,7 +523,7 @@ export function AccountView({
                 setBusy(false);
               }
             }}
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium text-[#151811] dark:text-[#F5F3EA] bg-white dark:bg-[#1D2318] border border-[#D8D1BC] dark:border-[#343D2C] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] transition-colors"
+            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 text-sm font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-white dark:bg-[#111A14] border border-[#C6D5CA] dark:border-[#294031] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] transition-colors"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
               <path
@@ -543,16 +546,16 @@ export function AccountView({
             <span>Continue with Google</span>
           </button>
 
-          <div className="my-6 flex items-center gap-3 text-xs text-[#787B6E] dark:text-[#8E9384]">
-            <span className="flex-1 h-px bg-[#ECE8D9] dark:bg-[#262C21]" />
+          <div className="my-6 flex items-center gap-3 text-xs text-[#6A7B6F] dark:text-[#6E8575]">
+            <span className="flex-1 h-px bg-[#E1EAE3] dark:bg-[#262C21]" />
             <span>or use email & password</span>
-            <span className="flex-1 h-px bg-[#ECE8D9] dark:bg-[#262C21]" />
+            <span className="flex-1 h-px bg-[#E1EAE3] dark:bg-[#262C21]" />
           </div>
 
           <div
             role="tablist"
             aria-label="Account authentication mode"
-            className="grid grid-cols-2 p-1 bg-[#EFEBD9] dark:bg-[#0D0F0B] rounded-lg mb-5"
+            className="grid grid-cols-2 p-1 bg-[#E8EFEA] dark:bg-[#060807] rounded-lg mb-5"
           >
             <button
               type="button"
@@ -564,8 +567,8 @@ export function AccountView({
               }}
               className={`py-2 text-xs font-medium rounded-md transition-colors ${
                 authMode === 'register'
-                  ? 'bg-white dark:bg-[#232B1E] text-[#151811] dark:text-[#FCD116] shadow-xs'
-                  : 'text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white'
+                  ? 'bg-white dark:bg-[#132118] text-[#0C120E] dark:text-[#FFD600] shadow-xs'
+                  : 'text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white'
               }`}
             >
               Create Account
@@ -580,8 +583,8 @@ export function AccountView({
               }}
               className={`py-2 text-xs font-medium rounded-md transition-colors ${
                 authMode === 'login'
-                  ? 'bg-white dark:bg-[#232B1E] text-[#151811] dark:text-[#FCD116] shadow-xs'
-                  : 'text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white'
+                  ? 'bg-white dark:bg-[#132118] text-[#0C120E] dark:text-[#FFD600] shadow-xs'
+                  : 'text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white'
               }`}
             >
               Sign In
@@ -591,7 +594,7 @@ export function AccountView({
           {error && (
             <p
               role="alert"
-              className="mb-4 text-xs font-medium text-[#CE1126] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/50 border border-[#FECACA] dark:border-red-900 rounded-lg px-3.5 py-2.5"
+              className="mb-4 text-xs font-medium text-[#E11D32] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/50 border border-[#FECACA] dark:border-red-900 rounded-lg px-3.5 py-2.5"
             >
               {error}
             </p>
@@ -599,7 +602,7 @@ export function AccountView({
 
           {authMode === 'register' ? (
             !siteSettings.allowRegistrations ? (
-              <p className="text-sm text-[#5A5E52] dark:text-[#A6AA9C] py-4">
+              <p className="text-sm text-[#526056] dark:text-[#8FA395] py-4">
                 New local registrations are currently paused in the site cPanel. Please sign in with
                 an existing account.
               </p>
@@ -621,7 +624,7 @@ export function AccountView({
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="reg-name" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+                    <label htmlFor="reg-name" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                       Full Name
                     </label>
                     <input
@@ -631,11 +634,11 @@ export function AccountView({
                       value={displayName}
                       onChange={(e) => setDisplayName(e.target.value)}
                       placeholder="Alex Rivera"
-                      className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                      className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                     />
                   </div>
                   <div>
-                    <label htmlFor="reg-handle" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+                    <label htmlFor="reg-handle" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                       Handle (optional)
                     </label>
                     <input
@@ -644,13 +647,13 @@ export function AccountView({
                       value={handle}
                       onChange={(e) => setHandle(e.target.value)}
                       placeholder="alex.vault"
-                      className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                      className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="reg-email" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+                  <label htmlFor="reg-email" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                     Email Address
                   </label>
                   <input
@@ -660,12 +663,12 @@ export function AccountView({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@domain.com"
-                    className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                    className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="reg-pass" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+                  <label htmlFor="reg-pass" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                     Password (minimum 8 characters)
                   </label>
                   <input
@@ -676,7 +679,7 @@ export function AccountView({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Create a strong password"
-                    className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                    className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                   />
                 </div>
 
@@ -707,7 +710,7 @@ export function AccountView({
               className="space-y-4"
             >
               <div>
-                <label htmlFor="login-id" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+                <label htmlFor="login-id" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                   Email or Handle
                 </label>
                 <input
@@ -717,12 +720,12 @@ export function AccountView({
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   placeholder="you@domain.com"
-                  className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                  className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                 />
               </div>
 
               <div>
-                <label htmlFor="login-pass" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+                <label htmlFor="login-pass" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                   Password
                 </label>
                 <input
@@ -732,7 +735,7 @@ export function AccountView({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                  className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                 />
               </div>
 

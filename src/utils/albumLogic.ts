@@ -47,7 +47,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   heroSubheadline:
     'Drop entire folders or multi-gigabyte video masters into private vaults, passcode-locked share links, or public galleries.',
   footerText: 'Big B’z Leaks — Unlimited photo & video archive with private and public album control.',
-  accentColor: '#008732',
+  accentColor: '#00B84C',
   themeMode: 'dark',
   announcementEnabled: false,
   announcementText: '',

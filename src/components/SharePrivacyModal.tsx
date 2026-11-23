@@ -98,14 +98,14 @@ export function SharePrivacyModal({
       aria-label={`Share and privacy controls for ${album.title}`}
       className="fixed inset-0 z-50 bg-black/65 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto"
     >
-      <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
         <div className="h-[3px] w-full rasta-stripe" aria-hidden="true" />
-        <div className="flex items-start justify-between gap-4 p-6 border-b border-[#ECE8D9] dark:border-[#262C21]">
+        <div className="flex items-start justify-between gap-4 p-6 border-b border-[#E1EAE3] dark:border-[#262C21]">
           <div>
-            <p className="text-xs font-medium text-[#008732] dark:text-[#FCD116]">
+            <p className="text-xs font-medium text-[#00A846] dark:text-[#FFD600]">
               Album Access & Sharing
             </p>
-            <h2 className="mt-1 font-serif-editorial text-2xl font-medium text-[#151811] dark:text-[#F5F3EA]">
+            <h2 className="mt-1 font-serif-editorial text-2xl font-medium text-[#0C120E] dark:text-[#EEF4F0]">
               {album.title}
             </h2>
           </div>
@@ -113,7 +113,7 @@ export function SharePrivacyModal({
             type="button"
             onClick={onClose}
             aria-label="Close share settings"
-            className="p-2 text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white rounded-lg hover:bg-[#EFEBD9] dark:hover:bg-[#1E2418]"
+            className="p-2 text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white rounded-lg hover:bg-[#E8EFEA] dark:hover:bg-[#1E2418]"
           >
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -123,7 +123,7 @@ export function SharePrivacyModal({
           {error && (
             <p
               role="alert"
-              className="text-xs font-medium text-[#CE1126] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/50 border border-[#FECACA] dark:border-red-900 rounded-lg px-3.5 py-2.5"
+              className="text-xs font-medium text-[#E11D32] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/50 border border-[#FECACA] dark:border-red-900 rounded-lg px-3.5 py-2.5"
             >
               {error}
             </p>
@@ -131,7 +131,7 @@ export function SharePrivacyModal({
           {statusMessage && (
             <p
               role="status"
-              className="text-xs font-medium text-[#008732] dark:text-[#4ADE80] bg-[#F0FDF4] dark:bg-emerald-950/50 border border-[#BBF7D0] dark:border-emerald-900 rounded-lg px-3.5 py-2.5"
+              className="text-xs font-medium text-[#00A846] dark:text-[#00E676] bg-[#F0FDF4] dark:bg-emerald-950/50 border border-[#BBF7D0] dark:border-emerald-900 rounded-lg px-3.5 py-2.5"
             >
               {statusMessage}
             </p>
@@ -139,7 +139,7 @@ export function SharePrivacyModal({
 
           {/* 1. Visibility Tier Selector */}
           <section>
-            <h3 className="text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">Privacy Tier</h3>
+            <h3 className="text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">Privacy Tier</h3>
             <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
               {(
                 [
@@ -178,24 +178,24 @@ export function SharePrivacyModal({
                     }
                     className={`text-left p-3.5 rounded-xl border transition-colors ${
                       active
-                        ? 'border-[#008732] dark:border-[#FCD116] bg-[#008732]/10 dark:bg-[#FCD116]/10'
-                        : 'border-[#E2DCC8] dark:border-[#2A3124] bg-white dark:bg-[#0D0F0B] hover:border-[#009B3A] dark:hover:border-[#FCD116]'
+                        ? 'border-[#00A846] dark:border-[#FFD600] bg-[#00A846]/10 dark:bg-[#FFD600]/10'
+                        : 'border-[#D4DFD7] dark:border-[#1C2A21] bg-white dark:bg-[#060807] hover:border-[#00E676] dark:hover:border-[#FFD600]'
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       <Icon
                         className={`w-4 h-4 ${
                           active
-                            ? 'text-[#008732] dark:text-[#FCD116]'
-                            : 'text-[#5A5E52] dark:text-[#A6AA9C]'
+                            ? 'text-[#00A846] dark:text-[#FFD600]'
+                            : 'text-[#526056] dark:text-[#8FA395]'
                         }`}
                         aria-hidden="true"
                       />
-                      <span className="text-sm font-semibold text-[#151811] dark:text-[#F5F3EA]">
+                      <span className="text-sm font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                         {opt.title}
                       </span>
                     </div>
-                    <p className="mt-1.5 text-xs leading-relaxed text-[#5A5E52] dark:text-[#A6AA9C]">
+                    <p className="mt-1.5 text-xs leading-relaxed text-[#526056] dark:text-[#8FA395]">
                       {opt.desc}
                     </p>
                   </button>
@@ -205,9 +205,9 @@ export function SharePrivacyModal({
           </section>
 
           {/* 2. Share Link & Revocation */}
-          <section className="pt-6 border-t border-[#ECE8D9] dark:border-[#262C21]">
+          <section className="pt-6 border-t border-[#E1EAE3] dark:border-[#262C21]">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <h3 className="text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Direct Share Link
               </h3>
               <div className="flex items-center gap-3">
@@ -220,7 +220,7 @@ export function SharePrivacyModal({
                       'Generated a new share link. Previous links are now invalidated.'
                     )
                   }
-                  className="inline-flex items-center gap-1 text-xs font-medium text-[#008732] dark:text-[#FCD116] hover:underline"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-[#00A846] dark:text-[#FFD600] hover:underline"
                 >
                   <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>{album.shareToken ? 'Regenerate Link' : 'Generate Link'}</span>
@@ -235,7 +235,7 @@ export function SharePrivacyModal({
                         'Share link revoked. External link holders can no longer access this album.'
                       )
                     }
-                    className="inline-flex items-center gap-1 text-xs font-medium text-[#CE1126] dark:text-red-400 hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-[#E11D32] dark:text-red-400 hover:underline"
                   >
                     <ShieldOff className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>Revoke</span>
@@ -251,7 +251,7 @@ export function SharePrivacyModal({
                   readOnly
                   aria-label="Album share link URL"
                   value={shareUrl}
-                  className="flex-1 px-3 py-2 text-xs font-mono-tabular bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                  className="flex-1 px-3 py-2 text-xs font-mono-tabular bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                 />
                 <div className="flex items-center gap-2 shrink-0">
                   <button
@@ -266,29 +266,29 @@ export function SharePrivacyModal({
                   <button
                     type="button"
                     onClick={() => onOpenSharePreview(album.shareToken)}
-                    className="px-3 py-2 text-xs font-medium text-[#151811] dark:text-[#F5F3EA] bg-white dark:bg-[#1D2318] border border-[#D8D1BC] dark:border-[#343D2C] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] whitespace-nowrap"
+                    className="px-3 py-2 text-xs font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-white dark:bg-[#111A14] border border-[#C6D5CA] dark:border-[#294031] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] whitespace-nowrap"
                   >
                     Preview
                   </button>
                 </div>
               </div>
             ) : (
-              <p className="mt-2.5 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+              <p className="mt-2.5 text-xs text-[#526056] dark:text-[#8FA395]">
                 Share link is currently revoked. Click “Generate Link” above to issue a fresh URL.
               </p>
             )}
           </section>
 
           {/* 3. Passcode Protection & Downloads */}
-          <section className="pt-6 border-t border-[#ECE8D9] dark:border-[#262C21] grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <section className="pt-6 border-t border-[#E1EAE3] dark:border-[#262C21] grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <div className="flex items-center gap-1.5">
-                <KeyRound className="w-3.5 h-3.5 text-[#B88200] dark:text-[#FCD116]" aria-hidden="true" />
-                <h3 className="text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+                <KeyRound className="w-3.5 h-3.5 text-[#B88200] dark:text-[#FFD600]" aria-hidden="true" />
+                <h3 className="text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                   Passcode Lock ({album.hasPasscode ? 'Active' : 'Off'})
                 </h3>
               </div>
-              <p className="mt-1 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+              <p className="mt-1 text-xs text-[#526056] dark:text-[#8FA395]">
                 Require a passcode before external share-link visitors can view media.
               </p>
               <div className="mt-3 flex items-center gap-2">
@@ -298,7 +298,7 @@ export function SharePrivacyModal({
                   onChange={(e) => setPasscodeInput(e.target.value)}
                   aria-label="Set album passcode"
                   placeholder={album.hasPasscode ? 'New passcode (min 4 chars)' : 'Set passcode (min 4 chars)'}
-                  className="flex-1 min-w-0 px-3 py-1.5 text-xs bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                  className="flex-1 min-w-0 px-3 py-1.5 text-xs bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
                 />
                 <button
                   type="button"
@@ -325,7 +325,7 @@ export function SharePrivacyModal({
                       'Album passcode removed.'
                     )
                   }
-                  className="mt-2 text-xs font-medium text-[#CE1126] dark:text-red-400 hover:underline"
+                  className="mt-2 text-xs font-medium text-[#E11D32] dark:text-red-400 hover:underline"
                 >
                   Remove passcode
                 </button>
@@ -333,10 +333,10 @@ export function SharePrivacyModal({
             </div>
 
             <div>
-              <h3 className="text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <h3 className="text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Original File Downloads
               </h3>
-              <p className="mt-1 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+              <p className="mt-1 text-xs text-[#526056] dark:text-[#8FA395]">
                 Control whether viewers can download full-resolution photo and video originals.
               </p>
               <label className="mt-3 inline-flex items-center gap-2.5 cursor-pointer">
@@ -352,9 +352,9 @@ export function SharePrivacyModal({
                         : 'Original downloads restricted to owner and contributors.'
                     )
                   }
-                  className="w-4 h-4 rounded accent-[#008732]"
+                  className="w-4 h-4 rounded accent-[#00A846]"
                 />
-                <span className="text-xs font-medium text-[#151811] dark:text-[#F5F3EA]">
+                <span className="text-xs font-medium text-[#0C120E] dark:text-[#EEF4F0]">
                   Allow viewers to download originals
                 </span>
               </label>
@@ -362,11 +362,11 @@ export function SharePrivacyModal({
           </section>
 
           {/* 4. Collaborators */}
-          <section className="pt-6 border-t border-[#ECE8D9] dark:border-[#262C21]">
-            <h3 className="text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+          <section className="pt-6 border-t border-[#E1EAE3] dark:border-[#262C21]">
+            <h3 className="text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Invited Collaborators
             </h3>
-            <p className="mt-1 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+            <p className="mt-1 text-xs text-[#526056] dark:text-[#8FA395]">
               Grant specific accounts persistent access to private albums as Viewer or Contributor.
             </p>
 
@@ -377,13 +377,13 @@ export function SharePrivacyModal({
                 onChange={(e) => setInviteIdentifier(e.target.value)}
                 aria-label="Collaborator email or handle"
                 placeholder="Email address or @handle"
-                className="flex-1 px-3 py-2 text-xs bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                className="flex-1 px-3 py-2 text-xs bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
               />
               <select
                 value={inviteRole}
                 onChange={(e) => setInviteRole(e.target.value as MemberRole)}
                 aria-label="Collaborator role"
-                className="px-3 py-2 text-xs bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                className="px-3 py-2 text-xs bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
               >
                 <option value="viewer">Viewer</option>
                 <option value="contributor">Contributor (Can Upload)</option>
@@ -400,14 +400,14 @@ export function SharePrivacyModal({
             </form>
 
             {members.length > 0 && (
-              <ul className="mt-4 divide-y divide-[#ECE8D9] dark:divide-[#262C21] border border-[#E2DCC8] dark:border-[#2A3124] rounded-xl">
+              <ul className="mt-4 divide-y divide-[#E1EAE3] dark:divide-[#262C21] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-xl">
                 {members.map((m) => (
                   <li key={m.id} className="px-4 py-2.5 flex items-center justify-between gap-3 text-xs">
                     <div className="min-w-0">
-                      <p className="font-medium text-[#151811] dark:text-[#F5F3EA] truncate">
+                      <p className="font-medium text-[#0C120E] dark:text-[#EEF4F0] truncate">
                         {m.memberName}
                       </p>
-                      <p className="text-[#5A5E52] dark:text-[#A6AA9C] truncate">
+                      <p className="text-[#526056] dark:text-[#8FA395] truncate">
                         {m.email} · <span className="capitalize">{m.role}</span>
                       </p>
                     </div>
@@ -421,7 +421,7 @@ export function SharePrivacyModal({
                         )
                       }
                       aria-label={`Remove collaborator ${m.memberName}`}
-                      className="text-xs font-medium text-[#CE1126] dark:text-red-400 hover:underline shrink-0"
+                      className="text-xs font-medium text-[#E11D32] dark:text-red-400 hover:underline shrink-0"
                     >
                       Revoke
                     </button>

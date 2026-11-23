@@ -107,17 +107,17 @@ export function CreateEditAlbumModal({
       aria-label={existingAlbum ? `Edit album ${existingAlbum.title}` : 'Create new album'}
       className="fixed inset-0 z-50 bg-black/65 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto"
     >
-      <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden my-auto">
+      <div className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden my-auto">
         <div className="h-[3px] w-full rasta-stripe" aria-hidden="true" />
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#ECE8D9] dark:border-[#262C21]">
-          <h2 className="font-display text-xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#E1EAE3] dark:border-[#262C21]">
+          <h2 className="font-display text-xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
             {existingAlbum ? 'Edit Album' : 'Create Album'}
           </h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close album form"
-            className="p-2 text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white rounded-lg hover:bg-[#EFEBD9] dark:hover:bg-[#1E2418]"
+            className="p-2 text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white rounded-lg hover:bg-[#E8EFEA] dark:hover:bg-[#1E2418]"
           >
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -127,15 +127,15 @@ export function CreateEditAlbumModal({
           {error && (
             <p
               role="alert"
-              className="text-xs font-medium text-[#CE1126] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/50 border border-[#FECACA] dark:border-red-900 rounded-lg px-3.5 py-2.5"
+              className="text-xs font-medium text-[#E11D32] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/50 border border-[#FECACA] dark:border-red-900 rounded-lg px-3.5 py-2.5"
             >
               {error}
             </p>
           )}
 
           {/* Optional Album Cover Photo */}
-          <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#E2DCC8] dark:border-[#2A3124]">
-            <div className="w-24 h-16 rounded-lg overflow-hidden bg-[#EFEBD9] dark:bg-[#1B2117] border border-[#D8D1BC] dark:border-[#2E3627] flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-4 p-3 rounded-xl bg-[#F3F6F4] dark:bg-[#060807] border border-[#D4DFD7] dark:border-[#1C2A21]">
+            <div className="w-24 h-16 rounded-lg overflow-hidden bg-[#E8EFEA] dark:bg-[#1B2117] border border-[#C6D5CA] dark:border-[#24382B] flex items-center justify-center shrink-0">
               {previewCoverSrc ? (
                 <img
                   src={previewCoverSrc}
@@ -143,11 +143,11 @@ export function CreateEditAlbumModal({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <ImageIcon className="w-5 h-5 text-[#787B6E]" aria-hidden="true" />
+                <ImageIcon className="w-5 h-5 text-[#6A7B6F]" aria-hidden="true" />
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <p className="text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Album Cover Photo (optional)
               </p>
               <input
@@ -162,7 +162,7 @@ export function CreateEditAlbumModal({
                 <button
                   type="button"
                   onClick={() => coverInputRef.current?.click()}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#151811] dark:text-[#F5F3EA] bg-white dark:bg-[#1D2318] border border-[#D8D1BC] dark:border-[#343D2C] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116]"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-white dark:bg-[#111A14] border border-[#C6D5CA] dark:border-[#294031] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600]"
                 >
                   <Upload className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>{previewCoverSrc ? 'Change Cover Photo' : 'Choose Cover Photo'}</span>
@@ -171,7 +171,7 @@ export function CreateEditAlbumModal({
                   <button
                     type="button"
                     onClick={() => setCoverDataUrl('')}
-                    className="text-xs text-[#CE1126] dark:text-red-400 hover:underline"
+                    className="text-xs text-[#E11D32] dark:text-red-400 hover:underline"
                   >
                     Clear
                   </button>
@@ -181,7 +181,7 @@ export function CreateEditAlbumModal({
           </div>
 
           <div>
-            <label htmlFor="album-form-title" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+            <label htmlFor="album-form-title" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Album Title
             </label>
             <input
@@ -191,12 +191,12 @@ export function CreateEditAlbumModal({
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Full Drop 2026"
               maxLength={120}
-              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
             />
           </div>
 
           <div>
-            <label htmlFor="album-form-desc" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+            <label htmlFor="album-form-desc" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Description (optional)
             </label>
             <textarea
@@ -206,12 +206,12 @@ export function CreateEditAlbumModal({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Notes or album description..."
               maxLength={600}
-              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
             />
           </div>
 
           <div>
-            <label htmlFor="album-form-tags" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+            <label htmlFor="album-form-tags" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Tags (optional, comma-separated)
             </label>
             <input
@@ -221,19 +221,19 @@ export function CreateEditAlbumModal({
               onChange={(e) => setTagsInput(e.target.value)}
               placeholder="e.g., roots, 4K, street, backstage"
               maxLength={240}
-              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
             />
           </div>
 
           <div>
-            <label htmlFor="album-form-vis" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+            <label htmlFor="album-form-vis" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
               Privacy Setting
             </label>
             <select
               id="album-form-vis"
               value={visibility}
               onChange={(e) => setVisibility(e.target.value as AlbumVisibility)}
-              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+              className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
             >
               <option value="private">Private — Only you & invited accounts</option>
               <option value="unlisted">Unlisted — Accessible via direct share link</option>
@@ -243,7 +243,7 @@ export function CreateEditAlbumModal({
 
           {!existingAlbum && visibility !== 'public' && (
             <div>
-              <label htmlFor="album-form-passcode" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <label htmlFor="album-form-passcode" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Optional Share Link Passcode
               </label>
               <input
@@ -252,7 +252,7 @@ export function CreateEditAlbumModal({
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
                 placeholder="Leave blank for no passcode (min 4 chars)"
-                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
               />
             </div>
           )}
@@ -262,18 +262,18 @@ export function CreateEditAlbumModal({
               type="checkbox"
               checked={allowDownloads}
               onChange={(e) => setAllowDownloads(e.target.checked)}
-              className="w-4 h-4 rounded accent-[#008732]"
+              className="w-4 h-4 rounded accent-[#00A846]"
             />
-            <span className="text-xs font-medium text-[#151811] dark:text-[#F5F3EA]">
+            <span className="text-xs font-medium text-[#0C120E] dark:text-[#EEF4F0]">
               Allow viewers to download original photo & video files
             </span>
           </label>
 
-          <div className="pt-4 border-t border-[#ECE8D9] dark:border-[#262C21] flex items-center justify-end gap-3">
+          <div className="pt-4 border-t border-[#E1EAE3] dark:border-[#262C21] flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white"
+              className="px-4 py-2 text-sm font-medium text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white"
             >
               Cancel
             </button>

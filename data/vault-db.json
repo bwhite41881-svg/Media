@@ -4643,8 +4643,8 @@
     "heroHeadline": "Upload 5,000+ photos and full-length videos with zero caps.",
     "heroSubheadline": "Drop entire folders or multi-gigabyte video masters into private vaults, passcode-locked share links, or public galleries.",
     "footerText": "Big B’z Leaks — Unlimited photo & video archive with private and public album control.",
-    "accentColor": "#008732",
-    "themeMode": "light",
+    "accentColor": "#00B84C",
+    "themeMode": "dark",
     "announcementEnabled": true,
     "announcementText": "Rasta Vault Live — 5,000+ Bulk Drops Active!",
     "allowRegistrations": true,
@@ -4652,6 +4652,6 @@
     "defaultAllowDownloads": true,
     "uploadConcurrency": 6,
     "chunkSizeMb": 4,
-    "updatedAt": "2026-11-23T00:33:58.159Z"
+    "updatedAt": "2026-11-23T01:43:05.399Z"
   }
 }

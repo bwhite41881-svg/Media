@@ -370,12 +370,12 @@ export function UploadStudio({
   if (!user) {
     return (
       <div className="max-w-[1360px] mx-auto px-6 sm:px-8 py-20">
-        <div className="max-w-xl mx-auto bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-8 sm:p-10 text-center">
-          <UploadCloud className="w-8 h-8 text-[#008732] dark:text-[#FCD116] mx-auto" aria-hidden="true" />
-          <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight text-[#151811] dark:text-[#F5F3EA]">
+        <div className="max-w-xl mx-auto bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-8 sm:p-10 text-center">
+          <UploadCloud className="w-8 h-8 text-[#00A846] dark:text-[#FFD600] mx-auto" aria-hidden="true" />
+          <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight text-[#0C120E] dark:text-[#EEF4F0]">
             Sign in to upload 5,000+ photos and videos
           </h1>
-          <p className="mt-2.5 text-sm leading-relaxed text-[#5A5E52] dark:text-[#A6AA9C]">
+          <p className="mt-2.5 text-sm leading-relaxed text-[#526056] dark:text-[#8FA395]">
             Accounts keep your massive batch uploads tied to your private and public albums with
             zero file size limits and zero file count caps.
           </p>
@@ -666,14 +666,14 @@ export function UploadStudio({
 
   return (
     <div className="max-w-[1240px] mx-auto px-6 sm:px-8 pt-10 pb-24">
-      <header className="pb-8 border-b border-[#E2DCC8] dark:border-[#2A3124]">
-        <p className="text-xs font-medium text-[#008732] dark:text-[#FCD116]">
+      <header className="pb-8 border-b border-[#D4DFD7] dark:border-[#1C2A21]">
+        <p className="text-xs font-medium text-[#00A846] dark:text-[#FFD600]">
           Massive 5,000+ File Parallel Engine · Zero File Size Cap · Zero File Count Cap
         </p>
-        <h1 className="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-[#151811] dark:text-[#F5F3EA]">
+        <h1 className="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-[#0C120E] dark:text-[#EEF4F0]">
           Bulk Upload Studio
         </h1>
-        <p className="mt-2 text-sm text-[#5A5E52] dark:text-[#A6AA9C] max-w-2xl">
+        <p className="mt-2 text-sm text-[#526056] dark:text-[#8FA395] max-w-2xl">
           Drop 5,000+ photos, entire folders, or multi-gigabyte 4K/8K videos at once. Files stream in{' '}
           {siteSettings.chunkSizeMb} MiB binary chunks across parallel workers with zero size or
           album file count limits.
@@ -681,12 +681,12 @@ export function UploadStudio({
       </header>
 
       {/* Destination Album & Parallel Engine Config */}
-      <section className="mt-8 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-6">
+      <section className="mt-8 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-end">
           <div className="lg:col-span-6">
             <label
               htmlFor="upload-destination-album"
-              className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]"
+              className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]"
             >
               Destination Album (No File Limit)
             </label>
@@ -694,7 +694,7 @@ export function UploadStudio({
               id="upload-destination-album"
               value={effectiveAlbumId}
               onChange={(e) => setSelectedAlbumId(e.target.value)}
-              className="mt-2 w-full px-3.5 py-2.5 text-sm text-[#151811] dark:text-[#F5F3EA] bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg"
+              className="mt-2 w-full px-3.5 py-2.5 text-sm text-[#0C120E] dark:text-[#EEF4F0] bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg"
             >
               {albums.length === 0 ? (
                 <option value="">No albums yet — create one below</option>
@@ -711,7 +711,7 @@ export function UploadStudio({
           <div className="lg:col-span-3">
             <label
               htmlFor="parallel-workers-select"
-              className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]"
+              className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]"
             >
               Parallel Streams
             </label>
@@ -720,7 +720,7 @@ export function UploadStudio({
               value={concurrency}
               disabled={isBatchRunning}
               onChange={(e) => setConcurrency(Number(e.target.value))}
-              className="mt-2 w-full px-3.5 py-2.5 text-sm font-mono-tabular text-[#151811] dark:text-[#F5F3EA] bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg disabled:opacity-60"
+              className="mt-2 w-full px-3.5 py-2.5 text-sm font-mono-tabular text-[#0C120E] dark:text-[#EEF4F0] bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg disabled:opacity-60"
             >
               {[1, 2, 4, 6, 8, 12, 16].map((n) => (
                 <option key={n} value={n}>
@@ -734,7 +734,7 @@ export function UploadStudio({
             <button
               type="button"
               onClick={() => setShowQuickAlbum((prev) => !prev)}
-              className="w-full lg:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-medium text-[#151811] dark:text-[#F5F3EA] bg-[#F8F6EE] dark:bg-[#1D2318] border border-[#D8D1BC] dark:border-[#343D2C] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] transition-colors whitespace-nowrap"
+              className="w-full lg:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-[#F3F6F4] dark:bg-[#111A14] border border-[#C6D5CA] dark:border-[#294031] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] transition-colors whitespace-nowrap"
             >
               <FolderPlus className="w-4 h-4" aria-hidden="true" />
               <span>{showQuickAlbum ? 'Close Quick Create' : 'New Album'}</span>
@@ -745,12 +745,12 @@ export function UploadStudio({
         {showQuickAlbum && (
           <form
             onSubmit={handleQuickCreateAlbum}
-            className="mt-5 pt-5 border-t border-[#ECE8D9] dark:border-[#262C21] grid grid-cols-1 sm:grid-cols-12 gap-4 items-end"
+            className="mt-5 pt-5 border-t border-[#E1EAE3] dark:border-[#262C21] grid grid-cols-1 sm:grid-cols-12 gap-4 items-end"
           >
             <div className="sm:col-span-5">
               <label
                 htmlFor="quick-album-title"
-                className="block text-xs font-medium text-[#5A5E52] dark:text-[#A6AA9C]"
+                className="block text-xs font-medium text-[#526056] dark:text-[#8FA395]"
               >
                 New Album Title
               </label>
@@ -761,14 +761,14 @@ export function UploadStudio({
                 onChange={(e) => setQuickTitle(e.target.value)}
                 placeholder="e.g., Full Archive Drop 2026"
                 maxLength={120}
-                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-white dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-white dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
               />
             </div>
 
             <div className="sm:col-span-4">
               <label
                 htmlFor="quick-album-vis"
-                className="block text-xs font-medium text-[#5A5E52] dark:text-[#A6AA9C]"
+                className="block text-xs font-medium text-[#526056] dark:text-[#8FA395]"
               >
                 Initial Privacy
               </label>
@@ -776,7 +776,7 @@ export function UploadStudio({
                 id="quick-album-vis"
                 value={quickVisibility}
                 onChange={(e) => setQuickVisibility(e.target.value as AlbumVisibility)}
-                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-white dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-white dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
               >
                 <option value="private">Private (Only me & invited)</option>
                 <option value="unlisted">Unlisted (Share link only)</option>
@@ -796,7 +796,7 @@ export function UploadStudio({
             </div>
 
             {quickError && (
-              <p role="alert" className="sm:col-span-12 text-xs text-[#CE1126] dark:text-red-400">
+              <p role="alert" className="sm:col-span-12 text-xs text-[#E11D32] dark:text-red-400">
                 {quickError}
               </p>
             )}
@@ -825,17 +825,17 @@ export function UploadStudio({
           }}
           className={`rounded-2xl border-2 border-dashed p-9 sm:p-12 text-center transition-colors ${
             dragActive
-              ? 'border-[#009B3A] dark:border-[#FCD116] bg-[#009B3A]/10'
-              : 'border-[#D4CEB8] dark:border-[#343D2C] bg-white dark:bg-[#151912] hover:border-[#009B3A] dark:hover:border-[#FCD116]'
+              ? 'border-[#00E676] dark:border-[#FFD600] bg-[#00E676]/10'
+              : 'border-[#D4CEB8] dark:border-[#294031] bg-white dark:bg-[#0C110E] hover:border-[#00E676] dark:hover:border-[#FFD600]'
           }`}
         >
-          <UploadCloud className="w-9 h-9 text-[#008732] dark:text-[#FCD116] mx-auto" aria-hidden="true" />
-          <h2 className="mt-4 font-display text-xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+          <UploadCloud className="w-9 h-9 text-[#00A846] dark:text-[#FFD600] mx-auto" aria-hidden="true" />
+          <h2 className="mt-4 font-display text-xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
             {scanningDrop
               ? 'Scanning dropped folders...'
               : 'Drop 5,000+ photos, videos, or entire folders here'}
           </h2>
-          <p className="mt-1.5 text-sm text-[#5A5E52] dark:text-[#A6AA9C]">
+          <p className="mt-1.5 text-sm text-[#526056] dark:text-[#8FA395]">
             MP4, MOV, WebM, MKV, ProRes, JPEG, PNG, WebP, HEIC, DNG — no file size limit & no file count cap
           </p>
 
@@ -883,26 +883,26 @@ export function UploadStudio({
             <button
               type="button"
               onClick={() => folderInputRef.current?.click()}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-[#151811] dark:text-[#F5F3EA] bg-[#F8F6EE] dark:bg-[#1D2318] border border-[#D8D1BC] dark:border-[#343D2C] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] transition-colors whitespace-nowrap"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-[#F3F6F4] dark:bg-[#111A14] border border-[#C6D5CA] dark:border-[#294031] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] transition-colors whitespace-nowrap"
             >
               <FolderOpen className="w-4 h-4" aria-hidden="true" />
               <span>Choose Entire Folder</span>
             </button>
           </div>
 
-          <label className="mt-4 inline-flex items-center gap-2 text-xs text-[#5A5E52] dark:text-[#A6AA9C] cursor-pointer select-none">
+          <label className="mt-4 inline-flex items-center gap-2 text-xs text-[#526056] dark:text-[#8FA395] cursor-pointer select-none">
             <input
               type="checkbox"
               checked={autoStart}
               onChange={(e) => setAutoStart(e.target.checked)}
-              className="rounded border-[#D8D1BC] dark:border-[#343D2C] accent-[#008732]"
+              className="rounded border-[#C6D5CA] dark:border-[#294031] accent-[#00A846]"
             />
             <span>Auto-upload &amp; save immediately when files are selected</span>
           </label>
         </div>
 
         {globalError && (
-          <p role="alert" className="mt-3 text-sm text-[#CE1126] dark:text-red-400">
+          <p role="alert" className="mt-3 text-sm text-[#E11D32] dark:text-red-400">
             {globalError}
           </p>
         )}
@@ -910,10 +910,10 @@ export function UploadStudio({
 
       {/* Aggregate Massive Batch Progress & Controls (Always visible: 0 / 500 ready state) */}
       <section className="mt-8" aria-label="Batch Upload Queue">
-        <div className="bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-6">
+        <div className="bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-6">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
-              <h2 className="font-display text-xl font-semibold text-[#151811] dark:text-[#F5F3EA] tabular-nums">
+              <h2 className="font-display text-xl font-semibold text-[#0C120E] dark:text-[#EEF4F0] tabular-nums">
                 {queue.length === 0
                   ? `Batch Queue — 0 / ${PAGE_SIZE}`
                   : `Batch Queue — ${stats.doneCount.toLocaleString()} / ${Math.max(PAGE_SIZE, stats.totalCount).toLocaleString()} (${
@@ -922,7 +922,7 @@ export function UploadStudio({
                         : `${stats.totalCount.toLocaleString()} in batch`
                     } · ${stats.overallPercent}%)`}
               </h2>
-              <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs font-mono-tabular text-[#5A5E52] dark:text-[#A6AA9C]">
+              <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs font-mono-tabular text-[#526056] dark:text-[#8FA395]">
                 <span>
                   {formatBytes(stats.uploadedBytes)} / {formatBytes(stats.totalBytes)}
                 </span>
@@ -935,7 +935,7 @@ export function UploadStudio({
                 {stats.errorCount > 0 && (
                   <>
                     <span aria-hidden="true">·</span>
-                    <span className="text-[#CE1126] dark:text-red-400">
+                    <span className="text-[#E11D32] dark:text-red-400">
                       {stats.errorCount} failed
                     </span>
                   </>
@@ -943,7 +943,7 @@ export function UploadStudio({
                 {stats.combinedSpeedBytesPerSec > 0 && (
                   <>
                     <span aria-hidden="true">·</span>
-                    <span className="text-[#008732] dark:text-[#FCD116]">
+                    <span className="text-[#00A846] dark:text-[#FFD600]">
                       {formatTransferSpeed(stats.combinedSpeedBytesPerSec)}
                     </span>
                     <span aria-hidden="true">·</span>
@@ -957,7 +957,7 @@ export function UploadStudio({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-[#151811] dark:text-[#F5F3EA] bg-[#F8F6EE] dark:bg-[#1D2318] border border-[#D8D1BC] dark:border-[#343D2C] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] whitespace-nowrap"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-[#F3F6F4] dark:bg-[#111A14] border border-[#C6D5CA] dark:border-[#294031] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] whitespace-nowrap"
               >
                 <Plus className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Add More Files</span>
@@ -967,7 +967,7 @@ export function UploadStudio({
                 <button
                   type="button"
                   onClick={() => onOpenAlbum(effectiveAlbumId)}
-                  className="px-3.5 py-2 text-xs font-medium text-[#151811] dark:text-[#F5F3EA] bg-[#F8F6EE] dark:bg-[#1D2318] border border-[#D8D1BC] dark:border-[#343D2C] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] whitespace-nowrap"
+                  className="px-3.5 py-2 text-xs font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-[#F3F6F4] dark:bg-[#111A14] border border-[#C6D5CA] dark:border-[#294031] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] whitespace-nowrap"
                 >
                   Open Album
                 </button>
@@ -977,7 +977,7 @@ export function UploadStudio({
                 <button
                   type="button"
                   onClick={handlePauseAll}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-[#151811] bg-[#FCD116] rounded-lg hover:bg-[#E5BD0E] whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-[#0C120E] bg-[#FFD600] rounded-lg hover:bg-[#E5BD0E] whitespace-nowrap"
                 >
                   <Pause className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Pause All</span>
@@ -1002,7 +1002,7 @@ export function UploadStudio({
                 <button
                   type="button"
                   onClick={() => void handleStartBatch(true)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-white bg-[#CE1126] rounded-lg hover:bg-[#AE0E20] whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-white bg-[#E11D32] rounded-lg hover:bg-[#AE0E20] whitespace-nowrap"
                 >
                   <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Retry Failed ({stats.errorCount})</span>
@@ -1013,7 +1013,7 @@ export function UploadStudio({
                 <button
                   type="button"
                   onClick={handleClearCompleted}
-                  className="px-3 py-2 text-xs font-medium text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white whitespace-nowrap"
+                  className="px-3 py-2 text-xs font-medium text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white whitespace-nowrap"
                 >
                   Clear Done
                 </button>
@@ -1023,7 +1023,7 @@ export function UploadStudio({
                 <button
                   type="button"
                   onClick={handleClearAll}
-                  className="px-3 py-2 text-xs font-medium text-[#CE1126] dark:text-red-400 hover:underline whitespace-nowrap"
+                  className="px-3 py-2 text-xs font-medium text-[#E11D32] dark:text-red-400 hover:underline whitespace-nowrap"
                 >
                   Clear Queue
                 </button>
@@ -1032,7 +1032,7 @@ export function UploadStudio({
           </div>
 
           {/* Aggregate Progress Track */}
-          <div className="mt-4 h-2.5 w-full bg-[#ECE8D9] dark:bg-[#232A1E] rounded-full overflow-hidden">
+          <div className="mt-4 h-2.5 w-full bg-[#E1EAE3] dark:bg-[#232A1E] rounded-full overflow-hidden">
             <div
               className="h-full rasta-stripe transition-all duration-150"
               style={{ width: `${stats.overallPercent}%` }}
@@ -1046,12 +1046,12 @@ export function UploadStudio({
               aria-live="polite"
               className={`mt-4 px-4 py-2.5 rounded-xl border text-xs flex flex-wrap items-center justify-between gap-2 ${
                 isBatchRunning || stats.activeCount > 0
-                  ? 'bg-[#FCD116]/10 border-[#FCD116]/40 text-[#7A5900] dark:text-[#FCD116]'
+                  ? 'bg-[#FFD600]/10 border-[#FFD600]/40 text-[#7A5900] dark:text-[#FFD600]'
                   : stats.errorCount > 0
-                    ? 'bg-[#CE1126]/10 border-[#CE1126]/40 text-[#CE1126] dark:text-red-400'
+                    ? 'bg-[#E11D32]/10 border-[#E11D32]/40 text-[#E11D32] dark:text-red-400'
                     : stats.queuedCount > 0 || stats.pausedCount > 0
-                      ? 'bg-[#EFEBD9] dark:bg-[#1D2318] border-[#D8D1BC] dark:border-[#343D2C] text-[#5A5E52] dark:text-[#C8CCB8]'
-                      : 'bg-[#008732]/10 border-[#008732]/40 text-[#006B27] dark:text-[#4ADE80]'
+                      ? 'bg-[#E8EFEA] dark:bg-[#111A14] border-[#C6D5CA] dark:border-[#294031] text-[#526056] dark:text-[#C8CCB8]'
+                      : 'bg-[#00A846]/10 border-[#00A846]/40 text-[#006B27] dark:text-[#00E676]'
               }`}
             >
               <span className="font-medium">
@@ -1077,11 +1077,11 @@ export function UploadStudio({
 
           {/* Filter & Pagination Controls for 500+ Items */}
           {queue.length > 0 && (
-            <div className="mt-5 pt-4 border-t border-[#ECE8D9] dark:border-[#262C21] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="mt-5 pt-4 border-t border-[#E1EAE3] dark:border-[#262C21] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div
                 role="group"
                 aria-label="Filter upload queue by status"
-                className="inline-flex items-center p-1 bg-[#EFEBD9] dark:bg-[#0D0F0B] rounded-lg overflow-x-auto max-w-full"
+                className="inline-flex items-center p-1 bg-[#E8EFEA] dark:bg-[#060807] rounded-lg overflow-x-auto max-w-full"
               >
                 {(
                   [
@@ -1104,8 +1104,8 @@ export function UploadStudio({
                     }}
                     className={`px-3 py-1 text-xs font-medium rounded-md whitespace-nowrap shrink-0 tabular-nums transition-colors ${
                       queueFilter === tab.id
-                        ? 'bg-white dark:bg-[#1D2318] text-[#151811] dark:text-[#FCD116] shadow-xs'
-                        : 'text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white'
+                        ? 'bg-white dark:bg-[#111A14] text-[#0C120E] dark:text-[#FFD600] shadow-xs'
+                        : 'text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white'
                     }`}
                   >
                     {tab.label}
@@ -1122,7 +1122,7 @@ export function UploadStudio({
                 }}
                 aria-label="Search queued filenames"
                 placeholder="Filter queue by filename..."
-                className="px-3 py-1.5 text-xs bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA] w-full sm:w-56"
+                className="px-3 py-1.5 text-xs bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0] w-full sm:w-56"
               />
             </div>
           )}
@@ -1139,14 +1139,14 @@ export function UploadStudio({
                 : undefined
             }
             style={shouldVirtualize ? { maxHeight: `${VIRTUAL_VIEWPORT_HEIGHT}px` } : undefined}
-            className={`mt-4 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl ${
+            className={`mt-4 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl ${
               shouldVirtualize
                 ? 'overflow-y-auto'
-                : 'overflow-hidden divide-y divide-[#ECE8D9] dark:divide-[#262C21]'
+                : 'overflow-hidden divide-y divide-[#E1EAE3] dark:divide-[#262C21]'
             }`}
           >
             {pageItems.length === 0 ? (
-              <div className="p-8 text-center text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+              <div className="p-8 text-center text-xs text-[#526056] dark:text-[#8FA395]">
                 No files match this queue filter.
               </div>
             ) : (
@@ -1156,7 +1156,7 @@ export function UploadStudio({
                     ? { position: 'relative', height: `${virtualWindow.totalHeight}px` }
                     : undefined
                 }
-                className={shouldVirtualize ? undefined : 'divide-y divide-[#ECE8D9] dark:divide-[#262C21]'}
+                className={shouldVirtualize ? undefined : 'divide-y divide-[#E1EAE3] dark:divide-[#262C21]'}
               >
                 {visibleItems.map((job, offsetIdx) => {
                   const absoluteIdx = virtualWindow.startIndex + offsetIdx;
@@ -1183,16 +1183,16 @@ export function UploadStudio({
                       }
                       className={`px-4 sm:px-5 py-3 flex items-center gap-3 sm:gap-5 ${
                         shouldVirtualize
-                          ? 'border-b border-[#ECE8D9] dark:border-[#262C21]'
+                          ? 'border-b border-[#E1EAE3] dark:border-[#262C21]'
                           : ''
                       }`}
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="w-10 h-10 rounded-lg bg-[#EFEBD9] dark:bg-[#1E2419] flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-lg bg-[#E8EFEA] dark:bg-[#1E2419] flex items-center justify-center shrink-0">
                           {job.kind === 'video' ? (
-                            <Film className="w-4 h-4 text-[#008732] dark:text-[#FCD116]" aria-hidden="true" />
+                            <Film className="w-4 h-4 text-[#00A846] dark:text-[#FFD600]" aria-hidden="true" />
                           ) : (
-                            <ImageIcon className="w-4 h-4 text-[#008732] dark:text-[#009B3A]" aria-hidden="true" />
+                            <ImageIcon className="w-4 h-4 text-[#00A846] dark:text-[#00E676]" aria-hidden="true" />
                           )}
                         </div>
 
@@ -1205,10 +1205,10 @@ export function UploadStudio({
                               disabled={job.status === 'uploading' || job.status === 'done'}
                               onChange={(e) => updateJob(job.localId, { title: e.target.value })}
                               maxLength={140}
-                              className="w-full max-w-md bg-transparent text-sm font-medium text-[#151811] dark:text-[#F5F3EA] border-b border-transparent focus:border-[#009B3A] dark:focus:border-[#FCD116] focus:outline-none truncate disabled:opacity-80"
+                              className="w-full max-w-md bg-transparent text-sm font-medium text-[#0C120E] dark:text-[#EEF4F0] border-b border-transparent focus:border-[#00E676] dark:focus:border-[#FFD600] focus:outline-none truncate disabled:opacity-80"
                             />
                           </div>
-                          <div className="mt-0.5 flex items-center gap-1.5 sm:gap-2 text-[11px] font-mono-tabular text-[#5A5E52] dark:text-[#A6AA9C] overflow-hidden whitespace-nowrap">
+                          <div className="mt-0.5 flex items-center gap-1.5 sm:gap-2 text-[11px] font-mono-tabular text-[#526056] dark:text-[#8FA395] overflow-hidden whitespace-nowrap">
                             <span className="uppercase">{job.kind}</span>
                             <span aria-hidden="true">·</span>
                             <span>
@@ -1227,14 +1227,14 @@ export function UploadStudio({
                             {job.status === 'uploading' && job.speedBytesPerSec > 0 && (
                               <>
                                 <span aria-hidden="true">·</span>
-                                <span className="text-[#008732] dark:text-[#FCD116]">
+                                <span className="text-[#00A846] dark:text-[#FFD600]">
                                   {formatTransferSpeed(job.speedBytesPerSec)}
                                 </span>
                               </>
                             )}
                           </div>
                           {job.error && (
-                            <p role="alert" className="mt-0.5 text-[11px] text-[#CE1126] dark:text-red-400 truncate">
+                            <p role="alert" className="mt-0.5 text-[11px] text-[#E11D32] dark:text-red-400 truncate">
                               {job.error}
                             </p>
                           )}
@@ -1243,14 +1243,14 @@ export function UploadStudio({
 
                       {/* Progress + Row Controls */}
                       <div className="flex items-center gap-2 sm:gap-3 sm:w-52 md:w-64 shrink-0">
-                        <div className="hidden sm:block flex-1 h-1.5 bg-[#ECE8D9] dark:bg-[#232A1E] rounded-full overflow-hidden">
+                        <div className="hidden sm:block flex-1 h-1.5 bg-[#E1EAE3] dark:bg-[#232A1E] rounded-full overflow-hidden">
                           <div
                             className={`h-full transition-all duration-150 ${
                               job.status === 'error'
-                                ? 'bg-[#CE1126]'
+                                ? 'bg-[#E11D32]'
                                 : job.status === 'done'
-                                  ? 'bg-[#009B3A]'
-                                  : 'bg-[#FCD116]'
+                                  ? 'bg-[#00E676]'
+                                  : 'bg-[#FFD600]'
                             }`}
                             style={{ width: `${pct}%` }}
                           />
@@ -1258,7 +1258,7 @@ export function UploadStudio({
 
                         <div className="flex items-center gap-1.5 shrink-0">
                           {job.status === 'done' && (
-                            <span className="inline-flex items-center gap-1 text-xs font-medium text-[#008732] dark:text-[#4ADE80]">
+                            <span className="inline-flex items-center gap-1 text-xs font-medium text-[#00A846] dark:text-[#00E676]">
                               <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
                               Done
                             </span>
@@ -1268,7 +1268,7 @@ export function UploadStudio({
                               type="button"
                               onClick={() => pauseFlagsRef.current.set(job.localId, true)}
                               aria-label={`Pause ${job.title}`}
-                              className="p-1.5 text-[#151811] dark:text-[#F5F3EA] hover:bg-[#EFEBD9] dark:hover:bg-[#262E20] rounded-md"
+                              className="p-1.5 text-[#0C120E] dark:text-[#EEF4F0] hover:bg-[#E8EFEA] dark:hover:bg-[#262E20] rounded-md"
                             >
                               <Pause className="w-3.5 h-3.5" aria-hidden="true" />
                             </button>
@@ -1293,7 +1293,7 @@ export function UploadStudio({
                                 abortControllersRef.current.get(job.localId)?.abort();
                               }}
                               aria-label={`Cancel ${job.title}`}
-                              className="p-1.5 text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#CE1126]"
+                              className="p-1.5 text-[#526056] dark:text-[#8FA395] hover:text-[#E11D32]"
                             >
                               <X className="w-4 h-4" aria-hidden="true" />
                             </button>
@@ -1304,7 +1304,7 @@ export function UploadStudio({
                                 setQueue((prev) => prev.filter((item) => item.localId !== job.localId))
                               }
                               aria-label={`Remove ${job.title}`}
-                              className="p-1.5 text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#CE1126]"
+                              className="p-1.5 text-[#526056] dark:text-[#8FA395] hover:text-[#E11D32]"
                             >
                               <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                             </button>
@@ -1321,7 +1321,7 @@ export function UploadStudio({
 
         {/* Batch Queue Range & Pagination Footer (500 files per page) */}
         {filteredQueue.length > 0 && (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-[#526056] dark:text-[#8FA395]">
             <p className="font-mono-tabular">
               Showing {((safePage - 1) * PAGE_SIZE + 1).toLocaleString()}–
               {Math.min(safePage * PAGE_SIZE, filteredQueue.length).toLocaleString()} of{' '}
@@ -1333,7 +1333,7 @@ export function UploadStudio({
                   type="button"
                   disabled={safePage <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2A3124] rounded-lg disabled:opacity-40"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#1C2A21] rounded-lg disabled:opacity-40"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                   Prev
@@ -1345,7 +1345,7 @@ export function UploadStudio({
                   type="button"
                   disabled={safePage >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2A3124] rounded-lg disabled:opacity-40"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#1C2A21] rounded-lg disabled:opacity-40"
                 >
                   Next
                   <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />

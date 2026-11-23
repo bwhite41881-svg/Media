@@ -213,10 +213,10 @@ export function AlbumDetailView({
   if (loading) {
     return (
       <div className="max-w-[1360px] mx-auto px-6 sm:px-8 py-12">
-        <div className="h-8 w-48 bg-[#ECE8D9] dark:bg-[#1B2017] rounded animate-pulse" />
+        <div className="h-8 w-48 bg-[#E1EAE3] dark:bg-[#101813] rounded animate-pulse" />
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="aspect-[4/3] bg-[#ECE8D9] dark:bg-[#1B2017] rounded-2xl animate-pulse" />
+            <div key={n} className="aspect-[4/3] bg-[#E1EAE3] dark:bg-[#101813] rounded-2xl animate-pulse" />
           ))}
         </div>
       </div>
@@ -226,12 +226,12 @@ export function AlbumDetailView({
   if (error || !album) {
     return (
       <div className="max-w-[1360px] mx-auto px-6 sm:px-8 py-20">
-        <div className="max-w-lg mx-auto bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-8 text-center">
-          <Lock className="w-8 h-8 text-[#CE1126] dark:text-[#FCD116] mx-auto" aria-hidden="true" />
-          <h1 className="mt-4 font-display text-2xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+        <div className="max-w-lg mx-auto bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-8 text-center">
+          <Lock className="w-8 h-8 text-[#E11D32] dark:text-[#FFD600] mx-auto" aria-hidden="true" />
+          <h1 className="mt-4 font-display text-2xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
             Album unavailable
           </h1>
-          <p className="mt-2 text-sm text-[#5A5E52] dark:text-[#A6AA9C]">
+          <p className="mt-2 text-sm text-[#526056] dark:text-[#8FA395]">
             {error || 'This album does not exist or its privacy settings restrict access.'}
           </p>
           <button
@@ -252,17 +252,17 @@ export function AlbumDetailView({
       <button
         type="button"
         onClick={onBack}
-        className="inline-flex items-center gap-2 text-sm font-medium text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-[#FCD116] transition-colors"
+        className="inline-flex items-center gap-2 text-sm font-medium text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-[#FFD600] transition-colors"
       >
         <ArrowLeft className="w-4 h-4" aria-hidden="true" />
         <span>Back</span>
       </button>
 
       {/* Album Monograph Header */}
-      <header className="mt-6 pb-8 border-b border-[#E2DCC8] dark:border-[#2A3124] flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+      <header className="mt-6 pb-8 border-b border-[#D4DFD7] dark:border-[#1C2A21] flex flex-col lg:flex-row lg:items-end justify-between gap-6">
         <div className="flex flex-col sm:flex-row items-start gap-5 max-w-3xl">
           {/* Album Cover Thumbnail */}
-          <div className="w-28 h-24 sm:w-36 sm:h-28 rounded-xl overflow-hidden bg-[#EFEBD9] dark:bg-[#1A2016] border border-[#E2DCC8] dark:border-[#2A3124] shrink-0 relative group">
+          <div className="w-28 h-24 sm:w-36 sm:h-28 rounded-xl overflow-hidden bg-[#E8EFEA] dark:bg-[#101813] border border-[#D4DFD7] dark:border-[#1C2A21] shrink-0 relative group">
             {album.coverUrl ? (
               <img
                 src={resolveProtectedUrl(album.coverUrl)}
@@ -279,7 +279,7 @@ export function AlbumDetailView({
                 className="w-full h-full"
               />
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center text-[#787B6E] dark:text-[#8E9384]">
+              <div className="w-full h-full flex flex-col items-center justify-center text-[#6A7B6F] dark:text-[#6E8575]">
                 <ImageIcon className="w-5 h-5" aria-hidden="true" />
                 <span className="mt-1 text-[10px]">No Cover</span>
               </div>
@@ -297,21 +297,21 @@ export function AlbumDetailView({
           </div>
 
           <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
-              <span className="inline-flex items-center gap-1.5 font-medium text-[#151811] dark:text-[#F5F3EA]">
+            <div className="flex flex-wrap items-center gap-2 text-xs text-[#526056] dark:text-[#8FA395]">
+              <span className="inline-flex items-center gap-1.5 font-medium text-[#0C120E] dark:text-[#EEF4F0]">
                 {album.visibility === 'private' ? (
                   <>
-                    <Lock className="w-3.5 h-3.5 text-[#CE1126] dark:text-[#F87171]" aria-hidden="true" />
+                    <Lock className="w-3.5 h-3.5 text-[#E11D32] dark:text-[#FF4D5E]" aria-hidden="true" />
                     Private Album
                   </>
                 ) : album.visibility === 'unlisted' ? (
                   <>
-                    <Link2 className="w-3.5 h-3.5 text-[#B88200] dark:text-[#FCD116]" aria-hidden="true" />
+                    <Link2 className="w-3.5 h-3.5 text-[#B88200] dark:text-[#FFD600]" aria-hidden="true" />
                     Unlisted Share Link
                   </>
                 ) : (
                   <>
-                    <Globe className="w-3.5 h-3.5 text-[#008732] dark:text-[#4ADE80]" aria-hidden="true" />
+                    <Globe className="w-3.5 h-3.5 text-[#00A846] dark:text-[#00E676]" aria-hidden="true" />
                     Public Album
                   </>
                 )}
@@ -319,7 +319,7 @@ export function AlbumDetailView({
               {album.hasPasscode && (
                 <>
                   <span aria-hidden="true">·</span>
-                  <span className="inline-flex items-center gap-1 text-[#B88200] dark:text-[#FCD116] font-medium">
+                  <span className="inline-flex items-center gap-1 text-[#B88200] dark:text-[#FFD600] font-medium">
                     <KeyRound className="w-3 h-3" aria-hidden="true" />
                     Passcode protected
                   </span>
@@ -335,12 +335,12 @@ export function AlbumDetailView({
               <span className="font-mono-tabular">{formatBytes(album.totalBytes)}</span>
             </div>
 
-            <h1 className="mt-2.5 font-serif-editorial text-3xl sm:text-4xl font-medium tracking-tight text-[#151811] dark:text-[#F5F3EA] text-balance">
+            <h1 className="mt-2.5 font-serif-editorial text-3xl sm:text-4xl font-medium tracking-tight text-[#0C120E] dark:text-[#EEF4F0] text-balance">
               {album.title}
             </h1>
 
             {album.description && (
-              <p className="mt-2.5 text-sm sm:text-[15px] leading-relaxed text-[#5A5E52] dark:text-[#A6AA9C]">
+              <p className="mt-2.5 text-sm sm:text-[15px] leading-relaxed text-[#526056] dark:text-[#8FA395]">
                 {album.description}
               </p>
             )}
@@ -356,7 +356,7 @@ export function AlbumDetailView({
               onClick={handleDownloadAll}
               disabled={isZipping}
               aria-label={`Download all ${media.length} media files from ${album.title} as ZIP`}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#151811] dark:text-[#F5F3EA] bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] disabled:opacity-60 transition-colors whitespace-nowrap shrink-0"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] disabled:opacity-60 transition-colors whitespace-nowrap shrink-0"
             >
               {zipMode === 'all' ? (
                 <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
@@ -374,7 +374,7 @@ export function AlbumDetailView({
             <button
               type="button"
               onClick={() => onMessageUser(album.ownerId)}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#151811] dark:text-[#F5F3EA] bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] transition-colors whitespace-nowrap shrink-0"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] transition-colors whitespace-nowrap shrink-0"
             >
               <MessageSquare className="w-4 h-4" aria-hidden="true" />
               <span>Message Creator</span>
@@ -397,7 +397,7 @@ export function AlbumDetailView({
                 <button
                   type="button"
                   onClick={() => onChangeCover(album)}
-                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#151811] dark:text-[#F5F3EA] bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] transition-colors whitespace-nowrap shrink-0"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] transition-colors whitespace-nowrap shrink-0"
                 >
                   <ImageIcon className="w-4 h-4" aria-hidden="true" />
                   <span>Change Cover</span>
@@ -406,7 +406,7 @@ export function AlbumDetailView({
               <button
                 type="button"
                 onClick={() => onOpenShareModal(album)}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#151811] dark:text-[#F5F3EA] bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] transition-colors whitespace-nowrap shrink-0"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] transition-colors whitespace-nowrap shrink-0"
               >
                 <Share2 className="w-4 h-4" aria-hidden="true" />
                 <span>Share & Privacy</span>
@@ -414,7 +414,7 @@ export function AlbumDetailView({
               <button
                 type="button"
                 onClick={() => onEditAlbum(album)}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#151811] dark:text-[#F5F3EA] bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg hover:border-[#009B3A] dark:hover:border-[#FCD116] transition-colors whitespace-nowrap shrink-0"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#0C120E] dark:text-[#EEF4F0] bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg hover:border-[#00E676] dark:hover:border-[#FFD600] transition-colors whitespace-nowrap shrink-0"
               >
                 <Edit3 className="w-4 h-4" aria-hidden="true" />
                 <span>Edit</span>
@@ -431,8 +431,8 @@ export function AlbumDetailView({
               }}
               className={`px-3.5 py-2 text-sm font-medium rounded-lg border transition-colors whitespace-nowrap shrink-0 ${
                 selectMode
-                  ? 'text-[#008732] dark:text-[#FCD116] bg-white dark:bg-[#151912] border-[#008732] dark:border-[#FCD116]'
-                  : 'text-[#5A5E52] dark:text-[#A6AA9C] border-transparent hover:text-[#151811] dark:hover:text-white'
+                  ? 'text-[#00A846] dark:text-[#FFD600] bg-white dark:bg-[#0C110E] border-[#00A846] dark:border-[#FFD600]'
+                  : 'text-[#526056] dark:text-[#8FA395] border-transparent hover:text-[#0C120E] dark:hover:text-white'
               }`}
             >
               {selectMode ? 'Done' : 'Select'}
@@ -446,22 +446,22 @@ export function AlbumDetailView({
         <div
           data-testid="zip-progress-banner"
           aria-live="polite"
-          className="mt-5 px-5 py-4 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-xl"
+          className="mt-5 px-5 py-4 tech-panel rounded-xl"
         >
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2 font-medium text-[#151811] dark:text-[#F5F3EA]">
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#008732] dark:text-[#FCD116]" aria-hidden="true" />
+            <div className="flex items-center gap-2 font-medium text-[#0C120E] dark:text-[#EEF4F0]">
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#00A846] dark:text-[#FFD600]" aria-hidden="true" />
               <span>{zipProgress.statusText}</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="font-mono-tabular text-[#5A5E52] dark:text-[#A6AA9C]">
+              <span className="font-mono-tabular text-[#526056] dark:text-[#8FA395]">
                 {zipProgress.overallPercent}%
               </span>
               {isZipping && (
                 <button
                   type="button"
                   onClick={handleCancelZip}
-                  className="inline-flex items-center gap-1 text-xs font-medium text-[#CE1126] dark:text-[#F87171] hover:underline"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-[#E11D32] dark:text-[#FF4D5E] hover:underline"
                 >
                   <X className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Cancel</span>
@@ -475,11 +475,11 @@ export function AlbumDetailView({
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={zipProgress.overallPercent}
-            className="mt-2.5 h-2 w-full rounded-full overflow-hidden bg-[#EFEBD9] dark:bg-[#22281D]"
+            className="mt-2.5 h-2 w-full rounded-full overflow-hidden bg-[#E8EFEA] dark:bg-[#132018]"
           >
             <div
               style={{ width: `${Math.max(2, zipProgress.overallPercent)}%` }}
-              className="h-full rounded-full bg-[#008732] dark:bg-[#4ADE80] transition-[width] duration-200 ease-out"
+              className="h-full rounded-full bg-[#00A846] dark:bg-[#00E676] shadow-[0_0_12px_rgba(0,230,118,0.55)] transition-[width] duration-200 ease-out"
             />
           </div>
         </div>
@@ -488,7 +488,7 @@ export function AlbumDetailView({
       {downloadError && (
         <div
           role="alert"
-          className="mt-5 px-4 py-3 text-sm text-[#CE1126] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/40 border border-[#FECACA] dark:border-red-900 rounded-xl"
+          className="mt-5 px-4 py-3 text-sm text-[#E11D32] dark:text-red-300 bg-[#FEF2F2] dark:bg-red-950/40 border border-[#FECACA] dark:border-red-900 rounded-xl"
         >
           {downloadError}
         </div>
@@ -498,18 +498,18 @@ export function AlbumDetailView({
       {selectMode && canSelectItems && (
         <div
           data-testid="batch-action-bar"
-          className="mt-6 px-5 py-3.5 bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2E3627] rounded-xl flex flex-wrap items-center justify-between gap-4"
+          className="mt-6 px-5 py-3.5 tech-panel rounded-xl flex flex-wrap items-center justify-between gap-4"
         >
-          <div className="flex flex-wrap items-center gap-2 text-sm text-[#151811] dark:text-[#F5F3EA]">
+          <div className="flex flex-wrap items-center gap-2 text-sm text-[#0C120E] dark:text-[#EEF4F0]">
             <span data-testid="batch-selected-count" className="font-medium font-mono-tabular">
               {selectedIds.size.toLocaleString()} of {media.length.toLocaleString()} selected
             </span>
             {selectedIds.size > 0 && (
               <>
-                <span aria-hidden="true" className="text-[#C8C2AE] dark:text-[#3A4332]">
+                <span aria-hidden="true" className="text-[#B8C7BC] dark:text-[#3A4332]">
                   ·
                 </span>
-                <span className="text-xs font-mono-tabular text-[#5A5E52] dark:text-[#A6AA9C]">
+                <span className="text-xs font-mono-tabular text-[#526056] dark:text-[#8FA395]">
                   {formatBytes(selectedBytes)}
                 </span>
               </>
@@ -523,7 +523,7 @@ export function AlbumDetailView({
               onClick={() =>
                 setSelectedIds(allSelected ? new Set() : new Set(media.map((m) => m.id)))
               }
-              className="text-xs font-medium text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white transition-colors"
+              className="text-xs font-medium text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white transition-colors"
             >
               {allSelected ? 'Clear selection' : `Select all (${media.length.toLocaleString()})`}
             </button>
@@ -542,7 +542,7 @@ export function AlbumDetailView({
                     return next;
                   })
                 }
-                className="text-xs font-medium text-[#5A5E52] dark:text-[#A6AA9C] hover:text-[#151811] dark:hover:text-white transition-colors"
+                className="text-xs font-medium text-[#526056] dark:text-[#8FA395] hover:text-[#0C120E] dark:hover:text-white transition-colors"
               >
                 {pageAllSelected ? 'Deselect page' : 'Select page'}
               </button>
@@ -586,7 +586,7 @@ export function AlbumDetailView({
                     setDeletingBatch(false);
                   }
                 }}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-white bg-[#CE1126] rounded-lg hover:bg-[#AE0E20] disabled:opacity-40 transition-colors whitespace-nowrap shrink-0"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-white bg-[#E11D32] rounded-lg hover:bg-[#AE0E20] disabled:opacity-40 transition-colors whitespace-nowrap shrink-0"
               >
                 <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>{deletingBatch ? 'Deleting...' : 'Delete Selected'}</span>
@@ -598,11 +598,11 @@ export function AlbumDetailView({
 
       {/* Media Grid (Paginated for 5,000+ file albums!) */}
       {media.length === 0 ? (
-        <div className="mt-10 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-14 text-center">
-          <h2 className="font-serif-editorial text-xl font-medium text-[#151811] dark:text-[#F5F3EA]">
+        <div className="mt-10 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-14 text-center">
+          <h2 className="font-serif-editorial text-xl font-medium text-[#0C120E] dark:text-[#EEF4F0]">
             This album is empty
           </h2>
-          <p className="mt-2 text-sm text-[#5A5E52] dark:text-[#A6AA9C]">
+          <p className="mt-2 text-sm text-[#526056] dark:text-[#8FA395]">
             Upload 5,000+ photos or full-length videos of any size into this album.
           </p>
           {access?.canUpload && (
@@ -636,7 +636,7 @@ export function AlbumDetailView({
                         : `Inspect ${item.kind} ${item.title}`
                     }
                     className={`block w-full text-left rounded-2xl transition-all ${
-                      isSelected ? 'ring-2 ring-[#FCD116] ring-offset-2 dark:ring-offset-[#0D0F0B]' : ''
+                      isSelected ? 'ring-2 ring-[#FFD600] ring-offset-2 dark:ring-offset-[#060807]' : ''
                     }`}
                   >
                     <div className="relative">
@@ -646,29 +646,29 @@ export function AlbumDetailView({
                         alt={item.title}
                         kind={item.kind}
                         durationSec={item.durationSec}
-                        className="aspect-[4/3] rounded-2xl border border-[#E2DCC8] dark:border-[#2A3124]"
+                        className="aspect-[4/3] rounded-2xl border border-[#D4DFD7] dark:border-[#1C2A21]"
                         imgClassName="group-hover:scale-[1.03]"
                       />
                       {selectMode && (
-                        <span className="absolute top-3 left-3 w-7 h-7 rounded-md bg-white/95 dark:bg-[#151912]/95 border border-[#D8D1BC] dark:border-[#2E3627] flex items-center justify-center">
+                        <span className="absolute top-3 left-3 w-7 h-7 rounded-md bg-white/95 dark:bg-[#0C110E]/95 border border-[#C6D5CA] dark:border-[#24382B] flex items-center justify-center">
                           {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-[#008732] dark:text-[#FCD116]" aria-hidden="true" />
+                            <CheckSquare className="w-4 h-4 text-[#00A846] dark:text-[#FFD600]" aria-hidden="true" />
                           ) : (
-                            <Square className="w-4 h-4 text-[#5A5E52] dark:text-[#A6AA9C]" aria-hidden="true" />
+                            <Square className="w-4 h-4 text-[#526056] dark:text-[#8FA395]" aria-hidden="true" />
                           )}
                         </span>
                       )}
                     </div>
 
                     <div className="mt-3 flex items-baseline justify-between gap-3">
-                      <h3 className="text-sm font-semibold text-[#151811] dark:text-[#F5F3EA] group-hover:text-[#008732] dark:group-hover:text-[#FCD116] transition-colors truncate">
+                      <h3 className="text-sm font-semibold text-[#0C120E] dark:text-[#EEF4F0] group-hover:text-[#00A846] dark:group-hover:text-[#FFD600] transition-colors truncate">
                         {item.title}
                       </h3>
-                      <span className="font-mono-tabular text-xs text-[#5A5E52] dark:text-[#A6AA9C] shrink-0">
+                      <span className="font-mono-tabular text-xs text-[#526056] dark:text-[#8FA395] shrink-0">
                         {formatBytes(item.fileSize)}
                       </span>
                     </div>
-                    <div className="mt-1 flex items-center gap-2 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+                    <div className="mt-1 flex items-center gap-2 text-xs text-[#526056] dark:text-[#8FA395]">
                       <span className="capitalize">{item.kind}</span>
                       {item.width > 0 && item.height > 0 && (
                         <>
@@ -688,7 +688,7 @@ export function AlbumDetailView({
           </div>
 
           {totalPages > 1 && (
-            <div className="mt-8 flex items-center justify-between text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+            <div className="mt-8 flex items-center justify-between text-xs text-[#526056] dark:text-[#8FA395]">
               <p className="font-mono-tabular">
                 Showing {((safePage - 1) * GALLERY_PAGE_SIZE + 1).toLocaleString()}–
                 {Math.min(safePage * GALLERY_PAGE_SIZE, media.length).toLocaleString()} of{' '}
@@ -699,7 +699,7 @@ export function AlbumDetailView({
                   type="button"
                   disabled={safePage <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2A3124] rounded-lg disabled:opacity-40"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#1C2A21] rounded-lg disabled:opacity-40"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                   Prev
@@ -711,7 +711,7 @@ export function AlbumDetailView({
                   type="button"
                   disabled={safePage >= totalPages}
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2A3124] rounded-lg disabled:opacity-40"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#1C2A21] rounded-lg disabled:opacity-40"
                 >
                   Next
                   <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />

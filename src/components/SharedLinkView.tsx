@@ -119,12 +119,12 @@ export function SharedLinkView({
   return (
     <div className="max-w-[1200px] mx-auto px-6 sm:px-8 pt-10 pb-24">
       {/* Lookup Bar */}
-      <section className="pb-8 border-b border-[#E2DCC8] dark:border-[#2A3124]">
-        <p className="text-xs font-medium text-[#008732] dark:text-[#FCD116]">Direct Share Access</p>
-        <h1 className="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-[#151811] dark:text-[#F5F3EA]">
+      <section className="pb-8 border-b border-[#D4DFD7] dark:border-[#1C2A21]">
+        <p className="text-xs font-medium text-[#00A846] dark:text-[#FFD600]">Direct Share Access</p>
+        <h1 className="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-[#0C120E] dark:text-[#EEF4F0]">
           Shared Albums & Links
         </h1>
-        <p className="mt-2 text-sm text-[#5A5E52] dark:text-[#A6AA9C]">
+        <p className="mt-2 text-sm text-[#526056] dark:text-[#8FA395]">
           Paste an unlisted or private share link (or token) below to open a shared collection.
         </p>
 
@@ -141,7 +141,7 @@ export function SharedLinkView({
             onChange={(e) => setTokenInput(e.target.value)}
             aria-label="Share link URL or token"
             placeholder="Paste a share URL (e.g., .../?share=token) or token"
-            className="flex-1 px-4 py-2.5 text-sm bg-white dark:bg-[#151912] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+            className="flex-1 px-4 py-2.5 text-sm bg-white dark:bg-[#0C110E] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
           />
           <button
             type="submit"
@@ -157,33 +157,33 @@ export function SharedLinkView({
 
       {/* Error / Revoked Link State */}
       {error && (
-        <div className="mt-8 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-8 max-w-lg">
-          <ShieldAlert className="w-7 h-7 text-[#CE1126] dark:text-red-400" aria-hidden="true" />
-          <h2 className="mt-3 font-display text-xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+        <div className="mt-8 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-8 max-w-lg">
+          <ShieldAlert className="w-7 h-7 text-[#E11D32] dark:text-red-400" aria-hidden="true" />
+          <h2 className="mt-3 font-display text-xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
             Access Restricted
           </h2>
-          <p className="mt-2 text-sm text-[#5A5E52] dark:text-[#A6AA9C]">{error}</p>
+          <p className="mt-2 text-sm text-[#526056] dark:text-[#8FA395]">{error}</p>
         </div>
       )}
 
       {/* Passcode Gate */}
       {lockedMeta && (
-        <div className="mt-8 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-8 max-w-md">
-          <KeyRound className="w-7 h-7 text-[#008732] dark:text-[#FCD116]" aria-hidden="true" />
-          <h2 className="mt-3 font-serif-editorial text-2xl font-medium text-[#151811] dark:text-[#F5F3EA]">
+        <div className="mt-8 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-8 max-w-md">
+          <KeyRound className="w-7 h-7 text-[#00A846] dark:text-[#FFD600]" aria-hidden="true" />
+          <h2 className="mt-3 font-serif-editorial text-2xl font-medium text-[#0C120E] dark:text-[#EEF4F0]">
             {lockedMeta.albumTitle}
           </h2>
-          <p className="mt-1.5 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+          <p className="mt-1.5 text-xs text-[#526056] dark:text-[#8FA395]">
             Shared by {lockedMeta.ownerName} · {lockedMeta.itemCount.toLocaleString()}{' '}
             {lockedMeta.itemCount === 1 ? 'item' : 'items'}
           </p>
-          <p className="mt-4 text-sm text-[#5A5E52] dark:text-[#A6AA9C]">
+          <p className="mt-4 text-sm text-[#526056] dark:text-[#8FA395]">
             The owner locked this album with a passcode. Enter it below to unlock the media.
           </p>
 
           <form onSubmit={handleUnlock} className="mt-5 space-y-3">
             <div>
-              <label htmlFor="share-passcode-input" className="block text-xs font-semibold text-[#151811] dark:text-[#F5F3EA]">
+              <label htmlFor="share-passcode-input" className="block text-xs font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
                 Album Passcode
               </label>
               <input
@@ -193,12 +193,12 @@ export function SharedLinkView({
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
                 placeholder="Enter passcode"
-                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F8F6EE] dark:bg-[#0D0F0B] border border-[#D8D1BC] dark:border-[#2E3627] rounded-lg text-[#151811] dark:text-[#F5F3EA]"
+                className="mt-1.5 w-full px-3.5 py-2 text-sm bg-[#F3F6F4] dark:bg-[#060807] border border-[#C6D5CA] dark:border-[#24382B] rounded-lg text-[#0C120E] dark:text-[#EEF4F0]"
               />
             </div>
 
             {unlockError && (
-              <p role="alert" className="text-xs font-medium text-[#CE1126] dark:text-red-400">
+              <p role="alert" className="text-xs font-medium text-[#E11D32] dark:text-red-400">
                 {unlockError}
               </p>
             )}
@@ -218,9 +218,9 @@ export function SharedLinkView({
       {/* Unlocked Shared Album */}
       {resolved && (
         <section className="mt-8">
-          <div className="pb-6 border-b border-[#E2DCC8] dark:border-[#2A3124]">
-            <div className="flex flex-wrap items-center gap-2 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
-              <span className="inline-flex items-center gap-1 font-medium text-[#008732] dark:text-[#FCD116]">
+          <div className="pb-6 border-b border-[#D4DFD7] dark:border-[#1C2A21]">
+            <div className="flex flex-wrap items-center gap-2 text-xs text-[#526056] dark:text-[#8FA395]">
+              <span className="inline-flex items-center gap-1 font-medium text-[#00A846] dark:text-[#FFD600]">
                 <Link2 className="w-3.5 h-3.5" aria-hidden="true" />
                 Shared Link Unlocked
               </span>
@@ -236,19 +236,19 @@ export function SharedLinkView({
               <span>{resolved.canDownload ? 'Downloads enabled' : 'View only'}</span>
             </div>
 
-            <h2 className="mt-2 font-serif-editorial text-3xl font-medium text-[#151811] dark:text-[#F5F3EA]">
+            <h2 className="mt-2 font-serif-editorial text-3xl font-medium text-[#0C120E] dark:text-[#EEF4F0]">
               {resolved.album.title}
             </h2>
             {resolved.album.description && (
-              <p className="mt-2 text-sm text-[#5A5E52] dark:text-[#A6AA9C] max-w-2xl">
+              <p className="mt-2 text-sm text-[#526056] dark:text-[#8FA395] max-w-2xl">
                 {resolved.album.description}
               </p>
             )}
           </div>
 
           {resolved.media.length === 0 ? (
-            <div className="mt-8 bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl p-12 text-center">
-              <p className="text-sm text-[#5A5E52] dark:text-[#A6AA9C]">
+            <div className="mt-8 bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl p-12 text-center">
+              <p className="text-sm text-[#526056] dark:text-[#8FA395]">
                 No photos or videos in this shared album yet.
               </p>
             </div>
@@ -267,18 +267,18 @@ export function SharedLinkView({
                     alt={item.title}
                     kind={item.kind}
                     durationSec={item.durationSec}
-                    className="aspect-[4/3] rounded-2xl border border-[#E2DCC8] dark:border-[#2A3124]"
+                    className="aspect-[4/3] rounded-2xl border border-[#D4DFD7] dark:border-[#1C2A21]"
                     imgClassName="group-hover:scale-[1.03]"
                   />
                   <div className="mt-3 flex items-baseline justify-between gap-2">
-                    <h3 className="text-sm font-semibold text-[#151811] dark:text-[#F5F3EA] group-hover:text-[#008732] dark:group-hover:text-[#FCD116] truncate">
+                    <h3 className="text-sm font-semibold text-[#0C120E] dark:text-[#EEF4F0] group-hover:text-[#00A846] dark:group-hover:text-[#FFD600] truncate">
                       {item.title}
                     </h3>
-                    <span className="font-mono-tabular text-xs text-[#5A5E52] dark:text-[#A6AA9C] shrink-0">
+                    <span className="font-mono-tabular text-xs text-[#526056] dark:text-[#8FA395] shrink-0">
                       {formatBytes(item.fileSize)}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-[#5A5E52] dark:text-[#A6AA9C]">
+                  <p className="mt-1 text-xs text-[#526056] dark:text-[#8FA395]">
                     {formatRelativeDate(item.createdAt)}
                   </p>
                 </button>
@@ -290,8 +290,8 @@ export function SharedLinkView({
 
       {/* Collaborator Shared Albums */}
       {sharedAlbums.length > 0 && (
-        <section className="mt-14 pt-8 border-t border-[#E2DCC8] dark:border-[#2A3124]">
-          <h2 className="font-display text-xl font-semibold text-[#151811] dark:text-[#F5F3EA]">
+        <section className="mt-14 pt-8 border-t border-[#D4DFD7] dark:border-[#1C2A21]">
+          <h2 className="font-display text-xl font-semibold text-[#0C120E] dark:text-[#EEF4F0]">
             Collaborator Albums Shared with Your Account
           </h2>
           <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -300,20 +300,20 @@ export function SharedLinkView({
                 key={album.id}
                 type="button"
                 onClick={() => onOpenAlbum(album.id)}
-                className="group text-left bg-white dark:bg-[#151912] border border-[#E2DCC8] dark:border-[#2A3124] rounded-2xl overflow-hidden hover:border-[#009B3A] dark:hover:border-[#FCD116] transition-colors"
+                className="group text-left bg-white dark:bg-[#0C110E] border border-[#D4DFD7] dark:border-[#1C2A21] rounded-2xl overflow-hidden hover:border-[#00E676] dark:hover:border-[#FFD600] transition-colors"
               >
                 <MediaSurface
                   src={album.coverUrl}
                   alt={album.title}
-                  className="aspect-[16/10] border-b border-[#E2DCC8] dark:border-[#2A3124]"
+                  className="aspect-[16/10] border-b border-[#D4DFD7] dark:border-[#1C2A21]"
                   imgClassName="group-hover:scale-[1.03]"
                   showVideoBadge={false}
                 />
                 <div className="p-4">
-                  <p className="font-serif-editorial text-lg font-medium text-[#151811] dark:text-[#F5F3EA]">
+                  <p className="font-serif-editorial text-lg font-medium text-[#0C120E] dark:text-[#EEF4F0]">
                     {album.title}
                   </p>
-                  <p className="mt-1 text-xs text-[#5A5E52] dark:text-[#A6AA9C] inline-flex items-center gap-1.5">
+                  <p className="mt-1 text-xs text-[#526056] dark:text-[#8FA395] inline-flex items-center gap-1.5">
                     <Lock className="w-3 h-3" aria-hidden="true" />
                     <span>
                       {album.ownerName} · {album.viewerRole} · {album.itemCount.toLocaleString()} items
