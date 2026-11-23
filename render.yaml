@@ -1,0 +1,20 @@
+# Exported from Render on 2026-11-23T01:08:45Z
+version: "1"
+projects:
+- name: My project
+  environments:
+  - name: Production
+    services:
+    - type: web
+      name: Media
+      runtime: node
+      repo: https://github.com/bwhite41881-svg/Media
+      plan: 0.5c-512mb
+      region: virginia
+      buildCommand: npm install && npm run build
+      startCommand: npm start
+      disk:
+        name: disk
+        mountPath: /app/data
+        sizeGB: 10
+      autoDeployTrigger: commit
